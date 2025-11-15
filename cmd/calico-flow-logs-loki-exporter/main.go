@@ -42,12 +42,23 @@ func main() {
 		privateKeyPath,
 	)
 	if err != nil {
-		log.Fatalf("Error while creating Goldmane client: %w", err)
+		log.Fatalf("Error while creating Goldmane client: %s", err)
 	}
 
-	// TODO: propagate to other systems, but for now, just print
-	// the flows to the console.
-	log.Println(client.GetFlow(context.Background()))
+	terminate := make(chan bool)
+	data := make(chan goldmane.GoldmaneFlow)
+
+	go func() { client.StreamFlows(context.Background(), data) }()
+	go receiveGoldmaneFlow(data)
+
+	<-terminate
 
 	defer client.Close()
+}
+
+func receiveGoldmaneFlow(receiver chan goldmane.GoldmaneFlow) {
+	for {
+		// TODO: Push data to Loki
+		log.Printf("%+v", <-receiver)
+	}
 }

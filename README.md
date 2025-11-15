@@ -30,8 +30,6 @@ in production environments, this is just for development.**
 
 ### Running
 
-1. Port-forward the Goldmane service: `kubectl port-forward [-n <goldmane-namespace>] svc/goldmane 7443`
-1. Copy the certificates from a running instance of Goldmane: `make copy-goldmane-certs-from-kubernetes-deployment`
-    - The Goldmane deployment must use default naming conventions for resources, otherwise you need to override `GOLDMANE_NAMESPACE`
-    when running `make`
+1. Port-forward the Goldmane service: `make [GOLDMANE_NAMESPACE=<goldmane namespace>] port-forward-goldmane`
+1. Copy the certificates from a running instance of Goldmane: `make [GOLDMANE_NAMESPACE=<goldmane namespace>] copy-goldmane-certs-from-kubernetes-deployment`
 1. Run project: `make run`

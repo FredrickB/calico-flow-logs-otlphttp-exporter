@@ -23,6 +23,9 @@ copy-goldmane-certs-from-kubernetes-deployment:
 	kubectl get secrets goldmane-key-pair -n $(GOLDMANE_NAMESPACE) -o jsonpath='{.data.tls\.key}' | base64 -d > $(GOLDMANE_CERTIFICATES_DIR)/goldmane.key
 	kubectl get cm goldmane-ca-bundle -o jsonpath='{.data.tigera-ca-bundle\.crt}' > $(GOLDMANE_CERTIFICATES_DIR)/goldmane_ca.crt
 
+port-forward-goldmane:
+	kubectl port-forward -n $(GOLDMANE_NAMESPACE) svc/goldmane 7443
+
 run:
 	CA_CERT_PATH=$(GOLDMANE_CERTIFICATES_DIR)/goldmane_ca.crt \
 	PRIVATE_KEY_PATH=$(GOLDMANE_CERTIFICATES_DIR)/goldmane.key \
