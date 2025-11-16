@@ -1,8 +1,10 @@
-PROTO_VERSION=v3.30.4
+GOLDMANE_PROTO_VERSION=v3.30.4
 PROTOBUF_DEFINITIONS_DIR=proto
 GOLDMANE_CERTIFICATES_DIR=certs/goldmane
 GOLDMANE_HOST=goldmane:7443
 GOLDMANE_NAMESPACE=calico-system
+# Disable HTTPS when running locally
+OTEL_EXPORTER_OTLP_ENDPOINT=http://localhost:4318
 
 install-development-packages:
 	go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
@@ -10,7 +12,7 @@ install-development-packages:
 
 fetch-protobuf-definition:
 	mkdir -p $(PROTOBUF_DEFINITIONS_DIR)
-	curl -sL https://raw.githubusercontent.com/projectcalico/calico/refs/tags/$(PROTO_VERSION)/goldmane/proto/api.proto -o $(PROTOBUF_DEFINITIONS_DIR)/api.proto
+	curl -sL https://raw.githubusercontent.com/projectcalico/calico/refs/tags/$(GOLDMANE_PROTO_VERSION)/goldmane/proto/api.proto -o $(PROTOBUF_DEFINITIONS_DIR)/api.proto
 
 generate-code-from-protobuf:
 	which protoc-gen-go > /dev/null || (echo "protoc-gen-go not in PATH" && exit 1)
@@ -26,9 +28,13 @@ copy-goldmane-certs-from-kubernetes-deployment:
 port-forward-goldmane:
 	kubectl port-forward -n $(GOLDMANE_NAMESPACE) svc/goldmane 7443
 
+run-otel-collector:
+	docker compose --project-directory hack/otel-collector up
+
 run:
 	CA_CERT_PATH=$(GOLDMANE_CERTIFICATES_DIR)/goldmane_ca.crt \
 	PRIVATE_KEY_PATH=$(GOLDMANE_CERTIFICATES_DIR)/goldmane.key \
 	PUBLIC_CERT_PATH=$(GOLDMANE_CERTIFICATES_DIR)/goldmane.crt \
 	GOLDMANE_HOST=$(GOLDMANE_HOST) \
+	OTEL_EXPORTER_OTLP_ENDPOINT=$(OTEL_EXPORTER_OTLP_ENDPOINT) \
 	go run cmd/calico-flow-logs-loki-exporter/main.go
