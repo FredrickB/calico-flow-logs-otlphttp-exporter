@@ -50,7 +50,7 @@ func main() {
 	}
 
 	context := context.Background()
-	loggerProvider, err := otlp.RegisterOTelLoggerProvider(context, SERVICE_NAME, SERVICE_VERSION)
+	loggerProvider, err := otlp.NewLoggerProvider(context, SERVICE_NAME, SERVICE_VERSION)
 	if err != nil {
 		log.Fatalf("Error while creating OTLP LoggerProvider")
 	}
