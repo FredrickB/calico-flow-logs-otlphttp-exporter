@@ -8,7 +8,7 @@ import (
 	"os"
 
 	"github.com/FredrickB/calico-flow-logs-loki-exporter/v2/internal/goldmane"
-	otlp "github.com/FredrickB/calico-flow-logs-loki-exporter/v2/internal/otlp"
+	"github.com/FredrickB/calico-flow-logs-loki-exporter/v2/internal/otlp"
 	"go.opentelemetry.io/contrib/bridges/otelslog"
 )
 
