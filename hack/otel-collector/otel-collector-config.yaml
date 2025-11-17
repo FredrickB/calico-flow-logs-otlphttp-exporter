@@ -4,6 +4,12 @@ receivers:
       http:
         endpoint: 0.0.0.0:4318
 
+processors:
+  transform:
+    error_mode: propagate
+    log_statements:
+      - set(log.body, ParseJSON(log.body))
+
 exporters:
   debug:
     verbosity: detailed
@@ -12,4 +18,5 @@ service:
   pipelines:
     logs:
       receivers: [otlp]
+      processors: [transform]
       exporters: [debug]
