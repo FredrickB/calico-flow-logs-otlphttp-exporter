@@ -13,10 +13,12 @@ processors:
 exporters:
   debug:
     verbosity: detailed
+  otlphttp:
+    endpoint: http://loki:3100/otlp
 
 service:
   pipelines:
     logs:
       receivers: [otlp]
       processors: [transform]
-      exporters: [debug]
+      exporters: [debug, otlphttp]

@@ -17,8 +17,8 @@ const (
 	PRIVATE_KEY_PATH_ENV string = "PRIVATE_KEY_PATH"
 	PUBLIC_CERT_PATH_ENV string = "PUBLIC_CERT_PATH"
 	GOLDMANE_HOST_ENV    string = "GOLDMANE_HOST"
-	PACKAGE_NAME         string = "goldmane-flow-logs"
-	SERVICE_NAME         string = "goldmane-flow-logs"
+	PACKAGE_NAME         string = "calico-flow-logs"
+	SERVICE_NAME         string = "calico-flow-logs"
 	SERVICE_VERSION      string = "0.0.1"
 )
 

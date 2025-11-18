@@ -28,8 +28,8 @@ copy-goldmane-certs-from-kubernetes-deployment:
 port-forward-goldmane:
 	kubectl port-forward -n $(GOLDMANE_NAMESPACE) svc/goldmane 7443
 
-run-otel-collector:
-	docker compose --project-directory hack/otel-collector up
+docker-compose-up:
+	docker compose --project-directory hack/docker up
 
 run:
 	CA_CERT_PATH=$(GOLDMANE_CERTIFICATES_DIR)/goldmane_ca.crt \

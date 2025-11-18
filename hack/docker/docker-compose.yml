@@ -1,0 +1,31 @@
+services:
+  otel-collector:
+    image: otel/opentelemetry-collector-contrib@sha256:faf125d656fa47cea568b2f3b4494efd2525083bc75c1e96038bc23f05cd68fd
+    container_name: otel-collector
+    command: ["--config=/etc/otel-collector-config.yaml"]
+    volumes:
+      - ./otel-collector-config.yaml:/etc/otel-collector-config.yaml
+    ports:
+      - "4318:4318" # OTLP HTTP
+    restart: unless-stopped
+  loki:
+    image: grafana/loki:3.1.0
+    container_name: loki
+    command: ["-config.file=/etc/loki/local-config.yaml"]
+    volumes:
+      - ./loki-config.yaml:/etc/loki/config.yaml
+      - loki:/loki
+    ports:
+      - "3100:3100"
+    restart: unless-stopped
+  grafana:
+    image: grafana/grafana:12.4.0-19358656895
+    environment:
+      GF_SECURITY_ADMIN_PASSWORD: "admin123"
+      GF_SECURITY_ADMIN_USER: "admin123"
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./loki-datasource.yaml:/etc/grafana/provisioning/datasources/loki-datasource.yaml
+volumes:
+  loki:
