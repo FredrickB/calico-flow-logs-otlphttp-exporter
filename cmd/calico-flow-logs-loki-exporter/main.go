@@ -2,14 +2,15 @@ package main
 
 import (
 	"context"
-	"encoding/json"
 	"log"
 	"log/slog"
 	"os"
 
 	"github.com/FredrickB/calico-flow-logs-loki-exporter/v2/internal/goldmane"
 	"github.com/FredrickB/calico-flow-logs-loki-exporter/v2/internal/otlp"
+	pb "github.com/FredrickB/calico-flow-logs-loki-exporter/v2/proto"
 	"go.opentelemetry.io/contrib/bridges/otelslog"
+	"google.golang.org/protobuf/encoding/protojson"
 )
 
 const (
@@ -58,7 +59,7 @@ func main() {
 	otelLogger := otelslog.NewLogger(PACKAGE_NAME, otelslog.WithLoggerProvider(loggerProvider))
 
 	terminate := make(chan bool)
-	data := make(chan goldmane.GoldmaneFlow)
+	data := make(chan *pb.Flow)
 
 	go func() { client.StreamFlows(context, data) }()
 	go receiveGoldmaneFlow(data, context, otelLogger)
@@ -76,10 +77,10 @@ func main() {
 	}()
 }
 
-func receiveGoldmaneFlow(receiver chan goldmane.GoldmaneFlow, context context.Context, logger *slog.Logger) {
+func receiveGoldmaneFlow(receiver chan *pb.Flow, context context.Context, logger *slog.Logger) {
 	for {
 		goldmaneFlow := <-receiver
-		jsonFlow, err := json.Marshal(goldmaneFlow)
+		jsonFlow, err := protojson.Marshal(goldmaneFlow)
 		if err != nil {
 			log.Printf("Failed to marshal GoldmaneFlow: %+v to JSON. Error: %s. Skipping", goldmaneFlow, err)
 			continue
