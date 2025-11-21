@@ -9,30 +9,6 @@ import (
 	"google.golang.org/grpc"
 )
 
-// TODO: Map remaining fields from pb.FlowResult.Flow.Key
-type GoldmaneFlowKey struct {
-	SourceName           string
-	SourceNamespace      string
-	DestName             string
-	DestNamespace        string
-	DestPort             int64
-	DestServiceName      string
-	DestServiceNamespace string
-	DestServicePortName  string
-	DestServicePort      int64
-	Proto                string
-}
-
-type GoldmaneFlow struct {
-	Key          GoldmaneFlowKey
-	StartTime    int64
-	EndTime      int64
-	SourceLabels []string
-	DestLabels   []string
-	PacketsIn    int64
-	PacketsOut   int64
-}
-
 type GoldmaneClient struct {
 	connection          *grpc.ClientConn
 	flowCollectorClient pb.FlowsClient
@@ -73,7 +49,7 @@ func (client *GoldmaneClient) GetFlow(context context.Context) (*pb.FlowListResu
 	return list, nil
 }
 
-func (client *GoldmaneClient) StreamFlows(context context.Context, receiver chan<- GoldmaneFlow) {
+func (client *GoldmaneClient) StreamFlows(context context.Context, receiver chan<- *pb.Flow) {
 	stream, err := client.flowCollectorClient.Stream(context, &pb.FlowStreamRequest{})
 	if err != nil {
 		log.Printf("Failed to create streaming client for flow api: %s", err)
@@ -90,33 +66,10 @@ func (client *GoldmaneClient) StreamFlows(context context.Context, receiver chan
 			log.Fatalf("Failed to receive message %s", err)
 			close(receiver)
 		}
-		receiver <- mapFlowResultToGoldmaneFlow(&flowResult)
+		receiver <- flowResult.Flow
 	}
 }
 
 func (client *GoldmaneClient) Close() error {
 	return client.connection.Close()
-}
-
-func mapFlowResultToGoldmaneFlow(flowResult *pb.FlowResult) GoldmaneFlow {
-	return GoldmaneFlow{
-		Key: GoldmaneFlowKey{
-			SourceName:           flowResult.Flow.Key.SourceName,
-			SourceNamespace:      flowResult.Flow.Key.SourceNamespace,
-			DestName:             flowResult.Flow.Key.DestName,
-			DestNamespace:        flowResult.Flow.Key.DestNamespace,
-			DestPort:             flowResult.Flow.Key.DestPort,
-			DestServiceName:      flowResult.Flow.Key.DestServiceName,
-			DestServiceNamespace: flowResult.Flow.Key.DestServiceNamespace,
-			DestServicePortName:  flowResult.Flow.Key.DestServicePortName,
-			DestServicePort:      flowResult.Flow.Key.DestServicePort,
-			Proto:                flowResult.Flow.Key.Proto,
-		},
-		StartTime:    flowResult.Flow.StartTime,
-		EndTime:      flowResult.Flow.EndTime,
-		SourceLabels: flowResult.Flow.SourceLabels,
-		DestLabels:   flowResult.Flow.DestLabels,
-		PacketsIn:    flowResult.Flow.PacketsIn,
-		PacketsOut:   flowResult.Flow.PacketsOut,
-	}
 }
