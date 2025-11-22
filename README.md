@@ -39,7 +39,7 @@ in production environments, this is just for development.
     - Username: `admin123`
     - Password: `admin123`
 
-### OTel exporter
+### OTLP Log HTTP Exporter environment variables
 
-To see a list of all environment variables which can be set for the OTel
-exporter, see the [official documentation](https://pkg.go.dev/go.opentelemetry.io/otel/exporters/otlp/otlplog/otlploghttp)
+To see a list of all environment variables which can be set for the OTLP
+Log HTTP exporter, see the [official documentation](https://pkg.go.dev/go.opentelemetry.io/otel/exporters/otlp/otlplog/otlploghttp)
