@@ -1,8 +1,7 @@
 # Calico Flow Logs Loki Exporter
 
-Uses the Goldmane Flow logs in Calico to
-extract realtime network flow logs and ingest
-them into Loki.
+Uses the Goldmane API in Calico to stream
+network flow logs to OTLP Log HTTP Exporter.
 
 ## Development
 
@@ -13,13 +12,14 @@ them into Loki.
 - `kubectl`
 - `base64`
 - `docker`
-- Running instance of Goldmane in namespace `calico-system` in a cluster preconfigured in `kubectl` context
+- Calico, `>=3.30`
+- Goldmane running in namespace `calico-system`
 
 ### Setup
 
 > For development we copy the certificates from a Goldmane
-deployment running in the cluster directly. Do not use this approach
-in production environments, this is just for development.
+deployment running in the cluster directly. Do not use this
+approach in production environments, this is just for development.
 
 1. Install development tools: `make install-development-packages`
 1. Fetch the protobufs from the Calico project: `make fetch-protobuf-definition`
