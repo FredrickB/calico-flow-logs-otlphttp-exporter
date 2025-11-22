@@ -4,6 +4,8 @@ import (
 	"context"
 	"log"
 	"os"
+	"os/signal"
+	"syscall"
 
 	"github.com/FredrickB/calico-flow-logs-loki-exporter/v2/internal/goldmane"
 	"github.com/FredrickB/calico-flow-logs-loki-exporter/v2/internal/otlp"
@@ -38,6 +40,7 @@ func main() {
 	log.Printf("%s set to %s", PUBLIC_CERT_PATH_ENV, publicCertPath)
 	log.Printf("%s set to %s", GOLDMANE_HOST_ENV, goldmaneHost)
 
+	// create goldmane client
 	client, err := goldmane.NewClient(
 		goldmaneHost,
 		caCertFilePath,
@@ -49,26 +52,48 @@ func main() {
 	}
 
 	context := context.Background()
+	// create logger
 	logger, err := otlp.NewLogger(context, PACKAGE_NAME, SERVICE_NAME, SERVICE_VERSION)
 	if err != nil {
 		log.Fatalf("Error while creating logger")
 	}
 
-	terminate := make(chan bool)
+	// register signals to terminate application
+	signals := make(chan os.Signal)
+	signal.Notify(signals, syscall.SIGINT, syscall.SIGTERM)
+	done := make(chan bool)
+
+	go func() {
+		<-signals
+
+		// trigger cleanup
+		log.Println("Termination signal received, triggering cleanup...")
+		cleanup(context, client, logger)
+		log.Println("Cleanup finished")
+
+		// trigger termination
+		done <- true
+	}()
+
+	log.Println("Start streaming logs from Goldmane to OTLP Log HTTP Exporter...")
+	startLogStreaming(context, client, logger)
+
+	<-done
+	log.Println("Program terminated")
+}
+
+func startLogStreaming(context context.Context, client *goldmane.GoldmaneClient, logger *otlp.Logger) {
 	data := make(chan *pb.Flow)
 
 	go client.StreamFlows(context, data)
 	go logger.ReceiveFlows(context, data)
+}
 
-	<-terminate
-
-	// cleanup resources
-	defer func() {
-		if err := client.Close(); err != nil {
-			log.Printf("Error while closing client: %s", err)
-		}
-		if err = logger.Close(context); err != nil {
-			log.Printf("Error while shutting down loggerProvider: %s", err)
-		}
-	}()
+func cleanup(context context.Context, client *goldmane.GoldmaneClient, logger *otlp.Logger) {
+	if err := client.Close(); err != nil {
+		log.Printf("Error while closing client: %s", err)
+	}
+	if err := logger.Close(context); err != nil {
+		log.Printf("Error while shutting down loggerProvider: %s", err)
+	}
 }
