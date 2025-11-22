@@ -3,14 +3,11 @@ package main
 import (
 	"context"
 	"log"
-	"log/slog"
 	"os"
 
 	"github.com/FredrickB/calico-flow-logs-loki-exporter/v2/internal/goldmane"
 	"github.com/FredrickB/calico-flow-logs-loki-exporter/v2/internal/otlp"
 	pb "github.com/FredrickB/calico-flow-logs-loki-exporter/v2/proto"
-	"go.opentelemetry.io/contrib/bridges/otelslog"
-	"google.golang.org/protobuf/encoding/protojson"
 )
 
 const (
@@ -52,17 +49,16 @@ func main() {
 	}
 
 	context := context.Background()
-	loggerProvider, err := otlp.NewLoggerProvider(context, SERVICE_NAME, SERVICE_VERSION)
+	logger, err := otlp.NewLogger(context, PACKAGE_NAME, SERVICE_NAME, SERVICE_VERSION)
 	if err != nil {
-		log.Fatalf("Error while creating OTLP LoggerProvider")
+		log.Fatalf("Error while creating logger")
 	}
-	otelLogger := otelslog.NewLogger(PACKAGE_NAME, otelslog.WithLoggerProvider(loggerProvider))
 
 	terminate := make(chan bool)
 	data := make(chan *pb.Flow)
 
-	go func() { client.StreamFlows(context, data) }()
-	go receiveGoldmaneFlow(data, context, otelLogger)
+	go client.StreamFlows(context, data)
+	go logger.ReceiveFlows(context, data)
 
 	<-terminate
 
@@ -71,20 +67,8 @@ func main() {
 		if err := client.Close(); err != nil {
 			log.Printf("Error while closing client: %s", err)
 		}
-		if err = loggerProvider.Shutdown(context); err != nil {
+		if err = logger.Close(context); err != nil {
 			log.Printf("Error while shutting down loggerProvider: %s", err)
 		}
 	}()
-}
-
-func receiveGoldmaneFlow(receiver chan *pb.Flow, context context.Context, logger *slog.Logger) {
-	for {
-		goldmaneFlow := <-receiver
-		jsonFlow, err := protojson.Marshal(goldmaneFlow)
-		if err != nil {
-			log.Printf("Failed to marshal GoldmaneFlow: %+v to JSON. Error: %s. Skipping", goldmaneFlow, err)
-			continue
-		}
-		logger.Log(context, slog.LevelInfo, string(jsonFlow))
-	}
 }

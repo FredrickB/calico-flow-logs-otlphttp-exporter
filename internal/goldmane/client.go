@@ -15,7 +15,7 @@ type GoldmaneClient struct {
 }
 
 func NewClient(host, caCertificateFilepath, publicCertFilepath, privateKeyFilepath string) (*GoldmaneClient, error) {
-	tlsConfig, err := NewTLSConfig(caCertificateFilepath, publicCertFilepath, privateKeyFilepath)
+	tlsConfig, err := newTLSConfig(caCertificateFilepath, publicCertFilepath, privateKeyFilepath)
 	if err != nil {
 		log.Printf("Failed to construct TLS certificate: %s", err)
 		return nil, err

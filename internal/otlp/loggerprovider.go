@@ -10,7 +10,7 @@ import (
 )
 
 // Adapted from: https://opentelemetry.io/docs/languages/go/instrumentation/#direct-to-collector
-func NewLoggerProvider(
+func newLoggerProvider(
 	context context.Context,
 	serviceName string,
 	serviceVersion string,
