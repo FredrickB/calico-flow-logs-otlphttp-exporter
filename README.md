@@ -17,10 +17,6 @@ network flow logs to OTLP Log HTTP Exporter.
 
 ### Setup
 
-> For development we copy the certificates from a Goldmane
-deployment running in the cluster directly. Do not use this
-approach in production environments, this is just for development.
-
 1. Install development tools: `make install-development-packages`
 1. Fetch the protobufs from the Calico project: `make fetch-protobuf-definition`
 1. Generate code from protobufs `make generate-code-from-protobuf`
@@ -31,11 +27,15 @@ approach in production environments, this is just for development.
 
 ### Running
 
+> For development we copy the certificates from a Goldmane
+deployment running in the cluster directly. Do not use this
+approach in production environments, this is just for development.
+
 1. Port-forward the Goldmane service: `make [GOLDMANE_NAMESPACE=<goldmane namespace>] port-forward-goldmane`
 1. Copy the certificates from a running instance of Goldmane: `make [GOLDMANE_NAMESPACE=<goldmane namespace>] copy-goldmane-certs-from-kubernetes-deployment`
 1. Start the otel-collector, Loki and Grafana: `make docker-compose-up`
 1. Run project: `make run`
-2. [Open Grafana Explore with Loki search](http://localhost:3000/explore?schemaVersion=1&panes=%7B%22fns%22:%7B%22datasource%22:%22P8E80F9AEF21F6940%22,%22queries%22:%5B%7B%22refId%22:%22A%22,%22expr%22:%22%7Bservice_name%3D%5C%22calico-flow-logs%5C%22%7D%22,%22queryType%22:%22range%22,%22datasource%22:%7B%22type%22:%22loki%22,%22uid%22:%22P8E80F9AEF21F6940%22%7D,%22editorMode%22:%22code%22,%22direction%22:%22backward%22%7D%5D,%22range%22:%7B%22from%22:%22now-1h%22,%22to%22:%22now%22%7D,%22compact%22:false%7D%7D&orgId=1)
+1. [Open Grafana Explore with Loki search](http://localhost:3000/explore?schemaVersion=1&panes=%7B%22fns%22:%7B%22datasource%22:%22P8E80F9AEF21F6940%22,%22queries%22:%5B%7B%22refId%22:%22A%22,%22expr%22:%22%7Bservice_name%3D%5C%22calico-flow-logs%5C%22%7D%22,%22queryType%22:%22range%22,%22datasource%22:%7B%22type%22:%22loki%22,%22uid%22:%22P8E80F9AEF21F6940%22%7D,%22editorMode%22:%22code%22,%22direction%22:%22backward%22%7D%5D,%22range%22:%7B%22from%22:%22now-1h%22,%22to%22:%22now%22%7D,%22compact%22:false%7D%7D&orgId=1)
     - Username: `admin123`
     - Password: `admin123`
 
