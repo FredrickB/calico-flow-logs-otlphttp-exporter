@@ -7,7 +7,6 @@ on:
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
-  ENABLE_BUILD_PROVENANCE_ATTESTATION: false
 
 jobs:
   build-and-push-image:
