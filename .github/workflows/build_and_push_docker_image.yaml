@@ -56,7 +56,7 @@ jobs:
           tags: |
             type=ref,event=branch
             type=ref,event=pr
-            type=raw,pattern=${{ steps.semver.outputs.next }}
+            type=raw,value=${{ steps.semver.outputs.next }}
 
       # This step uses the `docker/build-push-action` action to build the image, based on your repository's `Dockerfile`.
       # If the build succeeds, it pushes the image to GitHub Packages.
