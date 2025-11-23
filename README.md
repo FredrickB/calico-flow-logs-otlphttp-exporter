@@ -39,6 +39,14 @@ approach in production environments, this is just for development.
     - Username: `admin123`
     - Password: `admin123`
 
+#### Running as container
+
+1. Port-forward the Goldmane service: `make [GOLDMANE_NAMESPACE=<goldmane namespace>] port-forward-goldmane`
+1. Copy the certificates from a running instance of Goldmane: `make [GOLDMANE_NAMESPACE=<goldmane namespace>] copy-goldmane-certs-from-kubernetes-deployment`
+1. Start the otel-collector, Loki and Grafana: `make docker-compose-up`
+1. Build container image: `make build-container-image`
+1. Run the container image: `make run-container`
+
 ### OTLP Log HTTP Exporter environment variables
 
 To see a list of all environment variables which can be set for the OTLP

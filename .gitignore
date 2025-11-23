@@ -1,3 +1,4 @@
 # Don't include any generated code
 *.pb.go
 certs/
+out/
