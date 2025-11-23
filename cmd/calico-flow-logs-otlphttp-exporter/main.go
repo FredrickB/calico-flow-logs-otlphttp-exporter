@@ -7,9 +7,9 @@ import (
 	"os/signal"
 	"syscall"
 
-	"github.com/FredrickB/calico-flow-logs-loki-exporter/v2/internal/goldmane"
-	"github.com/FredrickB/calico-flow-logs-loki-exporter/v2/internal/otlp"
-	pb "github.com/FredrickB/calico-flow-logs-loki-exporter/v2/proto"
+	"github.com/FredrickB/calico-flow-logs-otlphttp-exporter/v2/internal/goldmane"
+	"github.com/FredrickB/calico-flow-logs-otlphttp-exporter/v2/internal/otlp"
+	pb "github.com/FredrickB/calico-flow-logs-otlphttp-exporter/v2/proto"
 )
 
 const (
@@ -17,8 +17,8 @@ const (
 	PRIVATE_KEY_PATH_ENV string = "PRIVATE_KEY_PATH"
 	PUBLIC_CERT_PATH_ENV string = "PUBLIC_CERT_PATH"
 	GOLDMANE_HOST_ENV    string = "GOLDMANE_HOST"
-	PACKAGE_NAME         string = "calico-flow-logs"
-	SERVICE_NAME         string = "calico-flow-logs"
+	PACKAGE_NAME         string = "calico-flow-logs-otlphttp-exporter"
+	SERVICE_NAME         string = "calico-flow-logs-otlphttp-exporter"
 	SERVICE_VERSION      string = "0.0.1"
 )
 

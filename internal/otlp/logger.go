@@ -5,7 +5,7 @@ import (
 	"log"
 	"log/slog"
 
-	pb "github.com/FredrickB/calico-flow-logs-loki-exporter/v2/proto"
+	pb "github.com/FredrickB/calico-flow-logs-otlphttp-exporter/v2/proto"
 	otelslog "go.opentelemetry.io/contrib/bridges/otelslog"
 	otelloggersdk "go.opentelemetry.io/otel/sdk/log"
 
@@ -29,7 +29,7 @@ func NewLogger(context context.Context, packageName, serviceName, serviceVersion
 	}, nil
 }
 
-func (l *Logger) ReceiveFlows(context context.Context, receiver chan *pb.Flow) {
+func (l *Logger) ReceiveFlows(context context.Context, receiver <-chan *pb.Flow) {
 	for {
 		flow := <-receiver
 		jsonFlow, err := protojson.Marshal(flow)

@@ -1,7 +1,8 @@
-# Calico Flow Logs Loki Exporter
+# calico-flow-logs-otlphttp-exporter
 
-Uses the Goldmane API in Calico to stream
-network flow logs to OTLP Log HTTP Exporter.
+Stream network flow logs from Goldmane API
+in Calico and export them using OTLP/HTTP
+Exporter.
 
 ## Development
 
