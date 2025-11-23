@@ -38,12 +38,21 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Get Next Version
+      - name: Get Next Version (PR)
         id: semver
         uses: ietf-tools/semver-action@v1
+        if: github.event_name != 'pull_request'
         with:
           token: ${{ github.token }}
           branch: ${{ github.event.pull_request.head.ref }}
+
+      - name: Get Next Version (main branch)
+        id: semver
+        uses: ietf-tools/semver-action@v1
+        if: github.ref == 'refs/heads/main'
+        with:
+          token: ${{ github.token }}
+          branch: main
 
       # This step uses [docker/metadata-action](https://github.com/docker/metadata-action#about) to extract tags
       # and labels that will be applied to the specified image. The `id` "meta" allows the output of this step to
