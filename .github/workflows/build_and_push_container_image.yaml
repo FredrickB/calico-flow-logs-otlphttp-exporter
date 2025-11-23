@@ -34,20 +34,13 @@ jobs:
           token: ${{ github.token }}
           branch: main
 
-      - name: Create Release
-        uses: ncipollo/release-action@v1.20.0
-        with:
-          allowUpdates: true
-          makeLatest: true
-          name: ${{ steps.semver.outputs.next }}
-          token: ${{ github.token }}
-
       - name: Extract metadata (tags, labels)
         id: meta
         uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
+            type=ref,event=branch
             type=raw,value=${{ steps.semver.outputs.nextStrict }}
 
       - name: Build and push container image
