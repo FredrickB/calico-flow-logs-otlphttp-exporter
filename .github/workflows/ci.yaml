@@ -27,7 +27,7 @@ jobs:
           token: ${{ github.token }}
           branch: ${{ github.event.pull_request.head.ref }}
 
-      - name: Extract metadata (tags, labels) for Docker
+      - name: Extract metadata (tags, labels)
         id: meta
         uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
         with:
@@ -35,7 +35,7 @@ jobs:
           tags: |
             type=raw,value=${{ steps.semver.outputs.nextStrict }}
 
-      - name: Build Docker image
+      - name: Build container image
         id: push
         uses: docker/build-push-action@f2a1d5e99d037542a71f64918e516c093c6f3fc4
         with:
