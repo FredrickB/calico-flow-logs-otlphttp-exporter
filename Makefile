@@ -61,11 +61,12 @@ build-container-image:
 run-container: build-container-image
 	docker run \
 		--network host \
+		--name $(GO_PROGRAM) \
+		--rm \
 		-v ./$(GOLDMANE_CERTIFICATES_DIR):$(CONTAINER_WOKRDIR)/$(GOLDMANE_CERTIFICATES_DIR) \
 		-e CA_CERT_PATH=/$(CONTAINER_WOKRDIR)/$(GOLDMANE_CERTIFICATES_DIR)/goldmane_ca.crt \
 		-e PRIVATE_KEY_PATH=/$(CONTAINER_WOKRDIR)/$(GOLDMANE_CERTIFICATES_DIR)/goldmane.key \
 		-e PUBLIC_CERT_PATH=/$(CONTAINER_WOKRDIR)/$(GOLDMANE_CERTIFICATES_DIR)/goldmane.crt \
 		-e GOLDMANE_HOST=$(GOLDMANE_HOST) \
 		-e OTEL_EXPORTER_OTLP_ENDPOINT=$(OTEL_EXPORTER_OTLP_ENDPOINT) \
-		-it $(GO_PROGRAM):$(TAG) \
-		--name $(GO_PROGRAM)
+		-it $(GO_PROGRAM):$(TAG)
