@@ -1,13 +1,12 @@
-name: Build and push container image
+name: CI
 
 on:
-  push:
+  pull_request:
     branches: ["main"]
 
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
-  ENABLE_BUILD_PROVENANCE_ATTESTATION: false
 
 jobs:
   build-and-push-image:
@@ -21,19 +20,12 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v5
 
-      - name: Log in to the Container registry
-        uses: docker/login-action@65b78e6e13532edd9afa3aa52ac7964289d1a9c1
-        with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Get Next Version (main branch)
+      - name: Get Next Version (PR)
         id: semver
         uses: ietf-tools/semver-action@v1
         with:
           token: ${{ github.token }}
-          branch: main
+          branch: ${{ github.event.pull_request.head.ref }}
 
       - name: Extract metadata (tags, labels) for Docker
         id: meta
@@ -41,7 +33,7 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
-            type=ref,event=branch
+            type=ref,event=pr
             type=raw,value=${{ steps.semver.outputs.nextStrict }}
 
       - name: Build and push Docker image
@@ -49,6 +41,6 @@ jobs:
         uses: docker/build-push-action@f2a1d5e99d037542a71f64918e516c093c6f3fc4
         with:
           context: .
-          push: true
+          push: false
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
