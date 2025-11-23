@@ -2,6 +2,7 @@ package otlp
 
 import (
 	"context"
+	"fmt"
 
 	"go.opentelemetry.io/otel/exporters/otlp/otlplog/otlploghttp"
 	"go.opentelemetry.io/otel/sdk/log"
@@ -24,12 +25,12 @@ func newLoggerProvider(
 		),
 	)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("error while creating resource: %s", err)
 	}
 
 	exporter, err := otlploghttp.New(context)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("error while creating exporter: %s", err)
 	}
 
 	loggerProcessor := log.NewBatchProcessor(exporter)

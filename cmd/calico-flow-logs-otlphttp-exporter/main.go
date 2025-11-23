@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"os"
 	"os/signal"
@@ -9,7 +10,6 @@ import (
 
 	"github.com/FredrickB/calico-flow-logs-otlphttp-exporter/v2/internal/goldmane"
 	"github.com/FredrickB/calico-flow-logs-otlphttp-exporter/v2/internal/otlp"
-	pb "github.com/FredrickB/calico-flow-logs-otlphttp-exporter/v2/proto"
 )
 
 const (
@@ -55,7 +55,7 @@ func main() {
 	// create logger
 	logger, err := otlp.NewLogger(context, PACKAGE_NAME, SERVICE_NAME, SERVICE_VERSION)
 	if err != nil {
-		log.Fatalf("Error while creating logger")
+		log.Fatalf("Error while creating logger: %s", err)
 	}
 
 	// register signals to terminate application
@@ -75,18 +75,24 @@ func main() {
 		done <- true
 	}()
 
-	log.Println("Start streaming logs from Goldmane to OTLP Log HTTP Exporter...")
-	startLogStreaming(context, client, logger)
+	log.Println("Start streaming logs from Goldmane...")
+	err = startLogStreaming(context, client, logger)
+	if err != nil {
+		log.Fatalf("Failed to start streaming logs: %s", err)
+	}
 
 	<-done
 	log.Println("Program terminated")
 }
 
-func startLogStreaming(context context.Context, client *goldmane.GoldmaneClient, logger *otlp.Logger) {
-	data := make(chan *pb.Flow)
+func startLogStreaming(context context.Context, client *goldmane.GoldmaneClient, logger *otlp.Logger) error {
+	data, err := client.StreamFlows(context)
+	if err != nil {
+		return fmt.Errorf("error during start of log streaming: %s", err)
+	}
 
-	go client.StreamFlows(context, data)
-	go logger.ReceiveFlows(context, data)
+	logger.ReceiveFlows(context, data)
+	return nil
 }
 
 func cleanup(context context.Context, client *goldmane.GoldmaneClient, logger *otlp.Logger) {

@@ -2,6 +2,7 @@ package goldmane
 
 import (
 	"context"
+	"fmt"
 	"io"
 	"log"
 
@@ -17,14 +18,12 @@ type GoldmaneClient struct {
 func NewClient(host, caCertificateFilepath, publicCertFilepath, privateKeyFilepath string) (*GoldmaneClient, error) {
 	tlsConfig, err := newTLSConfig(caCertificateFilepath, publicCertFilepath, privateKeyFilepath)
 	if err != nil {
-		log.Printf("Failed to construct TLS certificate: %s", err)
-		return nil, err
+		return nil, fmt.Errorf("failed to construct TLS certificate: %s", err)
 	}
 
 	connection, err := grpc.NewClient(host, grpc.WithTransportCredentials(tlsConfig))
 	if err != nil {
-		log.Printf("Cannot make a connection to Goldmane on host: %s. Error: %s", host, err)
-		return nil, err
+		return nil, fmt.Errorf("cannot make a connection to Goldmane on host: %s. Error: %s", host, err)
 	}
 
 	flowClientConnection := pb.NewFlowsClient(connection)
@@ -42,32 +41,38 @@ func (client *GoldmaneClient) GetFlow(context context.Context) (*pb.FlowListResu
 	)
 
 	if err != nil {
-		log.Printf("Failed to get flows, error: %s. Returning empty list", err)
-		return &pb.FlowListResult{}, err
+		return nil, fmt.Errorf("failed to get flows, error: %s. Returning empty list", err)
 	}
 
 	return list, nil
 }
 
-func (client *GoldmaneClient) StreamFlows(context context.Context, receiver chan<- *pb.Flow) {
+func (client *GoldmaneClient) StreamFlows(context context.Context) (<-chan *pb.Flow, error) {
 	stream, err := client.flowCollectorClient.Stream(context, &pb.FlowStreamRequest{})
+
 	if err != nil {
-		log.Printf("Failed to create streaming client for flow api: %s", err)
-		close(receiver)
+		return nil, fmt.Errorf("failed to create streaming client for flow api %s", err)
 	}
-	for {
-		var flowResult pb.FlowResult
-		err := stream.RecvMsg(&flowResult)
-		if err == io.EOF {
-			log.Printf("Received EOF, closing channel")
-			close(receiver)
+
+	data := make(chan *pb.Flow)
+
+	go func() {
+		for {
+			var flowResult pb.FlowResult
+			err := stream.RecvMsg(&flowResult)
+			if err == io.EOF {
+				log.Printf("Received EOF, closing channel")
+				close(data)
+			}
+			if err != nil {
+				log.Printf("Failed to receive message. Error: %s, closing channel", err)
+				close(data)
+			}
+			data <- flowResult.Flow
 		}
-		if err != nil {
-			log.Fatalf("Failed to receive message %s", err)
-			close(receiver)
-		}
-		receiver <- flowResult.Flow
-	}
+	}()
+
+	return data, nil
 }
 
 func (client *GoldmaneClient) Close() error {
