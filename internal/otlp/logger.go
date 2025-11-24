@@ -32,13 +32,22 @@ func NewLogger(context context.Context, packageName, serviceName, serviceVersion
 func (l *Logger) ReceiveFlows(context context.Context, receiver <-chan *pb.Flow) {
 	go func() {
 		for {
-			flow := <-receiver
-			jsonFlow, err := protojson.Marshal(flow)
-			if err != nil {
-				log.Printf("Failed to marshal Flow: %+v to JSON. Error: %s. Skipping", flow, err)
-				continue
+			select {
+			case <-context.Done():
+				log.Printf("Cancellation invoked. Stopping")
+				return
+			case flow, ok := <-receiver:
+				if !ok {
+					log.Println("Data channel closed. Stopping")
+					return
+				}
+				jsonFlow, err := protojson.Marshal(flow)
+				if err != nil {
+					log.Printf("Failed to marshal flow: %+v to JSON. Error: %s. Skipping", flow, err)
+					continue
+				}
+				l.logger.Log(context, slog.LevelInfo, string(jsonFlow))
 			}
-			l.logger.Log(context, slog.LevelInfo, string(jsonFlow))
 		}
 	}()
 }

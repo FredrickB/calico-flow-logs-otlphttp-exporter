@@ -58,17 +58,24 @@ func (client *GoldmaneClient) StreamFlows(context context.Context) (<-chan *pb.F
 
 	go func() {
 		for {
-			var flowResult pb.FlowResult
-			err := stream.RecvMsg(&flowResult)
-			if err == io.EOF {
-				log.Printf("Received EOF, closing channel")
+			select {
+			case <-context.Done():
+				log.Println("Context done, closing channel, terminating goroutine")
 				close(data)
+				return
+			default:
+				var flowResult pb.FlowResult
+				err := stream.RecvMsg(&flowResult)
+				if err == io.EOF {
+					log.Printf("Received EOF, closing channel")
+					close(data)
+				}
+				if err != nil {
+					log.Printf("Failed to receive message. Error: %s, closing channel", err)
+					close(data)
+				}
+				data <- flowResult.Flow
 			}
-			if err != nil {
-				log.Printf("Failed to receive message. Error: %s, closing channel", err)
-				close(data)
-			}
-			data <- flowResult.Flow
 		}
 	}()
 
