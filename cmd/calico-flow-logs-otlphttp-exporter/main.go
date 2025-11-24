@@ -9,7 +9,7 @@ import (
 
 	"github.com/FredrickB/calico-flow-logs-otlphttp-exporter/v2/internal/goldmane"
 	"github.com/FredrickB/calico-flow-logs-otlphttp-exporter/v2/internal/otlp"
-	pb "github.com/FredrickB/calico-flow-logs-otlphttp-exporter/v2/proto"
+	"github.com/FredrickB/calico-flow-logs-otlphttp-exporter/v2/internal/util"
 )
 
 const (
@@ -25,7 +25,7 @@ const (
 func main() {
 	log.SetFlags(log.LstdFlags | log.Lshortfile)
 
-	// Get path to certs required for Goldmane communication
+	// get path to certs required for Goldmane communication
 	caCertFilePath, caCertSet := os.LookupEnv(CA_CERT_PATH_ENV)
 	publicCertPath, publicCertSet := os.LookupEnv(PUBLIC_CERT_PATH_ENV)
 	privateKeyPath, privateKeySet := os.LookupEnv(PRIVATE_KEY_PATH_ENV)
@@ -51,11 +51,12 @@ func main() {
 		log.Fatalf("Error while creating Goldmane client: %s", err)
 	}
 
-	context := context.Background()
+	context, cancel := context.WithCancel(context.Background())
+
 	// create logger
 	logger, err := otlp.NewLogger(context, PACKAGE_NAME, SERVICE_NAME, SERVICE_VERSION)
 	if err != nil {
-		log.Fatalf("Error while creating logger")
+		log.Fatalf("Error while creating logger: %s", err)
 	}
 
 	// register signals to terminate application
@@ -68,32 +69,20 @@ func main() {
 
 		// trigger cleanup
 		log.Println("Termination signal received, triggering cleanup...")
-		cleanup(context, client, logger)
+		util.Cleanup(context, client, logger)
+		cancel()
 		log.Println("Cleanup finished")
 
 		// trigger termination
 		done <- true
 	}()
 
-	log.Println("Start streaming logs from Goldmane to OTLP Log HTTP Exporter...")
-	startLogStreaming(context, client, logger)
+	log.Println("Start streaming logs from Goldmane...")
+	err = util.StartLogStreaming(context, client, logger)
+	if err != nil {
+		log.Fatalf("Failed to start streaming logs: %s", err)
+	}
 
 	<-done
 	log.Println("Program terminated")
-}
-
-func startLogStreaming(context context.Context, client *goldmane.GoldmaneClient, logger *otlp.Logger) {
-	data := make(chan *pb.Flow)
-
-	go client.StreamFlows(context, data)
-	go logger.ReceiveFlows(context, data)
-}
-
-func cleanup(context context.Context, client *goldmane.GoldmaneClient, logger *otlp.Logger) {
-	if err := client.Close(); err != nil {
-		log.Printf("Error while closing client: %s", err)
-	}
-	if err := logger.Close(context); err != nil {
-		log.Printf("Error while shutting down loggerProvider: %s", err)
-	}
 }
