@@ -3,6 +3,8 @@ name: CI
 on:
   pull_request:
     branches: ["main"]
+  push:
+    branches: ["main"]
 
 env:
   REGISTRY: ghcr.io
@@ -11,29 +13,15 @@ env:
 jobs:
   ci:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write
-      attestations: write
-      id-token: write
     steps:
       - name: Checkout repository
         uses: actions/checkout@v5
-
-      - name: Get Next Version (PR)
-        id: semver
-        uses: ietf-tools/semver-action@v1
-        with:
-          token: ${{ github.token }}
-          branch: ${{ github.event.pull_request.head.ref }}
 
       - name: Extract metadata (tags, labels)
         id: meta
         uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-          tags: |
-            type=raw,value=${{ steps.semver.outputs.nextStrict }}
 
       - name: Build container image
         id: push
