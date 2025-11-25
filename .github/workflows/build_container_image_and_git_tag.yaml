@@ -1,4 +1,4 @@
-name: Release
+name: Build container image and git tag
 
 on:
   push:
@@ -9,7 +9,7 @@ env:
   IMAGE_NAME: ${{ github.repository }}
 
 jobs:
-  build-and-push-image:
+  create-container-image-and-git-tag:
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -20,14 +20,14 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v5
 
-      - name: Log in to the Container registry
+      - name: Log in to the container registry
         uses: docker/login-action@65b78e6e13532edd9afa3aa52ac7964289d1a9c1
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Get Next Version (main branch)
+      - name: Get next version (main branch)
         id: semver
         uses: ietf-tools/semver-action@v1
         with:
@@ -51,11 +51,9 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
 
-      - name: Create Release
-        uses: ncipollo/release-action@v1.20.0
-        with:
-          allowUpdates: true
-          draft: false
-          makeLatest: true
-          name: ${{ steps.semver.outputs.next }}
-          generateReleaseNotes: true
+      - name: Push new git tag
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "github-actions@users.noreply.github.com"
+          git tag ${{ steps.semver.outputs.next }}
+          git push origin ${{ steps.semver.outputs.next }}
