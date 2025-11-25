@@ -25,7 +25,7 @@ const (
 func main() {
 	log.SetFlags(log.LstdFlags | log.Lshortfile)
 
-	// get path to certs required for Goldmane communication
+	// get path to certs required for goldmane communication
 	caCertFilePath, caCertSet := os.LookupEnv(CA_CERT_PATH_ENV)
 	publicCertPath, publicCertSet := os.LookupEnv(PUBLIC_CERT_PATH_ENV)
 	privateKeyPath, privateKeySet := os.LookupEnv(PRIVATE_KEY_PATH_ENV)
