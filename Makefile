@@ -12,6 +12,7 @@ CONTAINER_WOKRDIR=/build
 TAG=0.0.1-development.1
 
 .PHONY : \
+clean \
 install-development-packages \
 fetch-protobuf-definition \
 generate-code-from-protobuf \
@@ -23,8 +24,11 @@ run \
 run-built-binary \
 run-container
 
-all: install-development-packages fetch-protobuf-definition generate-code-from-protobuf build
+all: clean install-development-packages fetch-protobuf-definition generate-code-from-protobuf build
 .PHONY : all
+
+clean:
+	rm -rf out gen
 
 install-development-packages:
 	go install google.golang.org/protobuf/cmd/protoc-gen-go@v1.36.10
