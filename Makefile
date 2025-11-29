@@ -11,9 +11,24 @@ OUT_DIR=out
 CONTAINER_WOKRDIR=/build
 TAG=0.0.1-development.1
 
+.PHONY : \
+install-development-packages \
+fetch-protobuf-definition \
+generate-code-from-protobuf \
+build \
+copy-goldmane-certs-from-kubernetes-deployment \
+port-forward-goldmane \
+docker-compose-up \
+run \
+run-built-binary \
+run-container
+
+all: install-development-packages fetch-protobuf-definition generate-code-from-protobuf build
+.PHONY : all
+
 install-development-packages:
-	go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
-	go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
+	go install google.golang.org/protobuf/cmd/protoc-gen-go@v1.36.10
+	go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@v1.5.1
 
 fetch-protobuf-definition:
 	mkdir -p $(PROTOBUF_DEFINITIONS_DIR)
