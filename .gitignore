@@ -1,4 +1,4 @@
-# Don't include any generated code
-*.pb.go
+# Don't include generated protobuf code
+gen/
 certs/
 out/

@@ -1,5 +1,6 @@
 GOLDMANE_PROTO_VERSION=v3.30.4
-PROTOBUF_DEFINITIONS_DIR=proto
+PROTOBUF_DEFINITIONS_DIR=protos
+PROTOBUF_GENERATED_DIR=gen
 GOLDMANE_CERTIFICATES_DIR=certs/goldmane
 GOLDMANE_HOST=goldmane:7443
 GOLDMANE_NAMESPACE=calico-system
@@ -17,12 +18,19 @@ install-development-packages:
 fetch-protobuf-definition:
 	mkdir -p $(PROTOBUF_DEFINITIONS_DIR)
 	curl -sL https://raw.githubusercontent.com/projectcalico/calico/refs/tags/$(GOLDMANE_PROTO_VERSION)/goldmane/proto/api.proto -o $(PROTOBUF_DEFINITIONS_DIR)/api.proto
+	# sed -i -E "s/option go_package.*;/option go_package = \"\.\/internal\/goldmane\";/g" $(PROTOBUF_DEFINITIONS_DIR)/api.proto
 
 generate-code-from-protobuf:
 	which protoc > /dev/null || (echo "protoc not in PATH" && exit 1)
 	which protoc-gen-go > /dev/null || (echo "protoc-gen-go not in PATH" && exit 1)
 	which protoc-gen-go-grpc > /dev/null || (echo "protoc-gen-go-grpc not in PATH" && exit 1)
-	protoc --go_opt=paths=source_relative --go_out=. --go-grpc_out=. $(PROTOBUF_DEFINITIONS_DIR)/*.proto
+	mkdir -p $(PROTOBUF_GENERATED_DIR)
+	protoc \
+		--go_out=$(PROTOBUF_GENERATED_DIR) \
+		--go-grpc_out=$(PROTOBUF_GENERATED_DIR) \
+		--go_opt=paths=source_relative \
+		--go-grpc_opt=paths=source_relative \
+		$(PROTOBUF_DEFINITIONS_DIR)/api.proto
 
 copy-goldmane-certs-from-kubernetes-deployment:
 	mkdir -p $(GOLDMANE_CERTIFICATES_DIR)

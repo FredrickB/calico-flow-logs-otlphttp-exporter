@@ -6,7 +6,7 @@ import (
 	"log"
 	"log/slog"
 
-	pb "github.com/FredrickB/calico-flow-logs-otlphttp-exporter/v2/proto"
+	pb "github.com/FredrickB/calico-flow-logs-otlphttp-exporter/v2/gen/protos"
 	otelslog "go.opentelemetry.io/contrib/bridges/otelslog"
 	otelloggersdk "go.opentelemetry.io/otel/sdk/log"
 
