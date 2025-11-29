@@ -1,8 +1,20 @@
 # calico-flow-logs-otlphttp-exporter
 
-Stream network flow logs from Goldmane API
-in Calico and export them using OTLP/HTTP
-Exporter.
+**Currently in development, things will break, run at your own risk**
+
+Stream network flow logs from [Calico](https://docs.tigera.io/calico/latest/observability/flow-logs-api)
+using [OTLP](https://opentelemetry.io/docs/specs/otlp/) over HTTP
+to [OTel collector](https://opentelemetry.io/docs/collector/).
+Uses the [Direct to Collector](https://opentelemetry.io/docs/specs/otel/logs/#direct-to-collector)
+approach with the [Logs SDK](https://opentelemetry.io/docs/specs/otel/logs/sdk/)
+and [Logging bridge](https://pkg.go.dev/go.opentelemetry.io/contrib/bridges/otelslog).
+
+Compatibility matrix:
+
+|Calico version|Tested|
+|:---|:---|
+|`3.30`|yes|
+|`3.31`|no|
 
 ## Development
 
@@ -13,7 +25,7 @@ Exporter.
 - `kubectl`
 - `base64`
 - `docker`
-- Calico, `>=3.30`
+- Calico, `3.30`
 - Goldmane running in namespace `calico-system`
 
 ### Setup
