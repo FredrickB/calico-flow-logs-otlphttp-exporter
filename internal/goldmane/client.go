@@ -6,7 +6,7 @@ import (
 	"io"
 	"log"
 
-	pb "github.com/FredrickB/calico-flow-logs-otlphttp-exporter/v2/proto"
+	pb "github.com/FredrickB/calico-flow-logs-otlphttp-exporter/v2/gen/protos"
 	"google.golang.org/grpc"
 )
 
