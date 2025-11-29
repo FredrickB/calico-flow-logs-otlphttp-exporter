@@ -5,7 +5,7 @@ on:
     branches: ["main"]
 
 jobs:
-  generate-next-semantic-version:
+  generate-next-semver:
     name: Generate next semver
     runs-on: ubuntu-latest
     permissions:
