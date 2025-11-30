@@ -9,7 +9,6 @@ jobs:
     permissions:
       contents: write
     runs-on: ubuntu-latest
-    environment: production
     steps:
       - name: Checkout
         uses: actions/checkout@v5
@@ -24,4 +23,4 @@ jobs:
       - name: Run chart-releaser
         uses: helm/chart-releaser-action@v1.7.0
         env:
-          CR_TOKEN: "${{ secrets.CHART_RELEASER_TOKEN }}"
+          CR_TOKEN: "${{ secrets.GITHUB_TOKEN  }}"
