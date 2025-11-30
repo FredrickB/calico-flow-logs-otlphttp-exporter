@@ -31,7 +31,7 @@ Compatibility:
         --username ghp \
         --password $ACCESS_TOKEN \
         calico-flow-logs-otlphttp-exporter \
-        https://raw.githubusercontent.com/FredrickB/calico-flow-logs-otlphttp-exporter/gh-pages \
+        https://raw.githubusercontent.com/FredrickB/calico-flow-logs-otlphttp-exporter/gh-pages
     helm repo update
     ```
 1. Install Helm release:
