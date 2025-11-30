@@ -1,0 +1,4 @@
+Environment variables set in configuration:
+{{ range .Values.env }}
+{{ .name }}: {{ .value }}
+{{- end }}
