@@ -25,7 +25,7 @@ Compatibility:
 - `kubectl`
 - `base64`
 - `docker`
-- Calico, `3.30`
+- Calico
 - Goldmane running in namespace `calico-system`
 
 ### Setup
