@@ -31,4 +31,4 @@ volumeMounts:
     readOnly: true
 
 imagePullSecrets:
-  - name: ghcr-io-regcred
+  - name: calico-flow-logs-otlphttp-exporter-regcred

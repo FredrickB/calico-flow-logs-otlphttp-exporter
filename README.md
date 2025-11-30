@@ -16,6 +16,48 @@ Compatibility:
 |`3.30`|yes|
 |`3.31`|no|
 
+## Running
+
+### Helm
+
+1. Create ImagePullSecret:
+    ```bash
+    docker login ghcr.io -u ghp
+    <Paste Personal Access Token with read-only access to GitHub Packages>
+    kubectl create secret generic \
+        --namespace calico-system \
+        calico-flow-logs-otlphttp-exporter-regcred \
+        --from-file=.dockerconfigjson=$HOME/.docker/config.json \
+        --type kubernetes.io/dockerconfigjson
+    ```
+1. Pass created ImagePullSecret using `values.yaml`:
+    ```yaml
+    imagePullSecrets:
+      - name: calico-flow-logs-otlphttp-exporter-regcred
+    ```
+1. Set GitHub Access Token
+    ```bash
+    read -s ACCESS_TOKEN
+    <Paste Personal Access Token with read-only access to repository content>
+    ```
+1. Setup Helm chart repository:
+    ```bash
+    helm repo add \
+        --username ghp \
+        --password $ACCESS_TOKEN \
+        calico-flow-logs-otlphttp-exporter \
+        https://raw.githubusercontent.com/FredrickB/calico-flow-logs-otlphttp-exporter/gh-pages
+    helm repo update
+    ```
+1. Install Helm release:
+    ```bash
+    helm upgrade \
+        --install \
+        --namespace calico-system \
+        calico-flow-logs-otlphttp-exporter \
+        calico-flow-logs-otlphttp-exporter/calico-flow-logs-otlphttp-exporter
+    ```
+
 ## Development
 
 ### Prerequisites
