@@ -5,8 +5,8 @@ receivers:
         endpoint: 0.0.0.0:4318
 
 # Uncomment the lines below if you want
-# to transform the logs to JSON as part
-# of the processor.
+# to transform the logs to JSON in the
+# processor.
 # processors:
 #   transform:
 #     error_mode: propagate
@@ -23,8 +23,8 @@ service:
   pipelines:
     logs:
       receivers: [otlp]
-      # Uncomment the lines below if you want
-      # to transform the logs to JSON as part
-      # of the processor.
+      # Uncomment the line below if you want
+      # to transform the logs to JSON in the
+      # processor.
       # processors: [transform]
       exporters: [debug, otlphttp]
