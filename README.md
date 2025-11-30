@@ -9,7 +9,7 @@ Uses the [Direct to Collector](https://opentelemetry.io/docs/specs/otel/logs/#di
 approach with the [Logs SDK](https://opentelemetry.io/docs/specs/otel/logs/sdk/)
 and [Logging bridge](https://pkg.go.dev/go.opentelemetry.io/contrib/bridges/otelslog).
 
-Compatibility matrix:
+Compatibility:
 
 |Calico version|Tested|
 |:---|:---|
@@ -59,6 +59,34 @@ approach in production environments, this is just for development.
 1. Start the otel-collector, Loki and Grafana: `make docker-compose-up`
 1. Build container image: `make build-container-image`
 1. Run the container image: `make run-container`
+
+#### Running as Helm release
+
+##### Prerequisites
+
+1. OpenTelemetry-Collector installed:
+   1. Namespace must be `opentelemetry-collector`
+   1. Name of Service for OpenTelemetry-Collector must be `opentelemetry-collector`
+
+##### Install Helm chart
+
+1. Login to ghcr.io:
+    ```bash
+    docker login ghcr.io -u ghp
+    <Paste Personal Access Token>
+    ```
+1. Create an imagepullsecret from docker config:
+    ```bash
+    kubectl create secret generic ghcr-io-regcred \
+    -n calico-system \
+    --from-file=.dockerconfigjson=$HOME/.docker/config.json \
+    --type kubernetes.io/dockerconfigjson
+    ```
+1. (Optional) Adapt values in `hack/helm/override.yaml`
+1. Install Helm release:
+    ```bash
+    make install-helm-chart
+    ```
 
 ### OTLP Log HTTP Exporter environment variables
 

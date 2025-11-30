@@ -1,0 +1,34 @@
+env:
+  - name: GOLDMANE_HOST
+    value: "goldmane:7443"
+  - name: OTEL_EXPORTER_OTLP_ENDPOINT
+    value: "http://opentelemetry-collector.opentelemetry-collector:4318"
+  - name: CA_CERT_PATH
+    value: "/etc/goldmane/ca-cert/tigera-ca-bundle.crt"
+  - name: PRIVATE_KEY_PATH
+    value: "/etc/goldmane/certs/tls.key"
+  - name: PUBLIC_CERT_PATH
+    value: "/etc/goldmane/certs/tls.crt"
+
+volumes:
+  - name: goldmane-certs
+    secret:
+      secretName: goldmane-key-pair
+      optional: false
+  - name: goldmane-ca-cert
+    configMap:
+      name: goldmane-ca-bundle
+      items:
+        - key: "tigera-ca-bundle.crt"
+          path: "tigera-ca-bundle.crt"
+
+volumeMounts:
+  - name: goldmane-certs
+    mountPath: /etc/goldmane/certs
+    readOnly: true
+  - name: goldmane-ca-cert
+    mountPath: /etc/goldmane/ca-cert
+    readOnly: true
+
+imagePullSecrets:
+  - name: ghcr-io-regcred

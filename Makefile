@@ -22,7 +22,8 @@ port-forward-goldmane \
 docker-compose-up \
 run \
 run-built-binary \
-run-container
+run-container \
+install-helm-chart
 
 all: clean install-development-packages fetch-protobuf-definition generate-code-from-protobuf build
 .PHONY : all
@@ -97,3 +98,10 @@ run-container: build-container-image
 		-e GOLDMANE_HOST=$(GOLDMANE_HOST) \
 		-e OTEL_EXPORTER_OTLP_ENDPOINT=$(OTEL_EXPORTER_OTLP_ENDPOINT) \
 		-it $(GO_PROGRAM):$(TAG)
+
+install-helm-chart:
+	helm upgrade \
+		--install \
+		-n $(GOLDMANE_NAMESPACE) \
+		-f hack/charts/override.yaml \
+		$(GO_PROGRAM) ./charts
