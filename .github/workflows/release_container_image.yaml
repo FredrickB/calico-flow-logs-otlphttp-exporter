@@ -3,6 +3,13 @@ name: Release container image
 on:
   push:
     branches: ["main"]
+    paths:
+      - 'cmd/**'
+      - 'internal/**'
+      - 'protos/**'
+      - Dockerfile
+      - go.mod
+      - go.sum
 
 env:
   REGISTRY: ghcr.io
