@@ -25,7 +25,7 @@ Compatibility:
 - `kubectl`
 - `base64`
 - `docker`
-- Calico, `3.30`
+- Calico
 - Goldmane running in namespace `calico-system`
 
 ### Setup
@@ -67,9 +67,6 @@ approach in production environments, this is just for development.
 1. OpenTelemetry-Collector installed:
    1. Namespace must be `opentelemetry-collector`
    1. Name of Service for OpenTelemetry-Collector must be `opentelemetry-collector`
-
-##### Install Helm chart
-
 1. Login to ghcr.io:
     ```bash
     docker login ghcr.io -u ghp
@@ -82,10 +79,29 @@ approach in production environments, this is just for development.
     --from-file=.dockerconfigjson=$HOME/.docker/config.json \
     --type kubernetes.io/dockerconfigjson
     ```
-1. (Optional) Adapt values in `hack/helm/override.yaml`
+1. (Optional) Adapt values in `hack/charts/calico-flow-logs-otlphttp-exporter/override.yaml`
+
+##### Install Helm chart from local directory
+
 1. Install Helm release:
     ```bash
-    make install-helm-chart
+    make install-helm-chart-from-local-dir
+    ```
+
+##### Install Helm chart from private registry
+
+1. Login to GitHub Packages private chart repository
+    ```bash
+    read -s ACCESS_TOKEN
+    <Paste Personal Access Token with read-only access for repository content>
+    ```
+1. Setup private helm chart repository:
+    ```bash
+    make setup-private-helm-chart-repository
+    ```
+1. Install Helm release:
+    ```bash
+    make install-helm-chart-from-private-chart-repository
     ```
 
 ### OTLP Log HTTP Exporter environment variables
