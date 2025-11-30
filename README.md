@@ -1,20 +1,26 @@
 # calico-flow-logs-otlphttp-exporter
 
-**Currently in development, things will break, run at your own risk**
+**Currently in development, things will break, use at your own risk**
 
-Stream network flow logs from [Calico](https://docs.tigera.io/calico/latest/observability/flow-logs-api)
-using [OTLP](https://opentelemetry.io/docs/specs/otlp/) over HTTP
-to [OTel collector](https://opentelemetry.io/docs/collector/).
+Export network flow logs from [Calico](https://docs.tigera.io/calico/latest/observability/flow-logs-api)
+using [OTLP](https://opentelemetry.io/docs/specs/otlp/) over HTTP.
 Uses the [Direct to Collector](https://opentelemetry.io/docs/specs/otel/logs/#direct-to-collector)
 approach with the [Logs SDK](https://opentelemetry.io/docs/specs/otel/logs/sdk/)
 and [Logging bridge](https://pkg.go.dev/go.opentelemetry.io/contrib/bridges/otelslog).
 
+The motivation for this project is to be able to ingest
+network flow logs from Calico into Log Analysis or SIEM
+tools using the vendor-agnostic OTLP format. The exporter
+makes no attempt to change the structure of the protobuf
+payload received from Goldmane, with the exception of
+converting enum values to strings.
+
 Compatibility:
 
-|Calico version|Tested|
-|:---|:---|
-|`3.30`|yes|
-|`3.31`|no|
+|Calico version|Tested|Compatible|
+|:---|:---|:---|
+|`3.30`|Yes|Yes|
+|`3.31`|No|Unknown|
 
 ## Installation
 
