@@ -4,15 +4,14 @@ receivers:
       http:
         endpoint: 0.0.0.0:4318
 
-processors:
-  transform:
-    error_mode: propagate
-    # Uncomment the lines below if you want
-    # to transform the logs to JSON as part
-    # of the processor.
-    #
-    # log_statements:
-    #   - set(log.body, ParseJSON(log.body))
+# Uncomment the lines below if you want
+# to transform the logs to JSON as part
+# of the processor.
+# processors:
+#   transform:
+#     error_mode: propagate
+#     log_statements:
+#       - set(log.body, ParseJSON(log.body))
 
 exporters:
   debug:
@@ -24,5 +23,8 @@ service:
   pipelines:
     logs:
       receivers: [otlp]
-      processors: [transform]
+      # Uncomment the lines below if you want
+      # to transform the logs to JSON as part
+      # of the processor.
+      # processors: [transform]
       exporters: [debug, otlphttp]
