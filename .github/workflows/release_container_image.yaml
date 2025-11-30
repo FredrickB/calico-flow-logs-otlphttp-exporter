@@ -1,4 +1,4 @@
-name: Build container image and git tag
+name: Release container image
 
 on:
   push:
@@ -9,7 +9,7 @@ env:
   IMAGE_NAME: ${{ github.repository }}
 
 jobs:
-  create-container-image-and-git-tag:
+  release:
     runs-on: ubuntu-latest
     permissions:
       contents: write
