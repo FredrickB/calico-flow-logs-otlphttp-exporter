@@ -7,8 +7,12 @@ receivers:
 processors:
   transform:
     error_mode: propagate
-    log_statements:
-      - set(log.body, ParseJSON(log.body))
+    # Uncomment the lines below if you want
+    # to transform the logs to JSON as part
+    # of the processor.
+    #
+    # log_statements:
+    #   - set(log.body, ParseJSON(log.body))
 
 exporters:
   debug:
