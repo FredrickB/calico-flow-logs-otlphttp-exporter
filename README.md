@@ -25,7 +25,7 @@ Compatibility:
     read -s ACCESS_TOKEN
     <Paste Personal Access Token with read-only access for repository content>
     ```
-1. Setup private Helm chart repository:
+1. Setup Helm chart repository:
     ```bash
     helm repo add \
         --username ghp \
