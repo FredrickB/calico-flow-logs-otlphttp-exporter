@@ -19,7 +19,7 @@ entries:
     name: calico-flow-logs-otlphttp-exporter
     type: application
     urls:
-    - https://github.com/FredrickB/calico-flow-logs-otlphttp-exporter/releases/download/calico-flow-logs-otlphttp-exporter-0.1.1/calico-flow-logs-otlphttp-exporter-0.1.1.tgz
+    - calico-flow-logs-otlphttp-exporter-0.1.1.tgz
     version: 0.1.1
   - apiVersion: v2
     appVersion: 0.4.2
@@ -29,6 +29,6 @@ entries:
     name: calico-flow-logs-otlphttp-exporter
     type: application
     urls:
-    - https://github.com/FredrickB/calico-flow-logs-otlphttp-exporter/releases/download/calico-flow-logs-otlphttp-exporter-0.1.0/calico-flow-logs-otlphttp-exporter-0.1.0.tgz
+    - calico-flow-logs-otlphttp-exporter-0.1.0.tgz
     version: 0.1.0
 generated: "2025-11-30T15:16:55.3474087Z"
