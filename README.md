@@ -16,6 +16,33 @@ Compatibility:
 |`3.30`|yes|
 |`3.31`|no|
 
+## Running
+
+### Helm
+
+1. Login to GitHub Packages private chart repository
+    ```bash
+    read -s ACCESS_TOKEN
+    <Paste Personal Access Token with read-only access for repository content>
+    ```
+1. Setup private Helm chart repository:
+    ```bash
+    helm repo add \
+        --username ghp \
+        --password $ACCESS_TOKEN \
+        calico-flow-logs-otlphttp-exporter \
+        https://raw.githubusercontent.com/FredrickB/calico-flow-logs-otlphttp-exporter/gh-pages \
+    helm repo update
+    ```
+1. Install Helm release:
+    ```bash
+    helm upgrade \
+        --install \
+        -n calico-system \
+        calico-flow-logs-otlphttp-exporter \
+        calico-flow-logs-otlphttp-exporter/calico-flow-logs-otlphttp-exporter
+    ```
+
 ## Development
 
 ### Prerequisites
