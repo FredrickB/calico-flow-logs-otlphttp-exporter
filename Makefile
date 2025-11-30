@@ -104,4 +104,4 @@ install-helm-chart:
 		--install \
 		-n $(GOLDMANE_NAMESPACE) \
 		-f hack/charts/override.yaml \
-		$(GO_PROGRAM) ./charts
+		$(GO_PROGRAM) ./charts/$(GO_PROGRAM)
