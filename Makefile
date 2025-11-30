@@ -10,6 +10,7 @@ GO_PROGRAM=calico-flow-logs-otlphttp-exporter
 OUT_DIR=out
 CONTAINER_WOKRDIR=/build
 TAG=0.0.1-development.1
+HELM_CHART_REGISTRY_URL=https://raw.githubusercontent.com/FredrickB/calico-flow-logs-otlphttp-exporter/gh-pages
 
 .PHONY : \
 clean \
@@ -23,7 +24,9 @@ docker-compose-up \
 run \
 run-built-binary \
 run-container \
-install-helm-chart
+install-helm-chart-from-local-dir \
+setup-private-helm-chart-repository \
+install-helm-chart-from-private-chart-repository
 
 all: clean install-development-packages fetch-protobuf-definition generate-code-from-protobuf build
 .PHONY : all
@@ -38,7 +41,6 @@ install-development-packages:
 fetch-protobuf-definition:
 	mkdir -p $(PROTOBUF_DEFINITIONS_DIR)
 	curl -sL https://raw.githubusercontent.com/projectcalico/calico/refs/tags/$(GOLDMANE_PROTO_VERSION)/goldmane/proto/api.proto -o $(PROTOBUF_DEFINITIONS_DIR)/api.proto
-	# sed -i -E "s/option go_package.*;/option go_package = \"\.\/internal\/goldmane\";/g" $(PROTOBUF_DEFINITIONS_DIR)/api.proto
 
 generate-code-from-protobuf:
 	which protoc > /dev/null || (echo "protoc not in PATH" && exit 1)
@@ -99,9 +101,25 @@ run-container: build-container-image
 		-e OTEL_EXPORTER_OTLP_ENDPOINT=$(OTEL_EXPORTER_OTLP_ENDPOINT) \
 		-it $(GO_PROGRAM):$(TAG)
 
-install-helm-chart:
+install-helm-chart-from-local-dir:
 	helm upgrade \
 		--install \
 		-n $(GOLDMANE_NAMESPACE) \
 		-f hack/charts/$(GO_PROGRAM)/override.yaml \
 		$(GO_PROGRAM) ./charts/$(GO_PROGRAM)
+
+setup-private-helm-chart-repository:
+	if [ -z $${ACCESS_TOKEN:+x} ]; then (echo "Set ACCESS_TOKEN to Personal Access token with read access to repo contents" && exit 1); fi
+	helm repo add \
+		--username ghp \
+		--password $$ACCESS_TOKEN \
+		$(GO_PROGRAM) \
+		$(HELM_CHART_REGISTRY_URL)
+	helm repo update
+
+install-helm-chart-from-private-chart-repository:
+	helm upgrade \
+		--install \
+		-n $(GOLDMANE_NAMESPACE) \
+		-f hack/charts/$(GO_PROGRAM)/override.yaml \
+		$(GO_PROGRAM) $(GO_PROGRAM)/$(GO_PROGRAM)
