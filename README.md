@@ -38,7 +38,7 @@ Compatibility:
     ```bash
     helm upgrade \
         --install \
-        -n calico-system \
+        --namespace calico-system \
         calico-flow-logs-otlphttp-exporter \
         calico-flow-logs-otlphttp-exporter/calico-flow-logs-otlphttp-exporter
     ```
