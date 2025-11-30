@@ -20,7 +20,7 @@ Compatibility:
 
 ### Helm
 
-1. Copy and adapt `hack/charts/calico-flow-logs-otlphttp-exporter/override.yaml` to your setup
+1. Copy and adapt `hack/charts/calico-flow-logs-otlphttp-exporter/override.yaml`
 1. Create ImagePullSecret:
     ```bash
     docker login ghcr.io -u ghp
