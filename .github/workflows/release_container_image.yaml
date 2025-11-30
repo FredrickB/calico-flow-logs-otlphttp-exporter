@@ -33,7 +33,6 @@ jobs:
         with:
           token: ${{ github.token }}
           branch: main
-          noVersionBumpBehavior: silent
 
       - name: Extract metadata (tags, labels)
         id: meta
