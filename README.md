@@ -16,7 +16,7 @@ Compatibility:
 |`3.30`|yes|
 |`3.31`|no|
 
-## Running
+## Installation
 
 ### Helm
 
