@@ -26,7 +26,7 @@ Compatibility:
     <Paste Personal Access Token with read-only access to GitHub Packages>
     kubectl create secret generic \
         --namespace calico-system \
-        ghcr-io-regcred \
+        calico-flow-logs-otlphttp-exporter-regcred \
         --from-file=.dockerconfigjson=$HOME/.docker/config.json \
         --type kubernetes.io/dockerconfigjson
     ```
