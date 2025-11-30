@@ -20,6 +20,7 @@ Compatibility:
 
 ### Helm
 
+1. Copy and adapt `hack/charts/calico-flow-logs-otlphttp-exporter/override.yaml` to your setup
 1. Create ImagePullSecret:
     ```bash
     docker login ghcr.io -u ghp
@@ -30,7 +31,7 @@ Compatibility:
         --from-file=.dockerconfigjson=$HOME/.docker/config.json \
         --type kubernetes.io/dockerconfigjson
     ```
-1. Login to GitHub Packages private chart repository
+1. Set GitHub Access Token
     ```bash
     read -s ACCESS_TOKEN
     <Paste Personal Access Token with read-only access to repository content>
