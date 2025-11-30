@@ -20,10 +20,20 @@ Compatibility:
 
 ### Helm
 
+1. Create ImagePullSecret:
+    ```bash
+    docker login ghcr.io -u ghp
+    <Paste Personal Access Token with read-only access to GitHub Packages>
+    kubectl create secret generic \
+        --namespace calico-system \
+        ghcr-io-regcred \
+        --from-file=.dockerconfigjson=$HOME/.docker/config.json \
+        --type kubernetes.io/dockerconfigjson
+    ```
 1. Login to GitHub Packages private chart repository
     ```bash
     read -s ACCESS_TOKEN
-    <Paste Personal Access Token with read-only access for repository content>
+    <Paste Personal Access Token with read-only access to repository content>
     ```
 1. Setup Helm chart repository:
     ```bash
