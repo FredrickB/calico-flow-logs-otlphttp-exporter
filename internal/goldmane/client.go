@@ -47,7 +47,7 @@ func (client *GoldmaneClient) GetFlow(context context.Context) (*pb.FlowListResu
 	return list, nil
 }
 
-func (client *GoldmaneClient) StreamFlows(context context.Context) (<-chan *pb.Flow, error) {
+func (client *GoldmaneClient) StreamFlows(context context.Context, done chan<- bool) (<-chan *pb.Flow, error) {
 	stream, err := client.flowCollectorClient.Stream(context, &pb.FlowStreamRequest{})
 
 	if err != nil {
@@ -62,6 +62,7 @@ func (client *GoldmaneClient) StreamFlows(context context.Context) (<-chan *pb.F
 			case <-context.Done():
 				log.Println("Context done, closing channel, terminating goroutine")
 				close(data)
+				done <- true
 				return
 			default:
 				var flowResult pb.FlowResult
@@ -69,10 +70,14 @@ func (client *GoldmaneClient) StreamFlows(context context.Context) (<-chan *pb.F
 				if err == io.EOF {
 					log.Printf("Received EOF, closing channel")
 					close(data)
+					done <- true
+					return
 				}
 				if err != nil {
 					log.Printf("Failed to receive message. Error: %s, closing channel", err)
 					close(data)
+					done <- true
+					return
 				}
 				data <- flowResult.Flow
 			}
