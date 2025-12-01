@@ -40,6 +40,8 @@ jobs:
         with:
           token: ${{ github.token }}
           branch: main
+          # only match semver tags, not chart release tags
+          prefix: v
 
       - name: Extract metadata (tags, labels)
         id: meta
