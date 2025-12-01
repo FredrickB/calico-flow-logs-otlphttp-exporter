@@ -53,36 +53,55 @@ func main() {
 
 	context, cancel := context.WithCancel(context.Background())
 
-	// create logger
 	logger, err := otlp.NewLogger(context, PACKAGE_NAME, SERVICE_NAME, SERVICE_VERSION)
 	if err != nil {
 		log.Fatalf("Error while creating logger: %s", err)
 	}
 
-	// register signals to terminate application
 	signals := make(chan os.Signal)
 	signal.Notify(signals, syscall.SIGINT, syscall.SIGTERM)
-	done := make(chan bool)
-
-	go func() {
-		<-signals
-
-		// trigger cleanup
-		log.Println("Termination signal received, triggering cleanup...")
-		util.Cleanup(context, client, logger)
-		cancel()
-		log.Println("Cleanup finished")
-
-		// trigger termination
-		done <- true
-	}()
 
 	log.Println("Start streaming logs from Goldmane...")
-	err = util.StartLogStreaming(context, client, logger)
+	streamClosed, err := util.StartLogStreaming(context, client, logger)
 	if err != nil {
 		log.Fatalf("Failed to start streaming logs: %s", err)
 	}
 
+	done := make(chan bool)
+	go monitor(context, client, signals, streamClosed, done, cancel, logger)
 	<-done
+
 	log.Println("Program terminated")
+}
+
+// monitor execution and cleanup when
+// stream is closed or termination
+// signal is received
+func monitor(
+	context context.Context,
+	client *goldmane.GoldmaneClient,
+	signals chan os.Signal,
+	streamClosed chan bool,
+	done chan bool,
+	cancel func(),
+	logger *otlp.Logger,
+) {
+	for {
+		select {
+		case <-signals:
+			log.Println("Termination signal received, triggering cleanup...")
+			util.Cleanup(context, client, logger)
+			cancel()
+			log.Println("Cleanup finished")
+			done <- true
+			return
+		case <-streamClosed:
+			log.Println("Stream closed, triggering cleanup...")
+			util.Cleanup(context, client, logger)
+			cancel()
+			log.Println("Cleanup finished")
+			done <- true
+			return
+		}
+	}
 }

@@ -34,16 +34,16 @@ func (l *Logger) ReceiveFlows(context context.Context, receiver <-chan *pb.Flow)
 		for {
 			select {
 			case <-context.Done():
-				log.Printf("Cancellation invoked. Stopping")
+				log.Printf("Cancellation invoked, stopping log forwarding")
 				return
 			case flow, ok := <-receiver:
 				if !ok {
-					log.Println("Data channel closed. Stopping")
+					log.Println("Data channel closed, stopping log forwarding")
 					return
 				}
 				jsonFlow, err := protojson.Marshal(flow)
 				if err != nil {
-					log.Printf("Failed to marshal flow: %+v to JSON. Error: %s. Skipping", flow, err)
+					log.Printf("Failed to marshal flow: %+v to JSON. Error: %s. Skipping log", flow, err)
 					continue
 				}
 				l.logger.Log(context, slog.LevelInfo, string(jsonFlow))
