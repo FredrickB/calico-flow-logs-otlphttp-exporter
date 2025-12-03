@@ -29,3 +29,7 @@ func Cleanup(context context.Context, client *goldmane.GoldmaneClient, logger *o
 		log.Printf("Error while shutting down loggerProvider: %s", err)
 	}
 }
+
+func LogEnvironmentVariable(variable, value string) {
+	log.Printf("%s set to %s", variable, value)
+}

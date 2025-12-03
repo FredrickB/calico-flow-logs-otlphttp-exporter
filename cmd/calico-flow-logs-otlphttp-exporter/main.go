@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"log"
+	"log/slog"
 	"os"
 	"os/signal"
 	"syscall"
@@ -23,7 +24,8 @@ const (
 )
 
 func main() {
-	log.SetFlags(log.LstdFlags | log.Lshortfile)
+	appLogger := slog.New(slog.NewJSONHandler(os.Stdout, nil))
+	slog.SetDefault(appLogger)
 
 	// get path to certs required for Goldmane communication
 	caCertFilePath, caCertSet := os.LookupEnv(CA_CERT_PATH_ENV)
@@ -35,10 +37,10 @@ func main() {
 		log.Fatalf("One of the following environment variables is not set: %s, %s, %s, %s. All of these need to be set",
 			CA_CERT_PATH_ENV, PRIVATE_KEY_PATH_ENV, PUBLIC_CERT_PATH_ENV, GOLDMANE_HOST_ENV)
 	}
-	log.Printf("%s set to %s", CA_CERT_PATH_ENV, caCertFilePath)
-	log.Printf("%s set to %s", PRIVATE_KEY_PATH_ENV, privateKeyPath)
-	log.Printf("%s set to %s", PUBLIC_CERT_PATH_ENV, publicCertPath)
-	log.Printf("%s set to %s", GOLDMANE_HOST_ENV, goldmaneHost)
+	util.LogEnvironmentVariable(CA_CERT_PATH_ENV, caCertFilePath)
+	util.LogEnvironmentVariable(PRIVATE_KEY_PATH_ENV, privateKeyPath)
+	util.LogEnvironmentVariable(PUBLIC_CERT_PATH_ENV, publicCertPath)
+	util.LogEnvironmentVariable(GOLDMANE_HOST_ENV, goldmaneHost)
 
 	// create Goldmane client
 	client, err := goldmane.NewClient(
@@ -53,7 +55,7 @@ func main() {
 
 	context, cancel := context.WithCancel(context.Background())
 
-	logger, err := otlp.NewLogger(context, PACKAGE_NAME, SERVICE_NAME, SERVICE_VERSION)
+	otlpLogger, err := otlp.NewLogger(context, PACKAGE_NAME, SERVICE_NAME, SERVICE_VERSION)
 	if err != nil {
 		log.Fatalf("Error while creating logger: %s", err)
 	}
@@ -62,13 +64,13 @@ func main() {
 	signal.Notify(signals, syscall.SIGINT, syscall.SIGTERM)
 
 	log.Println("Start streaming logs from Goldmane...")
-	streamClosed, err := util.StartLogStreaming(context, client, logger)
+	streamClosed, err := util.StartLogStreaming(context, client, otlpLogger)
 	if err != nil {
 		log.Fatalf("Failed to start streaming logs: %s", err)
 	}
 
 	done := make(chan bool)
-	go monitor(context, client, signals, streamClosed, done, cancel, logger)
+	go monitor(context, client, signals, streamClosed, done, cancel, otlpLogger)
 	<-done
 
 	log.Println("Program terminated")
