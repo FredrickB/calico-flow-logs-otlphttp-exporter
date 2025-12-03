@@ -30,6 +30,6 @@ func Cleanup(context context.Context, client *goldmane.GoldmaneClient, logger *o
 	}
 }
 
-func LogEnvironmentVariable(variable string, value string) {
+func LogEnvironmentVariable(variable, value string) {
 	log.Printf("%s set to %s", variable, value)
 }
