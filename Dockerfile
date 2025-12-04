@@ -7,5 +7,9 @@ RUN make install-development-packages generate-code-from-protobuf build
 
 FROM alpine:3.22 AS app
 
-COPY --from=build /build/out/calico-flow-logs-otlphttp-exporter /bin/calico-flow-logs-otlphttp-exporter
-ENTRYPOINT ["sh", "-c", "/bin/calico-flow-logs-otlphttp-exporter"]
+WORKDIR /app
+RUN adduser -S exporter
+COPY --from=build /build/out/calico-flow-logs-otlphttp-exporter /app/calico-flow-logs-otlphttp-exporter
+RUN chown -R exporter /app
+USER exporter
+ENTRYPOINT ["sh", "-c", "/app/calico-flow-logs-otlphttp-exporter"]
