@@ -2,6 +2,16 @@ apiVersion: v1
 entries:
   calico-flow-logs-otlphttp-exporter:
   - apiVersion: v2
+    appVersion: 0.7.0
+    created: "2025-12-04T16:31:51.283065366Z"
+    description: Stream network flow logs from Calico to OTLP-compatible HTTP endpoint
+    digest: 985da042f6352f6b6c382886f643d4fdbcec7e457c1c988840400a5cde6db49f
+    name: calico-flow-logs-otlphttp-exporter
+    type: application
+    urls:
+    - calico-flow-logs-otlphttp-exporter-0.3.0.tgz
+    version: 0.3.0
+  - apiVersion: v2
     appVersion: 0.6.0
     created: "2025-12-03T16:47:42.315251101Z"
     description: Stream network flow logs from Calico to OTLP-compatible HTTP endpoint
@@ -51,4 +61,4 @@ entries:
     urls:
     - calico-flow-logs-otlphttp-exporter-0.1.0.tgz
     version: 0.1.0
-generated: "2025-12-03T16:47:42.315269645Z"
+generated: "2025-12-04T16:31:51.283090854Z"
