@@ -15,6 +15,21 @@ makes no attempt to change the structure of the protobuf
 payload received from Goldmane, with the exception of
 converting enum values to strings.
 
+Example output from the OpenTelemetry Collector debug
+exporter (no processor applied):
+
+```log
+Trace ID:
+Span ID:
+Flags: 0
+LogRecord #159
+ObservedTimestamp: 2025-12-05 21:41:14.743069595 +0000 UTC
+Timestamp: 2025-12-05 21:41:14.743069258 +0000 UTC
+SeverityText: INFO
+SeverityNumber: Info(9)
+Body: Str({"Key":{"sourceName":"longhorn-manager-*","sourceNamespace":"longhorn-system","sourceType":"WorkloadEndpoint" "destName":"instance-manager-318f1eac2bc7c775b7a6d2e68e9e2800","destNamespace":"longhorn-system","destType":"WorkloadEndpoint","destPort":"8503","destServiceName":"-","destServiceNamespace":"-","destServicePortName":"-","proto":"tcp","reporter":"Src","action":"Allow","policies":{"enforcedPolicies":[{"kind":"CalicoNetworkPolicy","namespace":"longhorn-system","name":"allow-same-namespace","tier":"default","action":"Allow"}],"pendingPolicies":[{"kind":"CalicoNetworkPolicy","namespace":"longhorn-system","name":"allow-same-namespace","tier":"default","action":"Allow"}]}},"startTime":"1764970845","endTime":"1764970860","sourceLabels":["app.kubernetes.io/instance=longhorn","app.kubernetes.io/managed-by=Helm","app.kubernetes.io/name=longhorn","app.kubernetes.io/version=v1.8.1","app=longhorn-manager","controller-revision-hash=5bb8c89b95","helm.sh/chart=longhorn-1.8.1","longhorn.io/admission-webhook=long horn-admission-webhook","longhorn.io/conversion-webhook=longhorn-conversion-webhook","longhorn.io/recovery-backend=longhorn-recovery-backend","pod-template-generation=2"],"destLabels":["longhorn.io/component=instance-manager","longhorn.io/data-engine=v1","longhorn.io/instance-manager-image=imi-7d4dc4d4","longhorn.io/instance-manager-type=aio","longhorn.io/managed-by=longhorn-manager","longhorn.io/node=k8s-worker-2"],"packetsIn":"11","packetsOut":"14","bytesIn":"957","bytesOut":"1226","numConnectionsStarted":"1","numConnectionsCompleted":"1","numConnectionsLive":"1"})
+```
+
 Compatibility:
 
 |Calico version|Tested|Compatible|
