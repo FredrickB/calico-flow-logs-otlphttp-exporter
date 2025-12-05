@@ -1,6 +1,6 @@
 FROM golang:1.24-alpine AS build
 
-ARG VERSION="REPLACED_DURING_BUILD"
+ARG VERSION="REPLACE_ME"
 
 RUN apk add --no-cache make protoc curl
 WORKDIR /build
