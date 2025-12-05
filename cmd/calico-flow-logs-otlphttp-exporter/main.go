@@ -91,19 +91,22 @@ func monitor(
 	for {
 		select {
 		case <-signals:
-			log.Println("Termination signal received, triggering cleanup...")
-			util.Cleanup(context, client, logger)
-			cancel()
-			log.Println("Cleanup finished")
+			log.Println("Termination signal received")
+			cleanup(context, client, logger, cancel)
 			done <- true
 			return
 		case <-streamClosed:
-			log.Println("Stream closed, triggering cleanup...")
-			util.Cleanup(context, client, logger)
-			cancel()
-			log.Println("Cleanup finished")
+			log.Println("Stream closed")
+			cleanup(context, client, logger, cancel)
 			done <- true
 			return
 		}
 	}
+}
+
+func cleanup(context context.Context, client *goldmane.GoldmaneClient, logger *otlp.Logger, cancel func()) {
+	log.Println("Triggering cleanup...")
+	util.Cleanup(context, client, logger)
+	cancel()
+	log.Println("Cleanup finished")
 }
