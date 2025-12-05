@@ -90,6 +90,11 @@ func monitor(
 ) {
 	for {
 		select {
+		case <-context.Done():
+			log.Println("Context done")
+			cleanup(context, client, logger, cancel)
+			done <- true
+			return
 		case <-signals:
 			log.Println("Termination signal received")
 			cleanup(context, client, logger, cancel)
