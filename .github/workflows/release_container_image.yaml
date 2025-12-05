@@ -59,10 +59,12 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+          build-args: |
+            VERSION=${{ steps.semver.outputs.nextStrict }}
 
       - name: Push new git tag
         run: |
-          git config user.name "GitHub Actions"
-          git config user.email "github-actions@users.noreply.github.com"
+          git config user.name "$GITHUB_ACTOR"
+          git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
           git tag ${{ steps.semver.outputs.next }}
           git push origin ${{ steps.semver.outputs.next }}

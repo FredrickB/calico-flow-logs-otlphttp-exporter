@@ -20,7 +20,7 @@ const (
 	GOLDMANE_HOST_ENV    string = "GOLDMANE_HOST"
 	PACKAGE_NAME         string = "calico-flow-logs-otlphttp-exporter"
 	SERVICE_NAME         string = "calico-flow-logs-otlphttp-exporter"
-	SERVICE_VERSION      string = "0.0.1"
+	SERVICE_VERSION      string = "REPLACED_DURING_BUILD"
 )
 
 func main() {

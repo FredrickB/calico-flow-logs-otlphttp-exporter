@@ -86,7 +86,7 @@ run-built-binary:
 	./$(OUT_DIR)/$(GO_PROGRAM)
 
 build-container-image:
-	docker build -t $(GO_PROGRAM):$(TAG) .
+	docker build --build-arg VERSION=$(TAG) -t $(GO_PROGRAM):$(TAG) .
 
 run-container: build-container-image
 	docker run \
