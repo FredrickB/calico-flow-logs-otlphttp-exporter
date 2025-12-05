@@ -1,6 +1,6 @@
 # calico-flow-logs-otlphttp-exporter
 
-**Currently in development, things will break, use at your own risk**
+**Currently in development, use at your own risk**
 
 Export network flow logs from [Calico](https://docs.tigera.io/calico/latest/observability/flow-logs-api)
 using [OTLP](https://opentelemetry.io/docs/specs/otlp/) over HTTP.
