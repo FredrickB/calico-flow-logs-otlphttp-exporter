@@ -120,6 +120,12 @@ graph TB
 
 ### Helm
 
+> The default installation uses Goldmanes own certificates for mTLS
+> between calico-flow-logs-otlphttp-exporter and Goldmane, this
+> is not a recommended practice. See the
+> [Calico documentation](https://docs.tigera.io/calico/latest/operations/certificate-management)
+> for recommended methods to secure communication using certificates.
+
 1. Create ImagePullSecret:
     ```bash
     docker login ghcr.io -u ghp
