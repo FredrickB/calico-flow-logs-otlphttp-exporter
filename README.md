@@ -270,4 +270,24 @@ Log HTTP exporter, see the [official documentation](https://pkg.go.dev/go.opente
 ## Contributors
 
 <!-- readme: erikroed,collaborators,contributors/ -start -->
+<table>
+	<tbody>
+		<tr>
+            <td align="center">
+                <a href="https://github.com/erikroed">
+                    <img src="https://avatars.githubusercontent.com/u/8682706?v=4" width="100;" alt="erikroed"/>
+                    <br />
+                    <sub><b>Erik</b></sub>
+                </a>
+            </td>
+            <td align="center">
+                <a href="https://github.com/FredrickB">
+                    <img src="https://avatars.githubusercontent.com/u/8116958?v=4" width="100;" alt="FredrickB"/>
+                    <br />
+                    <sub><b>Fredrick Biering</b></sub>
+                </a>
+            </td>
+		</tr>
+	<tbody>
+</table>
 <!-- readme: erikroed,collaborators,contributors/ -end -->
