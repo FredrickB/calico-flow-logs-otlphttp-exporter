@@ -11,8 +11,13 @@ and [Logging bridge](https://pkg.go.dev/go.opentelemetry.io/contrib/bridges/otel
 
 The motivation for this project is to be able to ingest
 network flow logs from Calico into Log Analysis or SIEM
-tools using the vendor agnostic OTLP format. The exporter
-does not modify the payload from Goldmane.
+tools using the vendor agnostic OTLP format. This will
+allow for Security teams/SOC to have insight into
+Kubernetes-aware network flows. The idea for the project
+originates from [this blogpost](https://www.tigera.io/blog/calico-open-source-3-30-exploring-the-goldmane-api-for-custom-kubernetes-network-observability/).
+
+The exporter does not modify the payload from Goldmane apart
+from converting numerical enums to strings.
 
 Example output:
 
@@ -171,13 +176,14 @@ graph TB
 
 ### Prerequisites
 
+- `go` >= `1.24`
+- `protoc` >= `3.21.12`
 - `make`
-- `protoc`, `3.21.12`
 - `kubectl`
 - `base64`
-- `docker`
-- Calico
-- Goldmane running in namespace `calico-system`
+- `docker` >= `28.2.1`
+- Calico ([installation documentation](https://docs.tigera.io/calico/latest/getting-started/))
+- Goldmane running in namespace `calico-system` ([installation documentation](https://docs.tigera.io/calico/latest/observability/enable-whisker#enable-the-flow-logs-api))
 
 ### Setup
 
