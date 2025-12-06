@@ -13,8 +13,8 @@ The motivation for this project is to be able to ingest
 network flow logs from Calico into Log Analysis or SIEM
 tools using the vendor agnostic OTLP format. This will
 allow for Security teams/SOC to have insight into
-Kubernetes-aware network flows. The idea for the project
-originates from [this blogpost](https://www.tigera.io/blog/calico-open-source-3-30-exploring-the-goldmane-api-for-custom-kubernetes-network-observability/).
+Kubernetes-contextual network flows. The idea for the
+project originates from [this blogpost](https://www.tigera.io/blog/calico-open-source-3-30-exploring-the-goldmane-api-for-custom-kubernetes-network-observability/).
 
 The exporter does not modify the payload from Goldmane apart
 from converting numerical enums to strings.
@@ -266,3 +266,8 @@ approach in production environments, this is just for development.
 
 To see a list of all environment variables which can be set for the OTLP
 Log HTTP exporter, see the [official documentation](https://pkg.go.dev/go.opentelemetry.io/otel/exporters/otlp/otlplog/otlploghttp)
+
+## Contributors
+
+<!-- readme: erikroed,collaborators,contributors/ -start -->
+<!-- readme: erikroed,collaborators,contributors/ -end -->

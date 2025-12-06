@@ -1,0 +1,18 @@
+name: "Add contributors to README.md"
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  contrib-readme:
+    runs-on: ubuntu-latest
+    name: Automate contrib in README.md
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - name: Contribute List
+        uses: akhilmhdh/contributors-readme-action@v2.3.11
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
