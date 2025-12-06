@@ -98,12 +98,12 @@ Search logs in Grafana using Loki as a Datasource
 after ingesting logs to the [Loki OTLP endpoint](https://grafana.com/docs/loki/latest/send-data/otel/)
 from OpenTelemetry Collector.
 
+> Using OpenTelemetry Collector as layer between the exporter and Loki
+> is optional, you can point the exporter directly at Lokis OTLP endpoint.
+
 ![Demo showing log search in Grafana using Loki as a Datasource](./docs/demo/otel_collector_loki_otlp_demo.gif)
 
 Architecture:
-
-> Using OpenTelemetry Collector as layer between the exporter and Loki
-> is optional, you can point the exporter directly at Lokis OTLP endpoint.
 
 ```mermaid
 graph TB
