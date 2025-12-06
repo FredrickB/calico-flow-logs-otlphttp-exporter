@@ -3,7 +3,7 @@
 **Currently in development, use at your own risk**
 
 Export network flow logs from [Calico](https://docs.tigera.io/calico/latest/observability/flow-logs-api)
-using [OTLP](https://opentelemetry.io/docs/specs/otlp/) over HTTP.
+using [OTLP/HTTP](https://opentelemetry.io/docs/specs/otlp/#otlphttp).
 Uses the [Direct to Collector](https://opentelemetry.io/docs/specs/otel/logs/#direct-to-collector)
 approach with the [Logs SDK](https://opentelemetry.io/docs/specs/otel/logs/sdk/)
 and [Logging bridge](https://pkg.go.dev/go.opentelemetry.io/contrib/bridges/otelslog).
