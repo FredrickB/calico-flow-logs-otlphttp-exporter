@@ -108,9 +108,9 @@ graph TB
     otel-collector[OpenTelemetry Collector]
     loki[Loki]
     grafana[Grafana]
-    exporter-->|Push logs using OTLP/HTTP to receiver|otel-collector
-    otel-collector-->|Push logs using OTLP/HTTP to exporter|loki
-    grafana-->|Consume as DataSource|loki
+    exporter-->|Push logs using OTLP/HTTP (receiver)|otel-collector
+    otel-collector-->|Push logs using OTLP/HTTP (exporter)|loki
+    grafana-->|Consume as Datasource|loki
 ```
 
 ## Installation
