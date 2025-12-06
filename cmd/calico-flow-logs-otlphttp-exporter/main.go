@@ -14,13 +14,14 @@ import (
 )
 
 const (
-	CA_CERT_PATH_ENV     string = "CA_CERT_PATH"
-	PRIVATE_KEY_PATH_ENV string = "PRIVATE_KEY_PATH"
-	PUBLIC_CERT_PATH_ENV string = "PUBLIC_CERT_PATH"
-	GOLDMANE_HOST_ENV    string = "GOLDMANE_HOST"
-	PACKAGE_NAME         string = "calico-flow-logs-otlphttp-exporter"
-	SERVICE_NAME         string = "calico-flow-logs-otlphttp-exporter"
-	SERVICE_VERSION      string = "REPLACED_DURING_BUILD"
+	CA_CERT_PATH_ENV                string = "CA_CERT_PATH"
+	PRIVATE_KEY_PATH_ENV            string = "PRIVATE_KEY_PATH"
+	PUBLIC_CERT_PATH_ENV            string = "PUBLIC_CERT_PATH"
+	GOLDMANE_HOST_ENV               string = "GOLDMANE_HOST"
+	OTEL_EXPORTER_OTLP_ENDPOINT_ENV string = "OTEL_EXPORTER_OTLP_ENDPOINT"
+	PACKAGE_NAME                    string = "calico-flow-logs-otlphttp-exporter"
+	SERVICE_NAME                    string = "calico-flow-logs-otlphttp-exporter"
+	SERVICE_VERSION                 string = "REPLACED_DURING_BUILD"
 )
 
 func main() {
@@ -32,15 +33,18 @@ func main() {
 	publicCertPath, publicCertSet := os.LookupEnv(PUBLIC_CERT_PATH_ENV)
 	privateKeyPath, privateKeySet := os.LookupEnv(PRIVATE_KEY_PATH_ENV)
 	goldmaneHost, goldmaneHostSet := os.LookupEnv(GOLDMANE_HOST_ENV)
+	// fail fast if exporter otlp endpoint is not set
+	otelExporterOtlpEndpoint, otelExporterOtlpEndpointSet := os.LookupEnv(OTEL_EXPORTER_OTLP_ENDPOINT_ENV)
 
-	if !caCertSet || !privateKeySet || !publicCertSet || !goldmaneHostSet {
-		log.Fatalf("One of the following environment variables is not set: %s, %s, %s, %s. All of these need to be set",
-			CA_CERT_PATH_ENV, PRIVATE_KEY_PATH_ENV, PUBLIC_CERT_PATH_ENV, GOLDMANE_HOST_ENV)
+	if !caCertSet || !privateKeySet || !publicCertSet || !goldmaneHostSet || !otelExporterOtlpEndpointSet {
+		log.Fatalf("One of the following environment variables is not set: %s, %s, %s, %s, %s. All of these need to be set",
+			CA_CERT_PATH_ENV, PRIVATE_KEY_PATH_ENV, PUBLIC_CERT_PATH_ENV, GOLDMANE_HOST_ENV, OTEL_EXPORTER_OTLP_ENDPOINT_ENV)
 	}
 	util.LogEnvironmentVariable(CA_CERT_PATH_ENV, caCertFilePath)
 	util.LogEnvironmentVariable(PRIVATE_KEY_PATH_ENV, privateKeyPath)
 	util.LogEnvironmentVariable(PUBLIC_CERT_PATH_ENV, publicCertPath)
 	util.LogEnvironmentVariable(GOLDMANE_HOST_ENV, goldmaneHost)
+	util.LogEnvironmentVariable(OTEL_EXPORTER_OTLP_ENDPOINT_ENV, otelExporterOtlpEndpoint)
 
 	// create Goldmane client
 	client, err := goldmane.NewClient(
