@@ -110,7 +110,7 @@ graph TB
     grafana[Grafana]
     exporter-->|Push logs using OTLP/HTTP|otel-collector
     otel-collector-->|Push logs using OTLP/HTTP|loki
-    grafana-->|Consume as Datasource|loki
+    grafana-->|Consume Datasource|loki
 ```
 
 ## Installation
