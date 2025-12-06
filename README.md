@@ -98,7 +98,7 @@ Search logs in Grafana using Loki as a Datasource
 after ingesting logs to the [Loki OTLP endpoint](https://grafana.com/docs/loki/latest/send-data/otel/)
 from OpenTelemetry Collector.
 
-![Demo showing log search in Grafana using Loki as a Datasource](docs/demo/otel_collector_loki_otlp_demo.gif)
+![Demo showing log search in Grafana using Loki as a Datasource](./docs/demo/otel_collector_loki_otlp_demo.gif)
 
 Architecture:
 
@@ -108,8 +108,8 @@ graph TB
     otel-collector[OpenTelemetry Collector]
     loki[Loki]
     grafana[Grafana]
-    exporter-->|Push logs using OTLP/HTTP|otel-collector
-    otel-collector-->|Push logs using OTLP/HTTP|loki
+    exporter-->|Push logs using OTLP/HTTP to receiver|otel-collector
+    otel-collector-->|Push logs using OTLP/HTTP to exporter|loki
     grafana-->|Consume as DataSource|loki
 ```
 
