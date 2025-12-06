@@ -1,6 +1,7 @@
 # calico-flow-logs-otlphttp-exporter
 
-**Currently in development, use at your own risk**
+> [!NOTE]
+> Currently in development, use at your own risk
 
 Export network flow logs from [Calico](https://docs.tigera.io/calico/latest/observability/flow-logs-api)
 using [OTLP/HTTP](https://opentelemetry.io/docs/specs/otlp/#otlphttp).
@@ -98,6 +99,7 @@ Search logs in Grafana using Loki as a Datasource
 after ingesting logs to the [Loki OTLP endpoint](https://grafana.com/docs/loki/latest/send-data/otel/)
 from OpenTelemetry Collector.
 
+> [!NOTE]
 > Using OpenTelemetry Collector as layer between calico-flow-logs-otlphttp-exporter
 > and Loki is optional, you can point the exporter directly at Lokis OTLP endpoint.
 
@@ -120,6 +122,7 @@ graph TB
 
 ### Helm
 
+> [!WARNING]
 > The default installation uses Goldmanes own certificates for mTLS
 > between calico-flow-logs-otlphttp-exporter and Goldmane, this
 > is not a recommended practice. See the
@@ -188,6 +191,7 @@ graph TB
 
 ### Running
 
+> [!WARNING]
 > For development we copy the certificates from a Goldmane
 deployment running in the cluster directly. Do not use this
 approach in production environments, this is just for development.
