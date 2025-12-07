@@ -23,26 +23,27 @@ const (
 	SERVICE_VERSION      string = "REPLACED_DURING_BUILD"
 )
 
+var (
+	caCertFilePath, caCertSet     = os.LookupEnv(CA_CERT_PATH_ENV)
+	publicCertPath, publicCertSet = os.LookupEnv(PUBLIC_CERT_PATH_ENV)
+	privateKeyPath, privateKeySet = os.LookupEnv(PRIVATE_KEY_PATH_ENV)
+	goldmaneHost, goldmaneHostSet = os.LookupEnv(GOLDMANE_HOST_ENV)
+)
+
 func main() {
 	appLogger := slog.New(slog.NewJSONHandler(os.Stdout, nil))
 	slog.SetDefault(appLogger)
-
-	// get path to certs required for Goldmane communication
-	caCertFilePath, caCertSet := os.LookupEnv(CA_CERT_PATH_ENV)
-	publicCertPath, publicCertSet := os.LookupEnv(PUBLIC_CERT_PATH_ENV)
-	privateKeyPath, privateKeySet := os.LookupEnv(PRIVATE_KEY_PATH_ENV)
-	goldmaneHost, goldmaneHostSet := os.LookupEnv(GOLDMANE_HOST_ENV)
 
 	if !caCertSet || !privateKeySet || !publicCertSet || !goldmaneHostSet {
 		log.Fatalf("One of the following environment variables is not set: %s, %s, %s, %s. All of these need to be set",
 			CA_CERT_PATH_ENV, PRIVATE_KEY_PATH_ENV, PUBLIC_CERT_PATH_ENV, GOLDMANE_HOST_ENV)
 	}
+
 	util.LogEnvironmentVariable(CA_CERT_PATH_ENV, caCertFilePath)
 	util.LogEnvironmentVariable(PRIVATE_KEY_PATH_ENV, privateKeyPath)
 	util.LogEnvironmentVariable(PUBLIC_CERT_PATH_ENV, publicCertPath)
 	util.LogEnvironmentVariable(GOLDMANE_HOST_ENV, goldmaneHost)
 
-	// create Goldmane client
 	client, err := goldmane.NewClient(
 		goldmaneHost,
 		caCertFilePath,
@@ -60,8 +61,8 @@ func main() {
 		log.Fatalf("Error while creating logger: %s", err)
 	}
 
-	signals := make(chan os.Signal)
-	signal.Notify(signals, syscall.SIGINT, syscall.SIGTERM)
+	signals := make(chan os.Signal, 2)
+	signal.Notify(signals, os.Interrupt, syscall.SIGTERM)
 
 	log.Println("Start streaming logs from Goldmane...")
 	streamClosed, err := util.StartLogStreaming(context, client, otlpLogger)
