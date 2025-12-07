@@ -16,8 +16,20 @@ allow for Security teams/SOC to have insight into
 Kubernetes-contextual network flows. The idea for the
 project originates from [this blogpost](https://www.tigera.io/blog/calico-open-source-3-30-exploring-the-goldmane-api-for-custom-kubernetes-network-observability/).
 
-The exporter does not modify the payload from Goldmane apart
-from converting numerical enums to strings.
+Compatibility:
+
+| Calico version | Compatible |
+| :------------- | :--------- |
+| `3.30`         | Yes        |
+| `3.31`         | Unknown    |
+
+## Datamodel
+
+The exporter forwards `Flow` in [./protos/api.proto](./protos/api.proto)
+payload. 
+
+> [!NOTE]
+> Numerical enums are converted to strings
 
 Example output:
 
@@ -90,13 +102,6 @@ Example output:
   "numConnectionsLive": "1"
 }
 ```
-
-Compatibility:
-
-| Calico version | Compatible |
-| :------------- | :--------- |
-| `3.30`         | Yes        |
-| `3.31`         | Unknown    |
 
 ## Demo
 
