@@ -53,7 +53,7 @@ Code submissions are welcome, to create a Pull Request:
 ├── certs       # Goldmane certs (only used for development)
 ├── charts      # Helm charts
 ├── cmd         # contains main.go for executables
-├── docs        # documentation (images, diagrams, etc)
+├── docs        # documentation
 ├── gen         # code generated from .proto files
 ├── go.mod
 ├── go.sum
