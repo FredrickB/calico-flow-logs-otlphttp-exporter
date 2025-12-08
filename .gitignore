@@ -2,3 +2,5 @@
 gen/
 certs/
 out/
+# Don't include output from delve
+__debug*
