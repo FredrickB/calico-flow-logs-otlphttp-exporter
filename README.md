@@ -189,7 +189,7 @@ graph TB
 - `docker` >= `28.2.1`
 - Calico ([installation documentation](https://docs.tigera.io/calico/latest/getting-started/))
 - Goldmane running in namespace `calico-system` ([installation documentation](https://docs.tigera.io/calico/latest/observability/enable-whisker#enable-the-flow-logs-api))
-- `dlv` (optional, for debugging [installation documentation](https://github.com/go-delve/delve))
+- `dlv` (optional for debugging, [installation documentation](https://github.com/go-delve/delve))
 
 ### Setup
 
