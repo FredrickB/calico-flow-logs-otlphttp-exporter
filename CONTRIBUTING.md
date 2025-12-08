@@ -58,7 +58,7 @@ Code submissions are welcome, to create a Pull Request:
 ├── go.mod
 ├── go.sum
 ├── hack        # utility dir for scripts, docker compose files, ect
-├── internal    # internal code
+├── internal    # code
 ├── out         # build output
 └── protos      # .proto files
 ```
