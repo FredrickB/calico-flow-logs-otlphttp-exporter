@@ -22,6 +22,7 @@ copy-goldmane-certs-from-kubernetes-deployment \
 port-forward-goldmane \
 docker-compose-up \
 run \
+debug \
 run-built-binary \
 run-container \
 install-helm-chart-from-local-dir \
@@ -72,7 +73,15 @@ run:
 	PUBLIC_CERT_PATH=$(GOLDMANE_CERTIFICATES_DIR)/goldmane.crt \
 	GOLDMANE_HOST=$(GOLDMANE_HOST) \
 	OTEL_EXPORTER_OTLP_ENDPOINT=$(OTEL_EXPORTER_OTLP_ENDPOINT) \
-	go run cmd/calico-flow-logs-otlphttp-exporter/main.go
+	go run cmd/$(GO_PROGRAM)/main.go
+
+debug:
+	CA_CERT_PATH=$(GOLDMANE_CERTIFICATES_DIR)/goldmane_ca.crt \
+	PRIVATE_KEY_PATH=$(GOLDMANE_CERTIFICATES_DIR)/goldmane.key \
+	PUBLIC_CERT_PATH=$(GOLDMANE_CERTIFICATES_DIR)/goldmane.crt \
+	GOLDMANE_HOST=$(GOLDMANE_HOST) \
+	OTEL_EXPORTER_OTLP_ENDPOINT=$(OTEL_EXPORTER_OTLP_ENDPOINT) \
+	dlv debug cmd/$(GO_PROGRAM)/main.go
 
 build:
 	go build -C cmd/$(GO_PROGRAM) -o ../../$(OUT_DIR)/$(GO_PROGRAM)
