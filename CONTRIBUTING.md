@@ -10,8 +10,8 @@ You're welcome to contribute to the project!
 The intention is to keep `calico-flow-logs-otlphttp-exporter`
 small and focus on doing one thing well, and that is to forward
 flow logs from Calico to anything thats compatible with OTLP/HTTP.
-Log storage, processing, transformation and exporting to other
-formats is left to tools such as
+Log storage, processing, and exporting to other formats is left to
+tools such as
 [OpenTelemetry Collector](https://opentelemetry.io/docs/collector/)
 or similar.
 
