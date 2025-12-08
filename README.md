@@ -16,7 +16,7 @@ allow for Security teams/SOC to have insight into
 Kubernetes-contextual network flows. The idea for the
 project originates from [this blogpost](https://www.tigera.io/blog/calico-open-source-3-30-exploring-the-goldmane-api-for-custom-kubernetes-network-observability/).
 
-Compatibility:
+## Compatibility matrix
 
 | Calico version | Compatible |
 | :------------- | :--------- |
