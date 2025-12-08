@@ -32,8 +32,6 @@ env:
   - name: PUBLIC_CERT_PATH
     value: "/etc/goldmane/certs/tls.crt"
 
-dsadadas
-
 volumes:
   - name: goldmane-certs
     secret:
