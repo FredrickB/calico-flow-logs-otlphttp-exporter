@@ -22,7 +22,7 @@ as issues in the repository.
 File an issue [here](https://github.com/FredrickB/calico-flow-logs-otlphttp-exporter/issues),
 provide a clear title and description.
 
-### Contributing code
+## Contributing code
 
 Code submissions are welcome, to create a Pull Request:
 
