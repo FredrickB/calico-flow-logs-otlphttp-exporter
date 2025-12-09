@@ -18,7 +18,8 @@ tools such as
 
 Bugs, feature requests, suggestions, etc are all
 recorded as issues in the repository. File an issue
-[here](https://github.com/FredrickB/calico-flow-logs-otlphttp-exporter/issues), provide a clear title and description.
+[here](https://github.com/FredrickB/calico-flow-logs-otlphttp-exporter/issues),
+provide a clear title and description.
 
 ## Contributing code
 
@@ -30,13 +31,17 @@ To contribute:
 1. Setup a development environment: [README.md#development](./README.md#development)
 1. Implement changes in a branch reflecting the change (bug, feature, etc)
    1. Use [Conventional Commits](https://www.conventionalcommits.org/)
-   1. Adhere to the [CONTRIBUTING.md#project-structure](./CONTRIBUTING.md#project-structure) when making changes
+   1. Adhere to the [CONTRIBUTING.md#project-structure](./CONTRIBUTING.md#project-structure)
+   when making changes
 1. Ensure changes work with all versions of Calico in the
-[README.md#compatibility-matrix](./README.md#compatibility-matrix) marked `Yes` in the `Compatible` column
+[README.md#compatibility-matrix](./README.md#compatibility-matrix)
+marked `Yes` in the `Compatible` column
    1. Ensure that the [README.md#datamodel](./README.md#datamodel)
    still reflects the structure of the logs
 1. Bump `version` and `appVersion` in the
-[Chart.yaml](./charts/calico-flow-logs-otlphttp-exporter/Chart.yaml) in a separate pull request once the new container image version has been released. **Releases of the Helm chart should _only_ use `chore` from
+[Chart.yaml](./charts/calico-flow-logs-otlphttp-exporter/Chart.yaml) in a separate
+pull request once the new container image version has been released.
+**Releases of the Helm chart should _only_ use `chore` from
    [Conventional Commits](https://www.conventionalcommits.org/)**
 1. Ensure build passes without any errors: `make`
 1. Ensure workflows for linting and CI pass
