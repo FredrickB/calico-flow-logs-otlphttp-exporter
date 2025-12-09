@@ -22,6 +22,7 @@ copy-goldmane-certs-from-kubernetes-deployment \
 port-forward-goldmane \
 docker-compose-up \
 run \
+lint \
 debug \
 run-built-binary \
 run-container \
@@ -29,7 +30,7 @@ install-helm-chart-from-local-dir \
 setup-private-helm-chart-repository \
 install-helm-chart-from-private-chart-repository
 
-all: clean install-development-packages fetch-protobuf-definition generate-code-from-protobuf build
+all: clean install-development-packages fetch-protobuf-definition generate-code-from-protobuf lint build
 .PHONY : all
 
 clean:
@@ -82,6 +83,9 @@ debug:
 	GOLDMANE_HOST=$(GOLDMANE_HOST) \
 	OTEL_EXPORTER_OTLP_ENDPOINT=$(OTEL_EXPORTER_OTLP_ENDPOINT) \
 	dlv debug cmd/$(GO_PROGRAM)/main.go
+
+lint:
+	gofmt -l .
 
 build:
 	go build -C cmd/$(GO_PROGRAM) -o ../../$(OUT_DIR)/$(GO_PROGRAM)

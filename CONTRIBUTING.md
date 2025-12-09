@@ -38,6 +38,7 @@ To contribute:
 1. Bump `version` and `appVersion` in the
 [Chart.yaml](./charts/calico-flow-logs-otlphttp-exporter/Chart.yaml) in a separate pull request once the new container image version has been released. **Releases of the Helm chart should _only_ use `chore` from
    [Conventional Commits](https://www.conventionalcommits.org/)**
+1. Ensure build passes without any errors: `make`
 1. Ensure workflows for linting and CI pass
 1. Update the documentation if necessary
 1. Create a Pull Request to `main` from your fork
