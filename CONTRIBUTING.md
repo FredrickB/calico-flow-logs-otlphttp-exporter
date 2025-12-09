@@ -16,14 +16,15 @@ tools such as
 
 ## Creating an issue
 
-Bugs, feature requests, suggestions, etc are all recorded
-as issues in the repository.
-File an issue [here](https://github.com/FredrickB/calico-flow-logs-otlphttp-exporter/issues),
-provide a clear title and description.
+Bugs, feature requests, suggestions, etc are all
+recorded as issues in the repository. File an issue
+[here](https://github.com/FredrickB/calico-flow-logs-otlphttp-exporter/issues), provide a clear title and description.
 
 ## Contributing code
 
-Code submissions are welcome, to create a Pull Request:
+Code submissions are welcome.
+
+To contribute:
 
 1. Fork the repository from the `main` branch
 1. Setup a development environment: [README.md#development](./README.md#development)
@@ -34,8 +35,9 @@ Code submissions are welcome, to create a Pull Request:
 [README.md#compatibility-matrix](./README.md#compatibility-matrix) marked `Yes` in the `Compatible` column
    1. Ensure that the [README.md#datamodel](./README.md#datamodel)
    still reflects the structure of the logs
-1. Bump the `Chart.version` and `Chart.appVersion` in the
-[Chart.yaml](./charts/calico-flow-logs-otlphttp-exporter/Chart.yaml) in a separate pull request once the new container image version has been released
+1. Bump `version` and `appVersion` in the
+[Chart.yaml](./charts/calico-flow-logs-otlphttp-exporter/Chart.yaml) in a separate pull request once the new container image version has been released. **Releases of the Helm chart should _only_ use `chore` from
+   [Conventional Commits](https://www.conventionalcommits.org/)**
 1. Ensure workflows for linting and CI pass
 1. Update the documentation if necessary
 1. Create a Pull Request to `main` from your fork
@@ -57,7 +59,7 @@ Code submissions are welcome, to create a Pull Request:
 ├── go.mod
 ├── go.sum
 ├── hack        # utility dir for scripts, docker compose files, ect
-├── internal    # code
+├── internal    # all code should be here
 ├── out         # build output
 └── protos      # .proto files
 ```
