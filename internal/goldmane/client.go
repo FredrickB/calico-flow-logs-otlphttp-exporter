@@ -13,10 +13,6 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-const (
-	BACKOFF = 5 * time.Second
-)
-
 type GoldmaneClient struct {
 	connection          *grpc.ClientConn
 	flowCollectorClient pb.FlowsClient
@@ -45,7 +41,7 @@ func (client *GoldmaneClient) Close() error {
 	return client.connection.Close()
 }
 
-func (client *GoldmaneClient) StreamFlows(context context.Context, done chan<- bool) (<-chan *pb.Flow, error) {
+func (client *GoldmaneClient) StreamFlows(context context.Context, done chan<- bool, reconnectWaitTime time.Duration) (<-chan *pb.Flow, error) {
 	data := make(chan *pb.Flow)
 
 	go func() {
@@ -54,65 +50,64 @@ func (client *GoldmaneClient) StreamFlows(context context.Context, done chan<- b
 			stream, err := client.flowCollectorClient.Stream(context, &pb.FlowStreamRequest{})
 
 			if err != nil {
-				log.Printf("Failed to create stream: %s", err)
-				time.Sleep(BACKOFF)
+				log.Printf("Failed to create stream: %s. Sleeping for %s", err, reconnectWaitTime)
+				time.Sleep(reconnectWaitTime)
 				continue
 			}
 
 			log.Printf("Stream created")
 
-			for {
-				select {
-				case <-context.Done():
-					log.Println("Context done, closing channel, terminating goroutine")
-					close(data)
-					done <- true
-					return
-				default:
-					var flowResult pb.FlowResult
-					err := stream.RecvMsg(&flowResult)
-
-					if errors.Is(err, io.EOF) {
-						// the sender has nothing more to send.
-						// Terminate execution
-						log.Printf("Received io.EOF, closing channel")
-						close(data)
-						done <- true
-						return
-					}
-
-					if err != nil {
-						if status, ok := status.FromError(err); ok {
-							log.Printf("Failed to receive message. Status: %s. Reconnecting", status.Code())
-							time.Sleep(BACKOFF)
-							// break out of the select to trigger
-							// reinitialization of stream
-							break
-						} else {
-							// this is an error we don't recognize
-							// and presume we can't handle.
-							// Terminate execution
-							log.Printf("Unknown error: %s. Terminating", err)
-							close(data)
-							done <- true
-							return
-						}
-					}
-
-					// pass data from Goldmane and proceed to
-					// next iteration to block and wait for
-					// more data from Goldmane
-					data <- flowResult.Flow
-					continue
-				}
-				// break out of the loop to reinitialize
-				// the stream, only happens if there is
-				// an error received which we believe we
-				// can handle
-				break
+			reconnect, _ := streamFlowsUntilError(context, stream, data)
+			if !reconnect {
+				close(data)
+				done <- true
+				return
 			}
 		}
 	}()
 
 	return data, nil
+}
+
+// start streaming flow logs to channel `data` until error is
+// received from grpc. If there is a possibillity for recovery
+// by reconnecting, flag it to the caller using `reconnect`
+func streamFlowsUntilError(context context.Context, stream grpc.ServerStreamingClient[pb.FlowResult], data chan<- *pb.Flow) (reconnect bool, err error) {
+	// start out with the assumption that
+	// reconnecting won't be done for the
+	// majority of errors
+	reconnect = false
+
+	log.Printf("Streaming logs...")
+
+	for {
+		select {
+		case <-context.Done():
+			log.Println("Context done, terminating")
+			return
+		default:
+			var flowResult pb.FlowResult
+			err = stream.RecvMsg(&flowResult)
+
+			if errors.Is(err, io.EOF) {
+				// the sender has nothing more to send, terminate
+				log.Printf("Received EOF, terminating")
+				return
+			}
+
+			if err != nil {
+				if status, ok := status.FromError(err); ok {
+					// known error, reconnect
+					log.Printf("Status received: %s, trigger reconnect", status.Code())
+					reconnect = true
+				} else {
+					// unrecognizeable error, terminate
+					log.Printf("Unknown error: %s, terminating", err)
+				}
+				return
+			}
+
+			data <- flowResult.Flow
+		}
+	}
 }

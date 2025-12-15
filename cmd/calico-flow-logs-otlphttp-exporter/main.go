@@ -7,6 +7,7 @@ import (
 	"os"
 	"os/signal"
 	"syscall"
+	"time"
 
 	"github.com/FredrickB/calico-flow-logs-otlphttp-exporter/v2/internal/goldmane"
 	"github.com/FredrickB/calico-flow-logs-otlphttp-exporter/v2/internal/otlp"
@@ -14,20 +15,23 @@ import (
 )
 
 const (
-	CA_CERT_PATH_ENV     string = "CA_CERT_PATH"
-	PRIVATE_KEY_PATH_ENV string = "PRIVATE_KEY_PATH"
-	PUBLIC_CERT_PATH_ENV string = "PUBLIC_CERT_PATH"
-	GOLDMANE_HOST_ENV    string = "GOLDMANE_HOST"
-	PACKAGE_NAME         string = "calico-flow-logs-otlphttp-exporter"
-	SERVICE_NAME         string = "calico-flow-logs-otlphttp-exporter"
-	SERVICE_VERSION      string = "REPLACED_DURING_BUILD"
+	CA_CERT_PATH_ENV                   string        = "CA_CERT_PATH"
+	PRIVATE_KEY_PATH_ENV               string        = "PRIVATE_KEY_PATH"
+	PUBLIC_CERT_PATH_ENV               string        = "PUBLIC_CERT_PATH"
+	GOLDMANE_HOST_ENV                  string        = "GOLDMANE_HOST"
+	RECONNECT_WAIT_TIME_IN_SECONDS_ENV string        = "RECONNECT_WAIT_TIME_IN_SECONDS"
+	DEFAULT_RECONNECT_WAIT_TIME        time.Duration = 5 * time.Second
+	PACKAGE_NAME                       string        = "calico-flow-logs-otlphttp-exporter"
+	SERVICE_NAME                       string        = "calico-flow-logs-otlphttp-exporter"
+	SERVICE_VERSION                    string        = "REPLACED_DURING_BUILD"
 )
 
 var (
-	caCertFilePath, caCertSet     = os.LookupEnv(CA_CERT_PATH_ENV)
-	publicCertPath, publicCertSet = os.LookupEnv(PUBLIC_CERT_PATH_ENV)
-	privateKeyPath, privateKeySet = os.LookupEnv(PRIVATE_KEY_PATH_ENV)
-	goldmaneHost, goldmaneHostSet = os.LookupEnv(GOLDMANE_HOST_ENV)
+	caCertFilePath, caCertSet                                   = os.LookupEnv(CA_CERT_PATH_ENV)
+	publicCertPath, publicCertSet                               = os.LookupEnv(PUBLIC_CERT_PATH_ENV)
+	privateKeyPath, privateKeySet                               = os.LookupEnv(PRIVATE_KEY_PATH_ENV)
+	goldmaneHost, goldmaneHostSet                               = os.LookupEnv(GOLDMANE_HOST_ENV)
+	reconnectSecondsStringValue, reconnectSecondsStringValueSet = os.LookupEnv(RECONNECT_WAIT_TIME_IN_SECONDS_ENV)
 )
 
 func main() {
@@ -43,6 +47,9 @@ func main() {
 	util.LogEnvironmentVariable(PRIVATE_KEY_PATH_ENV, privateKeyPath)
 	util.LogEnvironmentVariable(PUBLIC_CERT_PATH_ENV, publicCertPath)
 	util.LogEnvironmentVariable(GOLDMANE_HOST_ENV, goldmaneHost)
+	if reconnectSecondsStringValueSet {
+		util.LogEnvironmentVariable(RECONNECT_WAIT_TIME_IN_SECONDS_ENV, reconnectSecondsStringValue)
+	}
 
 	client, err := goldmane.NewClient(
 		goldmaneHost,
@@ -64,8 +71,10 @@ func main() {
 	signals := make(chan os.Signal, 2)
 	signal.Notify(signals, os.Interrupt, syscall.SIGTERM)
 
-	log.Println("Start streaming logs from Goldmane...")
-	streamClosed, err := util.StartLogStreaming(context, client, otlpLogger)
+	reconnectWaitTime := util.ParseSecondsStringValue(reconnectSecondsStringValue, DEFAULT_RECONNECT_WAIT_TIME)
+	log.Printf("Reconnect wait time set to: %s", reconnectWaitTime)
+
+	streamClosed, err := util.StartLogStreaming(context, client, otlpLogger, reconnectWaitTime)
 	if err != nil {
 		log.Fatalf("Failed to start streaming logs: %s", err)
 	}
