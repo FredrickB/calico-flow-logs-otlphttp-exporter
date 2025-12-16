@@ -31,6 +31,10 @@ env:
     value: "/etc/goldmane/certs/tls.key"
   - name: PUBLIC_CERT_PATH
     value: "/etc/goldmane/certs/tls.crt"
+  # Time to wait between reconnect attempts
+  # to Goldmane in the event of loss of connection
+  - name: RECONNECT_WAIT_TIME_IN_SECONDS
+    value: "5"
 
 volumes:
   - name: goldmane-certs
