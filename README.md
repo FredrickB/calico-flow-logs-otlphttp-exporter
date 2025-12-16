@@ -29,7 +29,7 @@ The exporter forwards `Flow` in [./protos/api.proto](./protos/api.proto)
 payload. 
 
 > [!NOTE]
-> Numerical enums are converted to strings
+> Numerical enums are converted to strings.
 
 Example output:
 
@@ -130,6 +130,10 @@ graph TB
 
 ## Installation
 
+> [!NOTE]
+> See the [official documentation](https://pkg.go.dev/go.opentelemetry.io/otel/exporters/otlp/otlplog/otlploghttp)
+> for a list of all environment variables which can be set for the OTLP Log HTTP exporter.
+
 ### Helm
 
 > [!WARNING]
@@ -178,6 +182,10 @@ graph TB
     ```
 
 ## Development
+
+> [!NOTE]
+> See the [official documentation](https://pkg.go.dev/go.opentelemetry.io/otel/exporters/otlp/otlplog/otlploghttp)
+> for a list of all environment variables which can be set for the OTLP Log HTTP exporter.
 
 ### Prerequisites
 
@@ -268,11 +276,6 @@ approach in production environments, this is just for development.
     ```bash
     make install-helm-chart-from-private-chart-repository
     ```
-
-### OTLP Log HTTP Exporter environment variables
-
-To see a list of all environment variables which can be set for the OTLP
-Log HTTP exporter, see the [official documentation](https://pkg.go.dev/go.opentelemetry.io/otel/exporters/otlp/otlplog/otlploghttp)
 
 ## Contributors
 
