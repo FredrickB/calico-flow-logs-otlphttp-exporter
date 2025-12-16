@@ -45,7 +45,6 @@ func (client *GoldmaneClient) StreamFlows(context context.Context, done chan<- b
 	data := make(chan *pb.Flow)
 
 	go func() {
-		// Begin the outer loop handling initialization
 		for {
 			stream, err := client.flowCollectorClient.Stream(context, &pb.FlowStreamRequest{})
 
@@ -57,6 +56,9 @@ func (client *GoldmaneClient) StreamFlows(context context.Context, done chan<- b
 
 			log.Printf("Stream created")
 
+			// block until streaming fails, then check return
+			// value to see if reconnect should be done or if
+			// the execution should be terminated
 			reconnect, _ := streamFlowsUntilError(context, stream, data)
 			if !reconnect {
 				close(data)
