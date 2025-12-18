@@ -24,6 +24,7 @@ port-forward-goldmane \
 docker-compose-up \
 run \
 lint \
+test \
 debug \
 run-built-binary \
 run-container \
@@ -43,6 +44,7 @@ clean:
 install-development-packages:
 	go install google.golang.org/protobuf/cmd/protoc-gen-go@v1.36.10
 	go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@v1.5.1
+	go install go.uber.org/mock/mockgen@v0.6.0
 
 fetch-protobuf-definition:
 	mkdir -p $(PROTOBUF_DEFINITIONS_DIR)
@@ -90,6 +92,12 @@ debug:
 
 lint:
 	gofmt -l .
+
+test:
+	mockgen -source=internal/goldmane/client.go -destination=gen/mocks/goldmane_mocks.go -package=mocks
+	mockgen -source=internal/otlp/logger.go -destination=gen/mocks/otlp_mocks.go -package=mocks
+	go test -v ./...
+	rm -r gen/mocks
 
 build:
 	go build -C cmd/$(GO_PROGRAM) -o ../../$(OUT_DIR)/$(GO_PROGRAM)

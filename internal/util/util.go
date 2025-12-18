@@ -11,10 +11,10 @@ import (
 	"github.com/FredrickB/calico-flow-logs-otlphttp-exporter/v2/internal/otlp"
 )
 
-func StartLogStreaming(context context.Context, client *goldmane.GoldmaneClient, logger *otlp.Logger, reconnectWaitTime time.Duration) (chan bool, error) {
+func StartLogStreaming(context context.Context, goldmaneApi goldmane.GoldmaneApi, logger otlp.OtlpLogger, reconnectWaitTime time.Duration) (chan bool, error) {
 	done := make(chan bool)
 
-	data, err := client.StreamFlows(context, done, reconnectWaitTime)
+	data, err := goldmaneApi.StreamFlows(context, done, reconnectWaitTime)
 	if err != nil {
 		return nil, fmt.Errorf("error during start of log streaming: %s", err)
 	}
@@ -23,8 +23,8 @@ func StartLogStreaming(context context.Context, client *goldmane.GoldmaneClient,
 	return done, nil
 }
 
-func Cleanup(context context.Context, client *goldmane.GoldmaneClient, logger *otlp.Logger) {
-	if err := client.Close(); err != nil {
+func Cleanup(context context.Context, goldmaneApi goldmane.GoldmaneApi, logger otlp.OtlpLogger) {
+	if err := goldmaneApi.Close(); err != nil {
 		log.Printf("Error while closing client: %s", err)
 	}
 	if err := logger.Close(context); err != nil {

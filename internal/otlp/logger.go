@@ -13,6 +13,11 @@ import (
 	"google.golang.org/protobuf/encoding/protojson"
 )
 
+type OtlpLogger interface {
+	ReceiveFlows(context context.Context, receiver <-chan *pb.Flow)
+	Close(context context.Context) error
+}
+
 type Logger struct {
 	logger         *slog.Logger
 	loggerprovider *otelloggersdk.LoggerProvider
