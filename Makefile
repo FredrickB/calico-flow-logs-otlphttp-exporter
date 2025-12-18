@@ -1,6 +1,6 @@
 GOLDMANE_PROTO_VERSION=v3.30.4
 PROTOBUF_DEFINITIONS_DIR=protos
-PROTOBUF_GENERATED_DIR=gen
+GEN_DIR=gen
 GOLDMANE_CERTIFICATES_DIR=certs/goldmane
 GOLDMANE_HOST=goldmane:7443
 GOLDMANE_NAMESPACE=calico-system
@@ -54,10 +54,10 @@ generate-code-from-protobuf:
 	which protoc > /dev/null || (echo "protoc not in PATH" && exit 1)
 	which protoc-gen-go > /dev/null || (echo "protoc-gen-go not in PATH" && exit 1)
 	which protoc-gen-go-grpc > /dev/null || (echo "protoc-gen-go-grpc not in PATH" && exit 1)
-	mkdir -p $(PROTOBUF_GENERATED_DIR)
+	mkdir -p $(GEN_DIR)
 	protoc \
-		--go_out=$(PROTOBUF_GENERATED_DIR) \
-		--go-grpc_out=$(PROTOBUF_GENERATED_DIR) \
+		--go_out=$(GEN_DIR) \
+		--go-grpc_out=$(GEN_DIR) \
 		--go_opt=paths=source_relative \
 		--go-grpc_opt=paths=source_relative \
 		$(PROTOBUF_DEFINITIONS_DIR)/api.proto
@@ -94,10 +94,11 @@ lint:
 	gofmt -l .
 
 test:
+	mkdir -p $(GEN_DIR)/mocks
 	mockgen -source=internal/goldmane/client.go -destination=gen/mocks/goldmane_mocks.go -package=mocks
 	mockgen -source=internal/otlp/logger.go -destination=gen/mocks/otlp_mocks.go -package=mocks
 	go test -v ./...
-	rm -r gen/mocks
+	rm -r $(GEN_DIR)/mocks
 
 build:
 	go build -C cmd/$(GO_PROGRAM) -o ../../$(OUT_DIR)/$(GO_PROGRAM)
