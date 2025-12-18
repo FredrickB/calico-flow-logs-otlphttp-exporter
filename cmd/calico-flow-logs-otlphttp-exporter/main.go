@@ -51,14 +51,14 @@ func main() {
 		util.LogEnvironmentVariable(RECONNECT_WAIT_TIME_IN_SECONDS_ENV, reconnectSecondsStringValue)
 	}
 
-	api, err := goldmane.NewClient(
+	client, err := goldmane.NewClient(
 		goldmaneHost,
 		caCertFilePath,
 		publicCertPath,
 		privateKeyPath,
 	)
 	if err != nil {
-		log.Fatalf("Error while creating GoldmaneApi: %s", err)
+		log.Fatalf("Error while creating Goldmane client: %s", err)
 	}
 
 	context, cancel := context.WithCancel(context.Background())
@@ -74,13 +74,13 @@ func main() {
 	reconnectWaitTime := util.ParseSecondsStringValue(reconnectSecondsStringValue, DEFAULT_RECONNECT_WAIT_TIME)
 	log.Printf("Reconnect wait time set to: %s", reconnectWaitTime)
 
-	streamClosed, err := util.StartLogStreaming(context, api, otlpLogger, reconnectWaitTime)
+	streamClosed, err := util.StartLogStreaming(context, client, otlpLogger, reconnectWaitTime)
 	if err != nil {
 		log.Fatalf("Failed to start streaming logs: %s", err)
 	}
 
 	done := make(chan bool)
-	go monitor(context, api, signals, streamClosed, done, cancel, otlpLogger)
+	go monitor(context, client, signals, streamClosed, done, cancel, otlpLogger)
 	<-done
 
 	log.Println("Program terminated")
