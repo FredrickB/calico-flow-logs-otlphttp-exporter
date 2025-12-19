@@ -39,7 +39,7 @@ all: clean install-development-packages fetch-protobuf-definition generate-code-
 .PHONY : all
 
 clean:
-	rm -rf out gen
+	rm -r out gen
 
 install-development-packages:
 	go install google.golang.org/protobuf/cmd/protoc-gen-go@v1.36.10
