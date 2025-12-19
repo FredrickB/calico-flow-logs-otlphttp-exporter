@@ -39,7 +39,7 @@ all: clean install-development-packages fetch-protobuf-definition generate-code-
 .PHONY : all
 
 clean:
-	rm -r out gen
+	rm -rf out gen
 
 install-development-packages:
 	go install google.golang.org/protobuf/cmd/protoc-gen-go@v1.36.10
@@ -96,7 +96,8 @@ lint:
 test:
 	mkdir -p $(GEN_DIR)/mocks
 	mockgen -source=internal/goldmane/client.go -destination=gen/mocks/goldmane_mocks.go -package=mocks
-	mockgen -source=internal/otlp/logger.go -destination=gen/mocks/otlp_mocks.go -package=mocks
+	mockgen -source=internal/otlp/logger.go -destination=gen/mocks/otlp_logger_mocks.go -package=mocks
+	mockgen -source=internal/otlp/processor.go -destination=gen/mocks/otlp_processor_mocks.go -package=mocks
 	go test -v ./...
 
 build:
