@@ -98,7 +98,6 @@ test:
 	mockgen -source=internal/goldmane/client.go -destination=gen/mocks/goldmane_mocks.go -package=mocks
 	mockgen -source=internal/otlp/logger.go -destination=gen/mocks/otlp_mocks.go -package=mocks
 	go test -v ./...
-	rm -r $(GEN_DIR)/mocks
 
 build:
 	go build -C cmd/$(GO_PROGRAM) -o ../../$(OUT_DIR)/$(GO_PROGRAM)
