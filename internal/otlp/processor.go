@@ -13,22 +13,22 @@ type Processor interface {
 	Close(ctx context.Context) error
 }
 
-type OtelProcessor struct {
+type OtlpProcessor struct {
 	logger         *slog.Logger
 	loggerprovider *otelloggersdk.LoggerProvider
 }
 
-func NewProcessor(context context.Context, packageName string, loggerProvider *otelloggersdk.LoggerProvider) *OtelProcessor {
-	return &OtelProcessor{
+func NewProcessor(context context.Context, packageName string, loggerProvider *otelloggersdk.LoggerProvider) *OtlpProcessor {
+	return &OtlpProcessor{
 		logger:         otelslog.NewLogger(packageName, otelslog.WithLoggerProvider(loggerProvider)),
 		loggerprovider: loggerProvider,
 	}
 }
 
-func (p *OtelProcessor) Log(ctx context.Context, message string) {
+func (p *OtlpProcessor) Log(ctx context.Context, message string) {
 	p.logger.Log(ctx, slog.LevelInfo, message)
 }
 
-func (p *OtelProcessor) Close(ctx context.Context) error {
+func (p *OtlpProcessor) Close(ctx context.Context) error {
 	return p.loggerprovider.Shutdown(ctx)
 }
