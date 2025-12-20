@@ -63,10 +63,12 @@ func main() {
 
 	context, cancel := context.WithCancel(context.Background())
 
-	otlpLogger, err := otlp.NewLogger(context, PACKAGE_NAME, SERVICE_NAME, SERVICE_VERSION)
+	loggerProvider, err := otlp.NewLoggerProvider(context, SERVICE_NAME, SERVICE_VERSION)
 	if err != nil {
-		log.Fatalf("Error while creating logger: %s", err)
+		log.Fatalf("Error while creating loggerprovider: %s", err)
 	}
+	processor := otlp.NewProcessor(context, PACKAGE_NAME, loggerProvider)
+	otlpLogger := otlp.NewLogger(processor)
 
 	signals := make(chan os.Signal, 2)
 	signal.Notify(signals, os.Interrupt, syscall.SIGTERM)

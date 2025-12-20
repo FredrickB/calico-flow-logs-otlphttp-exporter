@@ -19,7 +19,7 @@ func StartLogStreaming(context context.Context, client goldmane.GoldmaneApi, log
 		return nil, fmt.Errorf("error during start of log streaming: %s", err)
 	}
 
-	logger.ReceiveFlows(context, data)
+	go logger.ReceiveFlows(context, data)
 	return done, nil
 }
 

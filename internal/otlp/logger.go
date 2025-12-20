@@ -2,61 +2,51 @@ package otlp
 
 import (
 	"context"
-	"fmt"
+	"errors"
 	"log"
-	"log/slog"
 
 	pb "github.com/FredrickB/calico-flow-logs-otlphttp-exporter/v2/gen/protos"
-	otelslog "go.opentelemetry.io/contrib/bridges/otelslog"
-	otelloggersdk "go.opentelemetry.io/otel/sdk/log"
 
 	"google.golang.org/protobuf/encoding/protojson"
 )
 
+var (
+	ErrContextCancelled  = errors.New("Cancellation invoked, stopping log forwarding")
+	ErrDataChannelClosed = errors.New("Data channel closed, stopping log forwarding")
+)
+
 type OtlpLogger interface {
-	ReceiveFlows(context context.Context, receiver <-chan *pb.Flow)
+	ReceiveFlows(context context.Context, data <-chan *pb.Flow) error
 	Close(context context.Context) error
 }
 
 type Logger struct {
-	logger         *slog.Logger
-	loggerprovider *otelloggersdk.LoggerProvider
+	processor Processor
 }
 
-func NewLogger(context context.Context, packageName, serviceName, serviceVersion string) (*Logger, error) {
-	loggerProvider, err := newLoggerProvider(context, serviceName, serviceVersion)
-	if err != nil {
-		return nil, fmt.Errorf("error while creating OTLP LoggerProvider %s", err)
-	}
-	return &Logger{
-		logger:         otelslog.NewLogger(packageName, otelslog.WithLoggerProvider(loggerProvider)),
-		loggerprovider: loggerProvider,
-	}, nil
+func NewLogger(processor Processor) *Logger {
+	return &Logger{processor: processor}
 }
 
-func (l *Logger) ReceiveFlows(context context.Context, receiver <-chan *pb.Flow) {
-	go func() {
-		for {
-			select {
-			case <-context.Done():
-				log.Printf("Cancellation invoked, stopping log forwarding")
-				return
-			case flow, ok := <-receiver:
-				if !ok {
-					log.Println("Data channel closed, stopping log forwarding")
-					return
-				}
-				jsonFlow, err := protojson.Marshal(flow)
-				if err != nil {
-					log.Printf("Failed to marshal flow: %+v to JSON. Error: %s. Skipping log", flow, err)
-					continue
-				}
-				l.logger.Log(context, slog.LevelInfo, string(jsonFlow))
+func (logger *Logger) ReceiveFlows(context context.Context, data <-chan *pb.Flow) error {
+	for {
+		select {
+		case <-context.Done():
+			return ErrContextCancelled
+		case flow, ok := <-data:
+			if !ok {
+				return ErrDataChannelClosed
 			}
+			jsonFlow, err := protojson.Marshal(flow)
+			if err != nil {
+				log.Printf("Failed to marshal flow: %+v to JSON. Error: %s. Skipping log", flow, err)
+				continue
+			}
+			logger.processor.Log(context, string(jsonFlow))
 		}
-	}()
+	}
 }
 
-func (l *Logger) Close(context context.Context) error {
-	return l.loggerprovider.Shutdown(context)
+func (logger *Logger) Close(context context.Context) error {
+	return logger.processor.Close(context)
 }
