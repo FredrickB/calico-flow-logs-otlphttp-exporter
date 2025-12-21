@@ -8,7 +8,7 @@ import (
 	"google.golang.org/grpc/credentials"
 )
 
-func newTLSConfig(caCertFilePath, publicCertPath, privateKeyPath string) (credentials.TransportCredentials, error) {
+func NewTLSConfig(caCertFilePath, publicCertPath, privateKeyPath string) (credentials.TransportCredentials, error) {
 	clientCert, err := tls.LoadX509KeyPair(
 		publicCertPath,
 		privateKeyPath,

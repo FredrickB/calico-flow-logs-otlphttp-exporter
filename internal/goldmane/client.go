@@ -3,7 +3,6 @@ package goldmane
 import (
 	"context"
 	"errors"
-	"fmt"
 	"io"
 	"log"
 	"time"
@@ -19,56 +18,46 @@ type GoldmaneApi interface {
 }
 
 type GoldmaneClient struct {
-	connection          *grpc.ClientConn
-	flowCollectorClient pb.FlowsClient
+	client pb.FlowsClient
 }
 
-func NewClient(host, caCertificateFilepath, publicCertFilepath, privateKeyFilepath string) (*GoldmaneClient, error) {
-	tlsConfig, err := newTLSConfig(caCertificateFilepath, publicCertFilepath, privateKeyFilepath)
-	if err != nil {
-		return nil, fmt.Errorf("failed to construct TLS certificate: %s", err)
-	}
-
-	connection, err := grpc.NewClient(host, grpc.WithTransportCredentials(tlsConfig))
-	if err != nil {
-		return nil, fmt.Errorf("cannot make a connection to Goldmane on host: %s. Error: %s", host, err)
-	}
-
-	flowClientConnection := pb.NewFlowsClient(connection)
-
-	return &GoldmaneClient{
-		connection:          connection,
-		flowCollectorClient: flowClientConnection,
-	}, nil
+func NewClient(host string, client pb.FlowsClient) *GoldmaneClient {
+	return &GoldmaneClient{client: client}
 }
 
-func (client *GoldmaneClient) Close() error {
-	return client.connection.Close()
+func (c *GoldmaneClient) Close() error {
+	return nil
 }
 
-func (client *GoldmaneClient) StreamFlows(context context.Context, done chan<- bool, reconnectWaitTime time.Duration) (<-chan *pb.Flow, error) {
+func (c *GoldmaneClient) StreamFlows(context context.Context, done chan<- bool, reconnectWaitTime time.Duration) (<-chan *pb.Flow, error) {
 	data := make(chan *pb.Flow)
 
 	go func() {
 		for {
-			stream, err := client.flowCollectorClient.Stream(context, &pb.FlowStreamRequest{})
-
-			if err != nil {
-				log.Printf("Failed to create stream: %s. Sleeping for %s", err, reconnectWaitTime)
-				time.Sleep(reconnectWaitTime)
-				continue
-			}
-
-			log.Printf("Stream created")
-
-			// block until streaming fails, then check return
-			// value to see if reconnect should be done or if
-			// the execution should be terminated
-			reconnect, _ := streamFlowsUntilError(context, stream, data)
-			if !reconnect {
-				close(data)
-				done <- true
+			select {
+			case <-context.Done():
+				log.Println("Context done, terminating")
 				return
+			default:
+				stream, err := c.client.Stream(context, &pb.FlowStreamRequest{})
+
+				if err != nil {
+					log.Printf("Failed to create stream: %s. Sleeping for %s", err, reconnectWaitTime)
+					time.Sleep(reconnectWaitTime)
+					continue
+				}
+
+				log.Printf("Stream created")
+
+				// block until streaming fails, then check return
+				// value to see if reconnect should be done or if
+				// the execution should be terminated
+				reconnect, _ := streamFlowsUntilError(context, stream, data)
+				if !reconnect {
+					close(data)
+					done <- true
+					return
+				}
 			}
 		}
 	}()

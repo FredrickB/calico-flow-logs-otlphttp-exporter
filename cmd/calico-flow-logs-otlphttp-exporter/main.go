@@ -9,6 +9,9 @@ import (
 	"syscall"
 	"time"
 
+	"google.golang.org/grpc"
+
+	pb "github.com/FredrickB/calico-flow-logs-otlphttp-exporter/v2/gen/protos"
 	"github.com/FredrickB/calico-flow-logs-otlphttp-exporter/v2/internal/goldmane"
 	"github.com/FredrickB/calico-flow-logs-otlphttp-exporter/v2/internal/otlp"
 	"github.com/FredrickB/calico-flow-logs-otlphttp-exporter/v2/internal/util"
@@ -51,15 +54,15 @@ func main() {
 		util.LogEnvironmentVariable(RECONNECT_WAIT_TIME_IN_SECONDS_ENV, reconnectSecondsStringValue)
 	}
 
-	client, err := goldmane.NewClient(
-		goldmaneHost,
-		caCertFilePath,
-		publicCertPath,
-		privateKeyPath,
-	)
+	tlsConfig, err := goldmane.NewTLSConfig(caCertFilePath, publicCertPath, privateKeyPath)
 	if err != nil {
-		log.Fatalf("Error while creating Goldmane client: %s", err)
+		log.Fatalf("Failed to construct TLS certificate: %s", err)
 	}
+	connection, err := grpc.NewClient(goldmaneHost, grpc.WithTransportCredentials(tlsConfig))
+	if err != nil {
+		log.Fatalf("Cannot make a connection to Goldmane on host: %s. Error: %s", goldmaneHost, err)
+	}
+	client := goldmane.NewClient(goldmaneHost, pb.NewFlowsClient(connection))
 
 	context, cancel := context.WithCancel(context.Background())
 
@@ -82,7 +85,7 @@ func main() {
 	}
 
 	done := make(chan bool)
-	go monitor(context, client, signals, streamClosed, done, cancel, otlpLogger)
+	go monitor(context, client, signals, streamClosed, done, cancel, otlpLogger, connection)
 	<-done
 
 	log.Println("Program terminated")
@@ -99,31 +102,32 @@ func monitor(
 	done chan bool,
 	cancel func(),
 	logger otlp.OtlpLogger,
+	connection *grpc.ClientConn,
 ) {
 	for {
 		select {
 		case <-context.Done():
 			log.Println("Context done")
-			cleanup(context, client, logger, cancel)
+			cleanup(context, client, logger, cancel, connection)
 			done <- true
 			return
 		case <-signals:
 			log.Println("Termination signal received")
-			cleanup(context, client, logger, cancel)
+			cleanup(context, client, logger, cancel, connection)
 			done <- true
 			return
 		case <-streamClosed:
 			log.Println("Stream closed")
-			cleanup(context, client, logger, cancel)
+			cleanup(context, client, logger, cancel, connection)
 			done <- true
 			return
 		}
 	}
 }
 
-func cleanup(context context.Context, client goldmane.GoldmaneApi, logger otlp.OtlpLogger, cancel func()) {
+func cleanup(context context.Context, client goldmane.GoldmaneApi, logger otlp.OtlpLogger, cancel func(), connection *grpc.ClientConn) {
 	log.Println("Triggering cleanup...")
-	util.Cleanup(context, client, logger)
+	util.Cleanup(context, client, logger, connection)
 	cancel()
 	log.Println("Cleanup finished")
 }

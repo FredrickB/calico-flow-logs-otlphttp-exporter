@@ -9,6 +9,7 @@ import (
 
 	"github.com/FredrickB/calico-flow-logs-otlphttp-exporter/v2/internal/goldmane"
 	"github.com/FredrickB/calico-flow-logs-otlphttp-exporter/v2/internal/otlp"
+	"google.golang.org/grpc"
 )
 
 func StartLogStreaming(context context.Context, client goldmane.GoldmaneApi, logger otlp.OtlpLogger, reconnectWaitTime time.Duration) (chan bool, error) {
@@ -23,9 +24,12 @@ func StartLogStreaming(context context.Context, client goldmane.GoldmaneApi, log
 	return done, nil
 }
 
-func Cleanup(context context.Context, client goldmane.GoldmaneApi, logger otlp.OtlpLogger) {
+func Cleanup(context context.Context, client goldmane.GoldmaneApi, logger otlp.OtlpLogger, connection *grpc.ClientConn) {
 	if err := client.Close(); err != nil {
 		log.Printf("Error while closing client: %s", err)
+	}
+	if err := connection.Close(); err != nil {
+		log.Printf("Error while closing connection: %s", err)
 	}
 	if err := logger.Close(context); err != nil {
 		log.Printf("Error while shutting down loggerProvider: %s", err)
