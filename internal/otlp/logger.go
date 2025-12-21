@@ -17,7 +17,6 @@ var (
 
 type OtlpLogger interface {
 	ReceiveFlows(context context.Context, data <-chan *pb.Flow) error
-	Close(context context.Context) error
 }
 
 type Logger struct {

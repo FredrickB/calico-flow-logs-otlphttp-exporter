@@ -24,7 +24,7 @@ func StartLogStreaming(context context.Context, client goldmane.GoldmaneApi, log
 	return done, nil
 }
 
-func Cleanup(context context.Context, client goldmane.GoldmaneApi, logger otlp.OtlpLogger, connection *grpc.ClientConn) {
+func Cleanup(context context.Context, client *goldmane.GoldmaneClient, logger *otlp.Logger, connection *grpc.ClientConn) {
 	if err := client.Close(); err != nil {
 		log.Printf("Error while closing client: %s", err)
 	}

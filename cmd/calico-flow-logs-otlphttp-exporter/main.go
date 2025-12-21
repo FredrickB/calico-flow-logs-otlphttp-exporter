@@ -96,12 +96,12 @@ func main() {
 // signal is received
 func monitor(
 	context context.Context,
-	client goldmane.GoldmaneApi,
+	client *goldmane.GoldmaneClient,
 	signals chan os.Signal,
 	streamClosed chan bool,
 	done chan bool,
 	cancel func(),
-	logger otlp.OtlpLogger,
+	logger *otlp.Logger,
 	connection *grpc.ClientConn,
 ) {
 	for {
@@ -125,7 +125,7 @@ func monitor(
 	}
 }
 
-func cleanup(context context.Context, client goldmane.GoldmaneApi, logger otlp.OtlpLogger, cancel func(), connection *grpc.ClientConn) {
+func cleanup(context context.Context, client *goldmane.GoldmaneClient, logger *otlp.Logger, cancel func(), connection *grpc.ClientConn) {
 	log.Println("Triggering cleanup...")
 	util.Cleanup(context, client, logger, connection)
 	cancel()

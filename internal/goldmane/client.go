@@ -14,7 +14,6 @@ import (
 
 type GoldmaneApi interface {
 	StreamFlows(context context.Context, done chan<- bool, reconnectWaitTime time.Duration) (<-chan *pb.Flow, error)
-	Close() error
 }
 
 type GoldmaneClient struct {
