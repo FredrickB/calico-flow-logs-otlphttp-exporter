@@ -81,8 +81,8 @@ func streamFlowsUntilError(context context.Context, stream grpc.ServerStreamingC
 			log.Println("Context done, terminating")
 			return
 		default:
-			var flowResult pb.FlowResult
-			err = stream.RecvMsg(&flowResult)
+			var flowResult *pb.FlowResult
+			flowResult, err = stream.Recv()
 
 			if errors.Is(err, io.EOF) {
 				// the sender has nothing more to send, terminate

@@ -35,7 +35,7 @@ setup-k3d \
 start-k3d \
 stop-k3d
 
-all: clean install-development-packages fetch-protobuf-definition generate-code-from-protobuf lint build
+all: clean install-development-packages fetch-protobuf-definition generate-code-from-protobuf lint test build
 .PHONY : all
 
 clean:
@@ -93,11 +93,12 @@ debug:
 lint:
 	gofmt -l .
 
-test:
+test: generate-code-from-protobuf
 	mkdir -p $(GEN_DIR)/mocks
 	mockgen -source=internal/goldmane/client.go -destination=gen/mocks/goldmane_mocks.go -package=mocks
 	mockgen -source=internal/otlp/logger.go -destination=gen/mocks/otlp_logger_mocks.go -package=mocks
 	mockgen -source=internal/otlp/processor.go -destination=gen/mocks/otlp_processor_mocks.go -package=mocks
+	mockgen -source=gen/protos/api_grpc.pb.go -destination=gen/mocks/api_grpc_mocks.go -package=mocks
 	go test -v ./...
 
 build:
