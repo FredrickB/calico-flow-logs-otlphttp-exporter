@@ -11,6 +11,7 @@ OUT_DIR=out
 CONTAINER_WOKRDIR=/build
 TAG=0.0.1-development.1
 HELM_CHART_REGISTRY_URL=https://raw.githubusercontent.com/FredrickB/calico-flow-logs-otlphttp-exporter/gh-pages
+K3D_CLUSTER_NAME=calico-flow-logs
 
 .PHONY : \
 clean \
@@ -28,7 +29,10 @@ run-built-binary \
 run-container \
 install-helm-chart-from-local-dir \
 setup-private-helm-chart-repository \
-install-helm-chart-from-private-chart-repository
+install-helm-chart-from-private-chart-repository \
+setup-k3d \
+start-k3d \
+stop-k3d
 
 all: clean install-development-packages fetch-protobuf-definition generate-code-from-protobuf lint build
 .PHONY : all
@@ -60,7 +64,7 @@ copy-goldmane-certs-from-kubernetes-deployment:
 	mkdir -p $(GOLDMANE_CERTIFICATES_DIR)
 	kubectl get secrets goldmane-key-pair -n $(GOLDMANE_NAMESPACE) -o jsonpath='{.data.tls\.crt}' | base64 -d > $(GOLDMANE_CERTIFICATES_DIR)/goldmane.crt
 	kubectl get secrets goldmane-key-pair -n $(GOLDMANE_NAMESPACE) -o jsonpath='{.data.tls\.key}' | base64 -d > $(GOLDMANE_CERTIFICATES_DIR)/goldmane.key
-	kubectl get cm goldmane-ca-bundle -o jsonpath='{.data.tigera-ca-bundle\.crt}' > $(GOLDMANE_CERTIFICATES_DIR)/goldmane_ca.crt
+	kubectl get cm goldmane-ca-bundle -n $(GOLDMANE_NAMESPACE) -o jsonpath='{.data.tigera-ca-bundle\.crt}' > $(GOLDMANE_CERTIFICATES_DIR)/goldmane_ca.crt
 
 port-forward-goldmane:
 	kubectl port-forward -n $(GOLDMANE_NAMESPACE) svc/goldmane 7443
@@ -136,3 +140,17 @@ install-helm-chart-from-private-chart-repository:
 		-n $(GOLDMANE_NAMESPACE) \
 		-f hack/charts/$(GO_PROGRAM)/override.yaml \
 		$(GO_PROGRAM) $(GO_PROGRAM)/$(GO_PROGRAM)
+
+setup-k3d:
+	k3d cluster create $(K3D_CLUSTER_NAME) \
+  --k3s-arg '--flannel-backend=none@server:*' \
+  --k3s-arg '--disable-network-policy@server:*' \
+  --k3s-arg '--cluster-cidr=192.168.0.0/16@server:*'
+	kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.30.2/manifests/tigera-operator.yaml
+	kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.30.2/manifests/custom-resources.yaml
+
+start-k3d:
+	k3d cluster start $(K3D_CLUSTER_NAME)
+
+stop-k3d:
+	k3d cluster stop $(K3D_CLUSTER_NAME)
