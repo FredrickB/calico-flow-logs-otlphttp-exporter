@@ -12,16 +12,21 @@ import (
 	"google.golang.org/grpc"
 )
 
-func StartLogStreaming(context context.Context, client goldmane.GoldmaneApi, logger otlp.OtlpLogger, reconnectWaitTime time.Duration) (chan bool, error) {
+func StartLogStreaming(
+	context context.Context,
+	client goldmane.GoldmaneApi,
+	logger otlp.OtlpLogger,
+	reconnectWaitTime time.Duration,
+) (chan bool, <-chan error, error) {
 	done := make(chan bool)
 
-	data, err := client.StreamFlows(context, done, reconnectWaitTime)
+	data, reconnects, err := client.StreamFlows(context, done, reconnectWaitTime)
 	if err != nil {
-		return nil, fmt.Errorf("error during start of log streaming: %s", err)
+		return nil, nil, fmt.Errorf("error during start of log streaming: %s", err)
 	}
 
 	go logger.ReceiveFlows(context, data)
-	return done, nil
+	return done, reconnects, nil
 }
 
 func Cleanup(context context.Context, client *goldmane.GoldmaneClient, logger *otlp.Logger, connection *grpc.ClientConn) {

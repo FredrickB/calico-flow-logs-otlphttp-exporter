@@ -79,13 +79,13 @@ func main() {
 	reconnectWaitTime := util.ParseSecondsStringValue(reconnectSecondsStringValue, DEFAULT_RECONNECT_WAIT_TIME)
 	log.Printf("Reconnect wait time set to: %s", reconnectWaitTime)
 
-	streamClosed, err := util.StartLogStreaming(context, client, otlpLogger, reconnectWaitTime)
+	streamClosed, reconnects, err := util.StartLogStreaming(context, client, otlpLogger, reconnectWaitTime)
 	if err != nil {
 		log.Fatalf("Failed to start streaming logs: %s", err)
 	}
 
 	done := make(chan bool)
-	go monitor(context, client, signals, streamClosed, done, cancel, otlpLogger, connection)
+	go monitor(context, client, signals, streamClosed, done, cancel, otlpLogger, connection, reconnects)
 	<-done
 
 	log.Println("Program terminated")
@@ -100,34 +100,43 @@ func monitor(
 	signals chan os.Signal,
 	streamClosed chan bool,
 	done chan bool,
-	cancel func(),
+	cancelFunc func(),
 	logger *otlp.Logger,
 	connection *grpc.ClientConn,
+	reconnectErrors <-chan error,
 ) {
 	for {
 		select {
 		case <-context.Done():
 			log.Println("Context done")
-			cleanup(context, client, logger, cancel, connection)
+			cleanup(context, client, logger, cancelFunc, connection)
 			done <- true
 			return
 		case <-signals:
 			log.Println("Termination signal received")
-			cleanup(context, client, logger, cancel, connection)
+			cleanup(context, client, logger, cancelFunc, connection)
 			done <- true
 			return
 		case <-streamClosed:
 			log.Println("Stream closed")
-			cleanup(context, client, logger, cancel, connection)
+			cleanup(context, client, logger, cancelFunc, connection)
 			done <- true
 			return
+		case err := <-reconnectErrors:
+			log.Printf("Reconnect attempted, error: %s", err)
 		}
 	}
 }
 
-func cleanup(context context.Context, client *goldmane.GoldmaneClient, logger *otlp.Logger, cancel func(), connection *grpc.ClientConn) {
+func cleanup(
+	context context.Context,
+	client *goldmane.GoldmaneClient,
+	logger *otlp.Logger,
+	cancelFunc func(),
+	connection *grpc.ClientConn,
+) {
 	log.Println("Triggering cleanup...")
 	util.Cleanup(context, client, logger, connection)
-	cancel()
+	cancelFunc()
 	log.Println("Cleanup finished")
 }

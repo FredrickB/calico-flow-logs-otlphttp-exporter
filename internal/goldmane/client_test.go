@@ -10,7 +10,9 @@ import (
 	"github.com/FredrickB/calico-flow-logs-otlphttp-exporter/v2/gen/mocks"
 	pb "github.com/FredrickB/calico-flow-logs-otlphttp-exporter/v2/gen/protos"
 	"go.uber.org/mock/gomock"
+	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/metadata"
+	"google.golang.org/grpc/status"
 )
 
 var (
@@ -56,7 +58,7 @@ func TestStreamFlowsPassesData(t *testing.T) {
 	mockGrpcServerStreamingClient := MockGrpcServerStreamingClient[pb.FlowResult]{}
 	mockFlowsClient.EXPECT().Stream(ctx, &pb.FlowStreamRequest{}).Return(mockGrpcServerStreamingClient, nil)
 
-	dataCh, err := client.StreamFlows(ctx, mockDoneCh, reconnectWaitTime)
+	dataCh, _, err := client.StreamFlows(ctx, mockDoneCh, reconnectWaitTime)
 	if err != nil {
 		t.Error("err should be nil")
 	}
@@ -88,7 +90,7 @@ func TestEOFErrorStopsStream(t *testing.T) {
 	mockGrpcServerStreamingClient := MockGrpcServerStreamingClient[pb.FlowResult]{}
 	mockFlowsClient.EXPECT().Stream(ctx, &pb.FlowStreamRequest{}).Return(mockGrpcServerStreamingClient, nil)
 
-	dataCh, err := client.StreamFlows(ctx, mockDoneCh, 2*time.Second)
+	dataCh, _, err := client.StreamFlows(ctx, mockDoneCh, 2*time.Second)
 	if err != nil {
 		t.Error("err should be nil")
 	}
@@ -122,7 +124,7 @@ func TestUnknownGRPCErrorStopsStream(t *testing.T) {
 	mockGrpcServerStreamingClient := MockGrpcServerStreamingClient[pb.FlowResult]{}
 	mockFlowsClient.EXPECT().Stream(ctx, &pb.FlowStreamRequest{}).Return(mockGrpcServerStreamingClient, nil)
 
-	dataCh, err := client.StreamFlows(ctx, mockDoneCh, 2*time.Second)
+	dataCh, _, err := client.StreamFlows(ctx, mockDoneCh, 2*time.Second)
 	if err != nil {
 		t.Error("err should be nil")
 	}
@@ -135,5 +137,38 @@ func TestUnknownGRPCErrorStopsStream(t *testing.T) {
 	flow := <-dataCh
 	if flow != nil {
 		t.Errorf("flow should be nil, was: %s", flow)
+	}
+}
+
+func TestKnownGRPCErrorTriggersReconnect(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	mockFlowsClient := mocks.NewMockFlowsClient(ctrl)
+
+	client := NewClient("goldmane:7443", mockFlowsClient)
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	flowResult = nil
+	mockErr = status.Error(codes.NotFound, "some description")
+
+	mockDoneCh := make(chan bool)
+	reconnectWaitTime := 2 * time.Second
+
+	mockGrpcServerStreamingClient := MockGrpcServerStreamingClient[pb.FlowResult]{}
+	mockFlowsClient.EXPECT().Stream(ctx, &pb.FlowStreamRequest{}).Return(mockGrpcServerStreamingClient, nil).AnyTimes()
+
+	dataCh, reconnectCh, err := client.StreamFlows(ctx, mockDoneCh, reconnectWaitTime)
+	if err != nil {
+		t.Error("err should be nil")
+	}
+	if dataCh == nil {
+		t.Error("data channel should not be nil")
+	}
+
+	reconnectAttempt := <-reconnectCh
+	if !errors.Is(reconnectAttempt, mockErr) {
+		t.Errorf("reconnects should have been made")
 	}
 }

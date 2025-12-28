@@ -13,7 +13,7 @@ import (
 )
 
 type GoldmaneApi interface {
-	StreamFlows(context context.Context, done chan<- bool, reconnectWaitTime time.Duration) (<-chan *pb.Flow, error)
+	StreamFlows(context context.Context, done chan<- bool, reconnectWaitTime time.Duration) (<-chan *pb.Flow, <-chan error, error)
 }
 
 type GoldmaneClient struct {
@@ -28,8 +28,13 @@ func (c *GoldmaneClient) Close() error {
 	return nil
 }
 
-func (c *GoldmaneClient) StreamFlows(context context.Context, done chan<- bool, reconnectWaitTime time.Duration) (<-chan *pb.Flow, error) {
+func (c *GoldmaneClient) StreamFlows(
+	context context.Context,
+	done chan<- bool,
+	reconnectWaitTime time.Duration,
+) (<-chan *pb.Flow, <-chan error, error) {
 	data := make(chan *pb.Flow)
+	reconnectErrors := make(chan error)
 
 	go func() {
 		for {
@@ -51,23 +56,29 @@ func (c *GoldmaneClient) StreamFlows(context context.Context, done chan<- bool, 
 				// block until streaming fails, then check return
 				// value to see if reconnect should be done or if
 				// the execution should be terminated
-				reconnect, _ := streamFlowsUntilError(context, stream, data)
+				reconnect, err := streamFlowsUntilError(context, stream, data)
 				if !reconnect {
 					close(data)
 					done <- true
 					return
 				}
+
+				reconnectErrors <- err
 			}
 		}
 	}()
 
-	return data, nil
+	return data, reconnectErrors, nil
 }
 
 // start streaming flow logs to channel `data` until error is
 // received from grpc. If there is a possibillity for recovery
 // by reconnecting, flag it to the caller using `reconnect`
-func streamFlowsUntilError(context context.Context, stream grpc.ServerStreamingClient[pb.FlowResult], data chan<- *pb.Flow) (reconnect bool, err error) {
+func streamFlowsUntilError(
+	context context.Context,
+	stream grpc.ServerStreamingClient[pb.FlowResult],
+	data chan<- *pb.Flow,
+) (reconnect bool, err error) {
 	// start out with the assumption that
 	// reconnecting won't be done for the
 	// majority of errors

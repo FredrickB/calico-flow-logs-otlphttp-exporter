@@ -50,12 +50,12 @@ func TestStartLogStreaming(t *testing.T) {
 	dataChannelMock <- &flow
 
 	goldmaneApiMock := mocks.NewMockGoldmaneApi(ctrl)
-	goldmaneApiMock.EXPECT().StreamFlows(ctx, gomock.Any(), gomock.Any()).Return(dataChannelMock, nil).Times(1)
+	goldmaneApiMock.EXPECT().StreamFlows(ctx, gomock.Any(), gomock.Any()).Return(dataChannelMock, nil, nil).Times(1)
 
 	otlpLoggerMock := mocks.NewMockOtlpLogger(ctrl)
 	otlpLoggerMock.EXPECT().ReceiveFlows(ctx, dataChannelMock).Times(1)
 
-	doneChannel, err := StartLogStreaming(ctx, goldmaneApiMock, otlpLoggerMock, 2*time.Second)
+	doneChannel, _, err := StartLogStreaming(ctx, goldmaneApiMock, otlpLoggerMock, 2*time.Second)
 
 	if err != nil {
 		t.Errorf("err should be nil")
@@ -92,12 +92,12 @@ func TestStartLogStreamingFailsIfStreamFlowsReturnsErr(t *testing.T) {
 	reconnectWaitTime := 2 * time.Second
 
 	goldmaneApiMock := mocks.NewMockGoldmaneApi(ctrl)
-	goldmaneApiMock.EXPECT().StreamFlows(ctx, gomock.Any(), gomock.Any()).Return(nil, err)
+	goldmaneApiMock.EXPECT().StreamFlows(ctx, gomock.Any(), gomock.Any()).Return(nil, nil, err)
 
 	otlpLoggerMock := mocks.NewMockOtlpLogger(ctrl)
 	otlpLoggerMock.EXPECT().ReceiveFlows(ctx, flowChannelMock).Times(0)
 
-	doneChannel, err := StartLogStreaming(ctx, goldmaneApiMock, otlpLoggerMock, reconnectWaitTime)
+	doneChannel, _, err := StartLogStreaming(ctx, goldmaneApiMock, otlpLoggerMock, reconnectWaitTime)
 
 	if err == nil {
 		t.Errorf("err should not be nil")
