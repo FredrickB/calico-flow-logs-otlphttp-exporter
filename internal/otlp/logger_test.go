@@ -13,7 +13,9 @@ import (
 )
 
 var (
-	flow = pb.Flow{}
+	flow = pb.Flow{
+		SourceLabels: []string{"test=true"},
+	}
 )
 
 func TestReceiveFlows(t *testing.T) {

@@ -14,7 +14,9 @@ import (
 )
 
 var (
-	flow = pb.Flow{}
+	flow = pb.Flow{
+		SourceLabels: []string{"test=true"},
+	}
 )
 
 func TestShouldParseSecondsCorrectly(t *testing.T) {
