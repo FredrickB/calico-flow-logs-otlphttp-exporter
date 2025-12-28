@@ -48,14 +48,28 @@ func TestStartLogStreaming(t *testing.T) {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
-	dataChannelMock := make(chan *pb.Flow, 1)
-	dataChannelMock <- &flow
+	var wg sync.WaitGroup
+	wg.Add(1)
+
+	dataChMock := make(chan *pb.Flow, 1)
+	dataChMock <- &flow
 
 	goldmaneApiMock := mocks.NewMockGoldmaneApi(ctrl)
-	goldmaneApiMock.EXPECT().StreamFlows(ctx, gomock.Any(), gomock.Any()).Return(dataChannelMock, nil, nil).Times(1)
+	goldmaneApiMock.EXPECT().
+		StreamFlows(ctx, gomock.Any(), gomock.Any()).
+		Return(dataChMock, nil, nil).
+		Times(1)
 
 	otlpLoggerMock := mocks.NewMockOtlpLogger(ctrl)
-	otlpLoggerMock.EXPECT().ReceiveFlows(ctx, dataChannelMock).Times(1)
+	otlpLoggerMock.EXPECT().
+		ReceiveFlows(ctx, dataChMock).
+		// replace method with a call to the waitgroup
+		// since the real implementation is ran in its
+		// own goroutine
+		Do(func(_ context.Context, _ <-chan *pb.Flow) {
+			wg.Done()
+		}).
+		Times(1)
 
 	doneChannel, _, err := StartLogStreaming(ctx, goldmaneApiMock, otlpLoggerMock, 2*time.Second)
 
@@ -66,19 +80,8 @@ func TestStartLogStreaming(t *testing.T) {
 		t.Errorf("done channel should not be nil")
 	}
 
-	var wg sync.WaitGroup
-	wg.Add(2)
-
-	// make a waiting mechanism
-	go func() {
-		doneChannel <- true
-		wg.Done()
-	}()
-	go func() {
-		<-doneChannel
-		wg.Done()
-	}()
-
+	// block and wait for the otlplogger to be invoked
+	// in its own goroutine
 	wg.Wait()
 }
 
