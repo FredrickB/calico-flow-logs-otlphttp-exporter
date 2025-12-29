@@ -40,6 +40,8 @@ func (c *GoldmaneClient) StreamFlows(
 			select {
 			case <-ctx.Done():
 				log.Println("Context done, terminating")
+				close(data)
+				close(reconnectErrors)
 				return
 			default:
 				stream, err := c.client.Stream(ctx, &pb.FlowStreamRequest{})
@@ -58,6 +60,7 @@ func (c *GoldmaneClient) StreamFlows(
 				reconnect, err := streamFlowsUntilError(ctx, stream, data)
 				if !reconnect {
 					close(data)
+					close(reconnectErrors)
 					return
 				}
 
