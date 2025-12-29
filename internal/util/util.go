@@ -2,7 +2,6 @@ package util
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"strconv"
 	"time"
@@ -17,16 +16,10 @@ func StartLogStreaming(
 	client goldmane.GoldmaneApi,
 	logger otlp.OtlpLogger,
 	reconnectWaitTime time.Duration,
-) (chan bool, <-chan error, error) {
-	done := make(chan bool)
-
-	data, reconnects, err := client.StreamFlows(context, done, reconnectWaitTime)
-	if err != nil {
-		return nil, nil, fmt.Errorf("error during start of log streaming: %s", err)
-	}
-
+) <-chan error {
+	data, reconnects := client.StreamFlows(context, reconnectWaitTime)
 	go logger.ReceiveFlows(context, data)
-	return done, reconnects, nil
+	return reconnects
 }
 
 func Cleanup(context context.Context, client *goldmane.GoldmaneClient, logger *otlp.Logger, connection *grpc.ClientConn) {

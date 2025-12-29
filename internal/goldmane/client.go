@@ -13,7 +13,7 @@ import (
 )
 
 type GoldmaneApi interface {
-	StreamFlows(context context.Context, done chan<- bool, reconnectWaitTime time.Duration) (<-chan *pb.Flow, <-chan error, error)
+	StreamFlows(context context.Context, reconnectWaitTime time.Duration) (<-chan *pb.Flow, <-chan error)
 }
 
 type GoldmaneClient struct {
@@ -29,21 +29,20 @@ func (c *GoldmaneClient) Close() error {
 }
 
 func (c *GoldmaneClient) StreamFlows(
-	context context.Context,
-	done chan<- bool,
+	ctx context.Context,
 	reconnectWaitTime time.Duration,
-) (<-chan *pb.Flow, <-chan error, error) {
+) (<-chan *pb.Flow, <-chan error) {
 	data := make(chan *pb.Flow)
 	reconnectErrors := make(chan error)
 
 	go func() {
 		for {
 			select {
-			case <-context.Done():
+			case <-ctx.Done():
 				log.Println("Context done, terminating")
 				return
 			default:
-				stream, err := c.client.Stream(context, &pb.FlowStreamRequest{})
+				stream, err := c.client.Stream(ctx, &pb.FlowStreamRequest{})
 
 				if err != nil {
 					log.Printf("Failed to create stream: %s. Sleeping for %s", err, reconnectWaitTime)
@@ -56,10 +55,9 @@ func (c *GoldmaneClient) StreamFlows(
 				// block until streaming fails, then check return
 				// value to see if reconnect should be done or if
 				// the execution should be terminated
-				reconnect, err := streamFlowsUntilError(context, stream, data)
+				reconnect, err := streamFlowsUntilError(ctx, stream, data)
 				if !reconnect {
 					close(data)
-					done <- true
 					return
 				}
 
@@ -68,7 +66,7 @@ func (c *GoldmaneClient) StreamFlows(
 		}
 	}()
 
-	return data, reconnectErrors, nil
+	return data, reconnectErrors
 }
 
 // start streaming flow logs to channel `data` until error is

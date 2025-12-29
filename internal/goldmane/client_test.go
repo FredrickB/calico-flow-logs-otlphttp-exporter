@@ -21,8 +21,8 @@ var (
 			SourceLabels: []string{"test=true"},
 		},
 	}
-	mockErr                    error = nil
-	ErrorNotMappedToGRPCStatus       = errors.New("error without GRPC mapping implementation")
+	mockErr                    error
+	ErrorNotMappedToGRPCStatus = errors.New("error without GRPC mapping implementation")
 )
 
 type MockGrpcServerStreamingClient[Res pb.FlowResult] struct {
@@ -52,19 +52,13 @@ func TestStreamFlowsPassesData(t *testing.T) {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
-	mockDoneCh := make(chan bool)
 	reconnectWaitTime := 2 * time.Second
 
 	mockGrpcServerStreamingClient := MockGrpcServerStreamingClient[pb.FlowResult]{}
-	mockFlowsClient.EXPECT().Stream(ctx, &pb.FlowStreamRequest{}).Return(mockGrpcServerStreamingClient, nil)
+	mockFlowsClient.EXPECT().Stream(ctx, &pb.FlowStreamRequest{}).
+		Return(mockGrpcServerStreamingClient, nil)
 
-	dataCh, _, err := client.StreamFlows(ctx, mockDoneCh, reconnectWaitTime)
-	if err != nil {
-		t.Error("err should be nil")
-	}
-	if dataCh == nil {
-		t.Error("data channel should not be nil")
-	}
+	dataCh, _ := client.StreamFlows(ctx, reconnectWaitTime)
 
 	receivedFlow := <-dataCh
 	if receivedFlow != flowResult.Flow {
@@ -85,20 +79,11 @@ func TestEOFErrorStopsStream(t *testing.T) {
 	flowResult = nil
 	mockErr = io.EOF
 
-	mockDoneCh := make(chan bool)
-
 	mockGrpcServerStreamingClient := MockGrpcServerStreamingClient[pb.FlowResult]{}
-	mockFlowsClient.EXPECT().Stream(ctx, &pb.FlowStreamRequest{}).Return(mockGrpcServerStreamingClient, nil)
+	mockFlowsClient.EXPECT().Stream(ctx, &pb.FlowStreamRequest{}).
+		Return(mockGrpcServerStreamingClient, nil)
 
-	dataCh, _, err := client.StreamFlows(ctx, mockDoneCh, 2*time.Second)
-	if err != nil {
-		t.Error("err should be nil")
-	}
-	if dataCh == nil {
-		t.Error("data channel should not be nil")
-	}
-
-	<-mockDoneCh
+	dataCh, _ := client.StreamFlows(ctx, 2*time.Second)
 
 	flow := <-dataCh
 	if flow != nil {
@@ -119,20 +104,11 @@ func TestUnknownGRPCErrorStopsStream(t *testing.T) {
 	flowResult = nil
 	mockErr = ErrorNotMappedToGRPCStatus
 
-	mockDoneCh := make(chan bool)
-
 	mockGrpcServerStreamingClient := MockGrpcServerStreamingClient[pb.FlowResult]{}
-	mockFlowsClient.EXPECT().Stream(ctx, &pb.FlowStreamRequest{}).Return(mockGrpcServerStreamingClient, nil)
+	mockFlowsClient.EXPECT().Stream(ctx, &pb.FlowStreamRequest{}).
+		Return(mockGrpcServerStreamingClient, nil)
 
-	dataCh, _, err := client.StreamFlows(ctx, mockDoneCh, 2*time.Second)
-	if err != nil {
-		t.Error("err should be nil")
-	}
-	if dataCh == nil {
-		t.Error("data channel should not be nil")
-	}
-
-	<-mockDoneCh
+	dataCh, _ := client.StreamFlows(ctx, 2*time.Second)
 
 	flow := <-dataCh
 	if flow != nil {
@@ -153,19 +129,14 @@ func TestKnownGRPCErrorTriggersReconnect(t *testing.T) {
 	flowResult = nil
 	mockErr = status.Error(codes.NotFound, "some description")
 
-	mockDoneCh := make(chan bool)
 	reconnectWaitTime := 2 * time.Second
 
 	mockGrpcServerStreamingClient := MockGrpcServerStreamingClient[pb.FlowResult]{}
-	mockFlowsClient.EXPECT().Stream(ctx, &pb.FlowStreamRequest{}).Return(mockGrpcServerStreamingClient, nil).AnyTimes()
+	mockFlowsClient.EXPECT().Stream(ctx, &pb.FlowStreamRequest{}).
+		Return(mockGrpcServerStreamingClient, nil).
+		AnyTimes()
 
-	dataCh, reconnectCh, err := client.StreamFlows(ctx, mockDoneCh, reconnectWaitTime)
-	if err != nil {
-		t.Error("err should be nil")
-	}
-	if dataCh == nil {
-		t.Error("data channel should not be nil")
-	}
+	_, reconnectCh := client.StreamFlows(ctx, reconnectWaitTime)
 
 	reconnectAttempt := <-reconnectCh
 	if !errors.Is(reconnectAttempt, mockErr) {

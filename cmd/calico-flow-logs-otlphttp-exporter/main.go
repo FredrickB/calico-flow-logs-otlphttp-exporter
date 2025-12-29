@@ -79,14 +79,11 @@ func main() {
 	reconnectWaitTime := util.ParseSecondsStringValue(reconnectSecondsStringValue, DEFAULT_RECONNECT_WAIT_TIME)
 	log.Printf("Reconnect wait time set to: %s", reconnectWaitTime)
 
-	streamClosed, reconnects, err := util.StartLogStreaming(context, client, otlpLogger, reconnectWaitTime)
-	if err != nil {
-		log.Fatalf("Failed to start streaming logs: %s", err)
-	}
+	reconnects := util.StartLogStreaming(context, client, otlpLogger, reconnectWaitTime)
 
-	done := make(chan bool)
-	go monitor(context, client, signals, streamClosed, done, cancel, otlpLogger, connection, reconnects)
-	<-done
+	go monitor(context, client, signals, cancel, otlpLogger, connection, reconnects)
+
+	<-context.Done()
 
 	log.Println("Program terminated")
 }
@@ -98,8 +95,6 @@ func monitor(
 	context context.Context,
 	client *goldmane.GoldmaneClient,
 	signals chan os.Signal,
-	streamClosed chan bool,
-	done chan bool,
 	cancelFunc func(),
 	logger *otlp.Logger,
 	connection *grpc.ClientConn,
@@ -110,17 +105,10 @@ func monitor(
 		case <-context.Done():
 			log.Println("Context done")
 			cleanup(context, client, logger, cancelFunc, connection)
-			done <- true
 			return
 		case <-signals:
 			log.Println("Termination signal received")
 			cleanup(context, client, logger, cancelFunc, connection)
-			done <- true
-			return
-		case <-streamClosed:
-			log.Println("Stream closed")
-			cleanup(context, client, logger, cancelFunc, connection)
-			done <- true
 			return
 		case err := <-reconnectErrors:
 			log.Printf("Reconnect attempted, error: %s", err)
