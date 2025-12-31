@@ -2,21 +2,43 @@ package util
 
 import (
 	"context"
-	"sync"
+	"reflect"
 	"testing"
 	"time"
 
-	mocks "github.com/FredrickB/calico-flow-logs-otlphttp-exporter/v2/gen/mocks"
 	pb "github.com/FredrickB/calico-flow-logs-otlphttp-exporter/v2/gen/protos"
-
-	"go.uber.org/mock/gomock"
 )
 
 var (
 	flow = pb.Flow{
 		SourceLabels: []string{"test=true"},
 	}
+	flows                   = make(chan *pb.Flow)
+	errors                  = make(chan error)
+	otlpLoggerReceivedFlows = []*pb.Flow{}
+	otlpLoggerError         error
 )
+
+type FakeGoldmaneApi struct {
+	Flows  chan (*pb.Flow)
+	Errors chan (error)
+}
+
+func (client *FakeGoldmaneApi) StreamFlows(
+	context context.Context,
+	reconnectWaitTime time.Duration,
+) (<-chan *pb.Flow, <-chan error) {
+	return client.Flows, client.Errors
+}
+
+type FakeOtlpLogger struct {
+	ReceivedFlows []*pb.Flow
+}
+
+func (logger *FakeOtlpLogger) ReceiveFlows(context context.Context, data <-chan *pb.Flow) error {
+	logger.ReceivedFlows = append(logger.ReceivedFlows, <-data)
+	return otlpLoggerError
+}
 
 func TestShouldParseSecondsCorrectly(t *testing.T) {
 	secondStringValue := "5"
@@ -41,42 +63,25 @@ func TestInvalidSecondsReturnsDefaultValue(t *testing.T) {
 }
 
 func TestStartLogStreaming(t *testing.T) {
-	ctrl := gomock.NewController(t)
-	defer ctrl.Finish()
-
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
-	var wg sync.WaitGroup
-	wg.Add(1)
-
-	dataChMock := make(chan *pb.Flow, 1)
-	dataChMock <- &flow
-
-	goldmaneApiMock := mocks.NewMockGoldmaneApi(ctrl)
-	goldmaneApiMock.EXPECT().
-		StreamFlows(ctx, gomock.Any()).
-		Return(dataChMock, nil).
-		Times(1)
-
-	otlpLoggerMock := mocks.NewMockOtlpLogger(ctrl)
-	otlpLoggerMock.EXPECT().
-		ReceiveFlows(ctx, dataChMock).
-		// replace method with a call to the waitgroup
-		// since the real implementation is ran in its
-		// own goroutine
-		Do(func(_ context.Context, _ <-chan *pb.Flow) {
-			wg.Done()
-		}).
-		Times(1)
-
-	reconnects := StartLogStreaming(ctx, goldmaneApiMock, otlpLoggerMock, 2*time.Second)
-
-	if reconnects != nil {
-		t.Errorf("reconnects should be nil")
+	goldmaneApiFake := &FakeGoldmaneApi{
+		Flows:  flows,
+		Errors: errors,
 	}
 
-	// block and wait for the otlplogger to be invoked
-	// in its own goroutine
-	wg.Wait()
+	otlpLoggerFake := FakeOtlpLogger{
+		ReceivedFlows: otlpLoggerReceivedFlows,
+	}
+
+	_ = StartLogStreaming(ctx, goldmaneApiFake, &otlpLoggerFake, 2*time.Second)
+
+	// pass in a flow to trigger consumption in logger
+	flows <- &flow
+
+	receivedFlow := *otlpLoggerFake.ReceivedFlows[0]
+	if !reflect.DeepEqual(receivedFlow, flow) {
+		t.Errorf("expected: %v, actual: %v", flow, receivedFlow)
+	}
 }
