@@ -3,9 +3,14 @@ package goldmane
 import (
 	"crypto/tls"
 	"crypto/x509"
+	"errors"
 	"os"
 
 	"google.golang.org/grpc/credentials"
+)
+
+var (
+	ErrInvalidX509KeyPairLoading = errors.New("Could not load X509KeyPair")
 )
 
 func NewTLSConfig(caCertFilePath, publicCertPath, privateKeyPath string) (credentials.TransportCredentials, error) {
@@ -15,7 +20,7 @@ func NewTLSConfig(caCertFilePath, publicCertPath, privateKeyPath string) (creden
 	)
 
 	if err != nil {
-		return nil, err
+		return nil, errors.Join(ErrInvalidX509KeyPairLoading, err)
 	}
 
 	caCert, err := os.ReadFile(caCertFilePath)
