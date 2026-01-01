@@ -81,7 +81,7 @@ func main() {
 
 	reconnects := util.StartLogStreaming(context, client, otlpLogger, reconnectWaitTime)
 
-	go monitor(context, client, signals, cancel, otlpLogger, connection, reconnects)
+	go monitor(context, signals, cancel, otlpLogger, connection, reconnects)
 
 	<-context.Done()
 
@@ -93,7 +93,6 @@ func main() {
 // signal is received
 func monitor(
 	context context.Context,
-	client *goldmane.GoldmaneClient,
 	signals chan os.Signal,
 	cancelFunc func(),
 	logger *otlp.Logger,
@@ -104,11 +103,11 @@ func monitor(
 		select {
 		case <-context.Done():
 			log.Println("Context done")
-			cleanup(context, client, logger, cancelFunc, connection)
+			cleanup(context, logger, cancelFunc, connection)
 			return
 		case <-signals:
 			log.Println("Termination signal received")
-			cleanup(context, client, logger, cancelFunc, connection)
+			cleanup(context, logger, cancelFunc, connection)
 			return
 		case err := <-reconnectErrors:
 			log.Printf("Reconnect attempted, error: %s", err)
@@ -118,13 +117,12 @@ func monitor(
 
 func cleanup(
 	context context.Context,
-	client *goldmane.GoldmaneClient,
 	logger *otlp.Logger,
 	cancelFunc func(),
 	connection *grpc.ClientConn,
 ) {
 	log.Println("Triggering cleanup...")
-	util.Cleanup(context, client, logger, connection)
+	util.Cleanup(context, logger, connection)
 	cancelFunc()
 	log.Println("Cleanup finished")
 }

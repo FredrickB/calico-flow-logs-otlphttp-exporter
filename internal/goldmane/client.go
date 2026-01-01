@@ -24,10 +24,6 @@ func NewClient(host string, client pb.FlowsClient) *GoldmaneClient {
 	return &GoldmaneClient{client: client}
 }
 
-func (c *GoldmaneClient) Close() error {
-	return nil
-}
-
 func (c *GoldmaneClient) StreamFlows(
 	ctx context.Context,
 	reconnectWaitTime time.Duration,

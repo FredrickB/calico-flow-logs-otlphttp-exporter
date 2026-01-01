@@ -22,10 +22,7 @@ func StartLogStreaming(
 	return reconnects
 }
 
-func Cleanup(context context.Context, client *goldmane.GoldmaneClient, logger *otlp.Logger, connection *grpc.ClientConn) {
-	if err := client.Close(); err != nil {
-		log.Printf("Error while closing client: %s", err)
-	}
+func Cleanup(context context.Context, logger *otlp.Logger, connection *grpc.ClientConn) {
 	if err := connection.Close(); err != nil {
 		log.Printf("Error while closing connection: %s", err)
 	}
