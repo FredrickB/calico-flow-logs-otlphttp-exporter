@@ -20,29 +20,29 @@ var (
 			SourceLabels: []string{"test=true"},
 		},
 	}
-	mockErr                    error
+	fakeErr                    error
 	ErrorNotMappedToGRPCStatus = errors.New("error without GRPC mapping implementation")
 )
 
-type MockGrpcServerStreamingClient[Res pb.FlowResult] struct {
-	MockClientStream
+type FakeGrpcServerStreamingClient[Res pb.FlowResult] struct {
+	FakeClientStream
 }
 
-func (MockGrpcServerStreamingClient[Res]) Recv() (*pb.FlowResult, error) {
-	return flowResult, mockErr
+func (FakeGrpcServerStreamingClient[Res]) Recv() (*pb.FlowResult, error) {
+	return flowResult, fakeErr
 }
 
-type MockClientStream struct{}
+type FakeClientStream struct{}
 
-func (MockClientStream) Header() (metadata.MD, error) { return nil, nil }
-func (MockClientStream) Trailer() metadata.MD         { return nil }
-func (MockClientStream) CloseSend() error             { return nil }
-func (MockClientStream) Context() context.Context     { return nil }
-func (MockClientStream) SendMsg(m any) error          { return nil }
-func (MockClientStream) RecvMsg(m any) error          { return nil }
+func (FakeClientStream) Header() (metadata.MD, error) { return nil, nil }
+func (FakeClientStream) Trailer() metadata.MD         { return nil }
+func (FakeClientStream) CloseSend() error             { return nil }
+func (FakeClientStream) Context() context.Context     { return nil }
+func (FakeClientStream) SendMsg(m any) error          { return nil }
+func (FakeClientStream) RecvMsg(m any) error          { return nil }
 
 type FakeFlowsClient struct {
-	StreamingClient MockGrpcServerStreamingClient[pb.FlowResult]
+	StreamingClient FakeGrpcServerStreamingClient[pb.FlowResult]
 }
 
 func (client *FakeFlowsClient) List(ctx context.Context, in *pb.FlowListRequest, opts ...grpc.CallOption) (*pb.FlowListResult, error) {
@@ -62,7 +62,7 @@ func TestStreamFlowsPassesData(t *testing.T) {
 	defer cancel()
 
 	mockFlowsClient := FakeFlowsClient{
-		StreamingClient: MockGrpcServerStreamingClient[pb.FlowResult]{},
+		StreamingClient: FakeGrpcServerStreamingClient[pb.FlowResult]{},
 	}
 
 	client := NewClient("goldmane:7443", &mockFlowsClient)
@@ -81,14 +81,14 @@ func TestEOFErrorStopsStream(t *testing.T) {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
-	mockFlowsClient := FakeFlowsClient{
-		StreamingClient: MockGrpcServerStreamingClient[pb.FlowResult]{},
+	fakeFlowsClient := FakeFlowsClient{
+		StreamingClient: FakeGrpcServerStreamingClient[pb.FlowResult]{},
 	}
 
-	client := NewClient("goldmane:7443", &mockFlowsClient)
+	client := NewClient("goldmane:7443", &fakeFlowsClient)
 
 	flowResult = nil
-	mockErr = io.EOF
+	fakeErr = io.EOF
 
 	dataCh, _ := client.StreamFlows(ctx, 2*time.Second)
 
@@ -102,14 +102,14 @@ func TestUnknownGRPCErrorStopsStream(t *testing.T) {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
-	mockFlowsClient := FakeFlowsClient{
-		StreamingClient: MockGrpcServerStreamingClient[pb.FlowResult]{},
+	fakeFlowsClient := FakeFlowsClient{
+		StreamingClient: FakeGrpcServerStreamingClient[pb.FlowResult]{},
 	}
 
-	client := NewClient("goldmane:7443", &mockFlowsClient)
+	client := NewClient("goldmane:7443", &fakeFlowsClient)
 
 	flowResult = nil
-	mockErr = ErrorNotMappedToGRPCStatus
+	fakeErr = ErrorNotMappedToGRPCStatus
 
 	dataCh, _ := client.StreamFlows(ctx, 2*time.Second)
 
@@ -123,21 +123,21 @@ func TestKnownGRPCErrorTriggersReconnect(t *testing.T) {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
-	mockFlowsClient := FakeFlowsClient{
-		StreamingClient: MockGrpcServerStreamingClient[pb.FlowResult]{},
+	fakeFlowsClient := FakeFlowsClient{
+		StreamingClient: FakeGrpcServerStreamingClient[pb.FlowResult]{},
 	}
 
-	client := NewClient("goldmane:7443", &mockFlowsClient)
+	client := NewClient("goldmane:7443", &fakeFlowsClient)
 
 	flowResult = nil
-	mockErr = status.Error(codes.NotFound, "some description")
+	fakeErr = status.Error(codes.NotFound, "some description")
 
 	reconnectWaitTime := 2 * time.Second
 
 	_, reconnectCh := client.StreamFlows(ctx, reconnectWaitTime)
 
 	reconnectAttempt := <-reconnectCh
-	if !errors.Is(reconnectAttempt, mockErr) {
+	if !errors.Is(reconnectAttempt, fakeErr) {
 		t.Errorf("reconnects should have been made")
 	}
 }
