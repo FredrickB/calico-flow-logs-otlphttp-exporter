@@ -10,7 +10,9 @@ import (
 )
 
 var (
-	ErrInvalidX509KeyPairLoading = errors.New("Could not load X509KeyPair")
+	ErrInvalidX509KeyPairLoading  = errors.New("Could not load x509KeyPair")
+	ErrCouldNotReadCaCertFilePath = errors.New("Could not read CA certificate file")
+	ErrCouldNotCreatex509CertPool = errors.New("Could not create x509 certpool from CA certificate file")
 )
 
 func NewTLSConfig(caCertFilePath, publicCertPath, privateKeyPath string) (credentials.TransportCredentials, error) {
@@ -25,12 +27,12 @@ func NewTLSConfig(caCertFilePath, publicCertPath, privateKeyPath string) (creden
 
 	caCert, err := os.ReadFile(caCertFilePath)
 	if err != nil {
-		return nil, err
+		return nil, errors.Join(ErrCouldNotReadCaCertFilePath, err)
 	}
 
 	caCertPool := x509.NewCertPool()
 	if ok := caCertPool.AppendCertsFromPEM(caCert); !ok {
-		return nil, err
+		return nil, errors.Join(ErrCouldNotCreatex509CertPool, err)
 	}
 
 	return credentials.NewTLS(&tls.Config{
