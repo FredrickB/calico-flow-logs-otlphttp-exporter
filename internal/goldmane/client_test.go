@@ -7,9 +7,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/FredrickB/calico-flow-logs-otlphttp-exporter/v2/gen/mocks"
 	pb "github.com/FredrickB/calico-flow-logs-otlphttp-exporter/v2/gen/protos"
-	"go.uber.org/mock/gomock"
+	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
@@ -42,21 +41,33 @@ func (MockClientStream) Context() context.Context     { return nil }
 func (MockClientStream) SendMsg(m any) error          { return nil }
 func (MockClientStream) RecvMsg(m any) error          { return nil }
 
+type FakeFlowsClient struct {
+	StreamingClient MockGrpcServerStreamingClient[pb.FlowResult]
+}
+
+func (client *FakeFlowsClient) List(ctx context.Context, in *pb.FlowListRequest, opts ...grpc.CallOption) (*pb.FlowListResult, error) {
+	return nil, nil
+}
+
+func (client *FakeFlowsClient) Stream(ctx context.Context, in *pb.FlowStreamRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[pb.FlowResult], error) {
+	return client.StreamingClient, nil
+}
+
+func (client *FakeFlowsClient) FilterHints(ctx context.Context, in *pb.FilterHintsRequest, opts ...grpc.CallOption) (*pb.FilterHintsResult, error) {
+	return nil, nil
+}
+
 func TestStreamFlowsPassesData(t *testing.T) {
-	ctrl := gomock.NewController(t)
-	defer ctrl.Finish()
-
-	mockFlowsClient := mocks.NewMockFlowsClient(ctrl)
-
-	client := NewClient("goldmane:7443", mockFlowsClient)
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
-	reconnectWaitTime := 2 * time.Second
+	mockFlowsClient := FakeFlowsClient{
+		StreamingClient: MockGrpcServerStreamingClient[pb.FlowResult]{},
+	}
 
-	mockGrpcServerStreamingClient := MockGrpcServerStreamingClient[pb.FlowResult]{}
-	mockFlowsClient.EXPECT().Stream(ctx, &pb.FlowStreamRequest{}).
-		Return(mockGrpcServerStreamingClient, nil)
+	client := NewClient("goldmane:7443", &mockFlowsClient)
+
+	reconnectWaitTime := 2 * time.Second
 
 	dataCh, _ := client.StreamFlows(ctx, reconnectWaitTime)
 
@@ -67,21 +78,17 @@ func TestStreamFlowsPassesData(t *testing.T) {
 }
 
 func TestEOFErrorStopsStream(t *testing.T) {
-	ctrl := gomock.NewController(t)
-	defer ctrl.Finish()
-
-	mockFlowsClient := mocks.NewMockFlowsClient(ctrl)
-
-	client := NewClient("goldmane:7443", mockFlowsClient)
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
+	mockFlowsClient := FakeFlowsClient{
+		StreamingClient: MockGrpcServerStreamingClient[pb.FlowResult]{},
+	}
+
+	client := NewClient("goldmane:7443", &mockFlowsClient)
+
 	flowResult = nil
 	mockErr = io.EOF
-
-	mockGrpcServerStreamingClient := MockGrpcServerStreamingClient[pb.FlowResult]{}
-	mockFlowsClient.EXPECT().Stream(ctx, &pb.FlowStreamRequest{}).
-		Return(mockGrpcServerStreamingClient, nil)
 
 	dataCh, _ := client.StreamFlows(ctx, 2*time.Second)
 
@@ -92,21 +99,17 @@ func TestEOFErrorStopsStream(t *testing.T) {
 }
 
 func TestUnknownGRPCErrorStopsStream(t *testing.T) {
-	ctrl := gomock.NewController(t)
-	defer ctrl.Finish()
-
-	mockFlowsClient := mocks.NewMockFlowsClient(ctrl)
-
-	client := NewClient("goldmane:7443", mockFlowsClient)
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
+	mockFlowsClient := FakeFlowsClient{
+		StreamingClient: MockGrpcServerStreamingClient[pb.FlowResult]{},
+	}
+
+	client := NewClient("goldmane:7443", &mockFlowsClient)
+
 	flowResult = nil
 	mockErr = ErrorNotMappedToGRPCStatus
-
-	mockGrpcServerStreamingClient := MockGrpcServerStreamingClient[pb.FlowResult]{}
-	mockFlowsClient.EXPECT().Stream(ctx, &pb.FlowStreamRequest{}).
-		Return(mockGrpcServerStreamingClient, nil)
 
 	dataCh, _ := client.StreamFlows(ctx, 2*time.Second)
 
@@ -117,24 +120,19 @@ func TestUnknownGRPCErrorStopsStream(t *testing.T) {
 }
 
 func TestKnownGRPCErrorTriggersReconnect(t *testing.T) {
-	ctrl := gomock.NewController(t)
-	defer ctrl.Finish()
-
-	mockFlowsClient := mocks.NewMockFlowsClient(ctrl)
-
-	client := NewClient("goldmane:7443", mockFlowsClient)
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
+
+	mockFlowsClient := FakeFlowsClient{
+		StreamingClient: MockGrpcServerStreamingClient[pb.FlowResult]{},
+	}
+
+	client := NewClient("goldmane:7443", &mockFlowsClient)
 
 	flowResult = nil
 	mockErr = status.Error(codes.NotFound, "some description")
 
 	reconnectWaitTime := 2 * time.Second
-
-	mockGrpcServerStreamingClient := MockGrpcServerStreamingClient[pb.FlowResult]{}
-	mockFlowsClient.EXPECT().Stream(ctx, &pb.FlowStreamRequest{}).
-		Return(mockGrpcServerStreamingClient, nil).
-		AnyTimes()
 
 	_, reconnectCh := client.StreamFlows(ctx, reconnectWaitTime)
 

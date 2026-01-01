@@ -44,7 +44,6 @@ clean:
 install-development-packages:
 	go install google.golang.org/protobuf/cmd/protoc-gen-go@v1.36.10
 	go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@v1.5.1
-	go install go.uber.org/mock/mockgen@v0.6.0
 
 fetch-protobuf-definition:
 	mkdir -p $(PROTOBUF_DEFINITIONS_DIR)
@@ -94,11 +93,6 @@ lint:
 	gofmt -l .
 
 test: generate-code-from-protobuf
-	mkdir -p $(GEN_DIR)/mocks
-	mockgen -source=internal/goldmane/client.go -destination=gen/mocks/goldmane_mocks.go -package=mocks
-	mockgen -source=internal/otlp/logger.go -destination=gen/mocks/otlp_logger_mocks.go -package=mocks
-	mockgen -source=internal/otlp/processor.go -destination=gen/mocks/otlp_processor_mocks.go -package=mocks
-	mockgen -source=gen/protos/api_grpc.pb.go -destination=gen/mocks/api_grpc_mocks.go -package=mocks
 	go test -v ./...
 
 build:

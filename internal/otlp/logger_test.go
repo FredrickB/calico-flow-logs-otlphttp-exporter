@@ -6,9 +6,7 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/FredrickB/calico-flow-logs-otlphttp-exporter/v2/gen/mocks"
 	pb "github.com/FredrickB/calico-flow-logs-otlphttp-exporter/v2/gen/protos"
-	"go.uber.org/mock/gomock"
 	"google.golang.org/protobuf/encoding/protojson"
 )
 
@@ -16,55 +14,56 @@ var (
 	flow = pb.Flow{
 		SourceLabels: []string{"test=true"},
 	}
+	processedFlows = []string{}
 )
 
-func TestReceiveFlows(t *testing.T) {
-	ctrl := gomock.NewController(t)
-	defer ctrl.Finish()
+type FakeProcessor struct {
+	ProcessedFlows []string
+}
 
+func (processor *FakeProcessor) Log(_ context.Context, message string) {
+	processor.ProcessedFlows = append(processor.ProcessedFlows, message)
+}
+
+func (processor *FakeProcessor) Close(_ context.Context) error {
+	return nil
+}
+
+func TestReceiveFlows(t *testing.T) {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
-	var wg sync.WaitGroup
-	wg.Add(1)
+	flowCh := make(chan *pb.Flow)
 
-	flowChannel := make(chan *pb.Flow, 2)
-	flowChannel <- &flow
+	processorFake := FakeProcessor{ProcessedFlows: processedFlows}
 
-	processorMock := mocks.NewMockProcessor(ctrl)
 	flowJson, marshalErr := protojson.Marshal(&flow)
 	if marshalErr != nil {
-		t.Errorf("should not fail to marshal flow protobuf")
+		t.Errorf("should not fail to marshal flow")
 	}
-	processorMock.EXPECT().Log(ctx, string(flowJson)).Times(1)
 
-	logger := NewLogger(processorMock)
-
-	var err error
+	logger := NewLogger(&processorFake)
 
 	go func() {
-		wg.Done()
-		err = logger.ReceiveFlows(ctx, flowChannel)
+		logger.ReceiveFlows(ctx, flowCh)
 	}()
 
-	wg.Wait()
+	flowCh <- &flow
 
-	if err != nil {
-		t.Errorf("err should be nil")
+	actualFlow := processorFake.ProcessedFlows[0]
+
+	if actualFlow != string(flowJson) {
+		t.Errorf("expected: %s, actual: %s", string(flowJson), actualFlow)
 	}
 }
 
 func TestReceiveFlowsWithContextCancelDoesNotInvokeCallToProcessor(t *testing.T) {
-	ctrl := gomock.NewController(t)
-	defer ctrl.Finish()
-
 	ctx, cancel := context.WithCancel(context.Background())
 
-	processorMock := mocks.NewMockProcessor(ctrl)
-	processorMock.EXPECT().Log(gomock.Any(), gomock.Any()).Times(0)
+	processorFake := FakeProcessor{ProcessedFlows: processedFlows}
 
-	logger := NewLogger(processorMock)
-	flowChannel := make(chan *pb.Flow)
+	logger := NewLogger(&processorFake)
+	flowCh := make(chan *pb.Flow)
 
 	var wg sync.WaitGroup
 	wg.Add(1)
@@ -72,7 +71,7 @@ func TestReceiveFlowsWithContextCancelDoesNotInvokeCallToProcessor(t *testing.T)
 	var err error
 
 	go func() {
-		err = logger.ReceiveFlows(ctx, flowChannel)
+		err = logger.ReceiveFlows(ctx, flowCh)
 		wg.Done()
 	}()
 
@@ -87,13 +86,9 @@ func TestReceiveFlowsWithContextCancelDoesNotInvokeCallToProcessor(t *testing.T)
 }
 
 func TestReceiveFlowsWithClosedDataChannelDoesNotInvokeCallToProcessor(t *testing.T) {
-	ctrl := gomock.NewController(t)
-	defer ctrl.Finish()
+	processorFake := FakeProcessor{ProcessedFlows: processedFlows}
 
-	processorMock := mocks.NewMockProcessor(ctrl)
-	processorMock.EXPECT().Log(gomock.Any(), gomock.Any()).Times(0)
-
-	logger := NewLogger(processorMock)
+	logger := NewLogger(&processorFake)
 	flowChannel := make(chan *pb.Flow)
 
 	var wg sync.WaitGroup
