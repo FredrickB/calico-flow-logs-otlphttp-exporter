@@ -70,8 +70,7 @@ func main() {
 	if err != nil {
 		log.Fatalf("Error while creating loggerprovider: %s", err)
 	}
-	processor := otlp.NewProcessor(context, PACKAGE_NAME, loggerProvider)
-	otlpLogger := otlp.NewLogger(processor)
+	otlpLogger := otlp.NewLogger(otlp.NewProcessor(context, PACKAGE_NAME, loggerProvider))
 
 	signals := make(chan os.Signal, 2)
 	signal.Notify(signals, os.Interrupt, syscall.SIGTERM)
