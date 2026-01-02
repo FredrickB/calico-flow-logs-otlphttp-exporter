@@ -18,23 +18,23 @@ import (
 )
 
 const (
-	CA_CERT_PATH_ENV                   string        = "CA_CERT_PATH"
-	PRIVATE_KEY_PATH_ENV               string        = "PRIVATE_KEY_PATH"
-	PUBLIC_CERT_PATH_ENV               string        = "PUBLIC_CERT_PATH"
-	GOLDMANE_HOST_ENV                  string        = "GOLDMANE_HOST"
-	RECONNECT_WAIT_TIME_IN_SECONDS_ENV string        = "RECONNECT_WAIT_TIME_IN_SECONDS"
-	DEFAULT_RECONNECT_WAIT_TIME        time.Duration = 5 * time.Second
-	PACKAGE_NAME                       string        = "calico-flow-logs-otlphttp-exporter"
-	SERVICE_NAME                       string        = "calico-flow-logs-otlphttp-exporter"
-	SERVICE_VERSION                    string        = "REPLACED_DURING_BUILD"
+	CA_CERT_PATH_ENV                        string        = "CA_CERT_PATH"
+	PRIVATE_KEY_PATH_ENV                    string        = "PRIVATE_KEY_PATH"
+	PUBLIC_CERT_PATH_ENV                    string        = "PUBLIC_CERT_PATH"
+	GOLDMANE_HOST_ENV                       string        = "GOLDMANE_HOST"
+	RECONNECT_WAIT_TIME_IN_MILLISECONDS_ENV string        = "RECONNECT_WAIT_TIME_IN_MILLISECONDS"
+	DEFAULT_RECONNECT_WAIT_TIME             time.Duration = 5 * time.Second
+	PACKAGE_NAME                            string        = "calico-flow-logs-otlphttp-exporter"
+	SERVICE_NAME                            string        = "calico-flow-logs-otlphttp-exporter"
+	SERVICE_VERSION                         string        = "REPLACED_DURING_BUILD"
 )
 
 var (
-	caCertFilePath, caCertSet                                   = os.LookupEnv(CA_CERT_PATH_ENV)
-	publicCertPath, publicCertSet                               = os.LookupEnv(PUBLIC_CERT_PATH_ENV)
-	privateKeyPath, privateKeySet                               = os.LookupEnv(PRIVATE_KEY_PATH_ENV)
-	goldmaneHost, goldmaneHostSet                               = os.LookupEnv(GOLDMANE_HOST_ENV)
-	reconnectSecondsStringValue, reconnectSecondsStringValueSet = os.LookupEnv(RECONNECT_WAIT_TIME_IN_SECONDS_ENV)
+	caCertFilePath, caCertSet                                             = os.LookupEnv(CA_CERT_PATH_ENV)
+	publicCertPath, publicCertSet                                         = os.LookupEnv(PUBLIC_CERT_PATH_ENV)
+	privateKeyPath, privateKeySet                                         = os.LookupEnv(PRIVATE_KEY_PATH_ENV)
+	goldmaneHost, goldmaneHostSet                                         = os.LookupEnv(GOLDMANE_HOST_ENV)
+	reconnectMilliSecondsStringValue, reconnectMilliSecondsStringValueSet = os.LookupEnv(RECONNECT_WAIT_TIME_IN_MILLISECONDS_ENV)
 )
 
 func main() {
@@ -50,8 +50,8 @@ func main() {
 	util.LogEnvironmentVariable(PRIVATE_KEY_PATH_ENV, privateKeyPath)
 	util.LogEnvironmentVariable(PUBLIC_CERT_PATH_ENV, publicCertPath)
 	util.LogEnvironmentVariable(GOLDMANE_HOST_ENV, goldmaneHost)
-	if reconnectSecondsStringValueSet {
-		util.LogEnvironmentVariable(RECONNECT_WAIT_TIME_IN_SECONDS_ENV, reconnectSecondsStringValue)
+	if reconnectMilliSecondsStringValueSet {
+		util.LogEnvironmentVariable(RECONNECT_WAIT_TIME_IN_MILLISECONDS_ENV, reconnectMilliSecondsStringValue)
 	}
 
 	tlsConfig, err := goldmane.NewTLSConfig(caCertFilePath, publicCertPath, privateKeyPath)
@@ -75,7 +75,7 @@ func main() {
 	signals := make(chan os.Signal, 2)
 	signal.Notify(signals, os.Interrupt, syscall.SIGTERM)
 
-	reconnectWaitTime := util.ParseSecondsStringValue(reconnectSecondsStringValue, DEFAULT_RECONNECT_WAIT_TIME)
+	reconnectWaitTime := util.ParseMilliSecondsStringValue(reconnectMilliSecondsStringValue, DEFAULT_RECONNECT_WAIT_TIME)
 	log.Printf("Reconnect wait time set to: %s", reconnectWaitTime)
 
 	reconnects := util.StartLogStreaming(context, client, otlpLogger, reconnectWaitTime)
