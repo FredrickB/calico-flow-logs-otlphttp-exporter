@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.9.2
+
+### Fixes
+
+Cast all environment variables to string as part
+of rendering. Fixes the issue where passing
+`RECONNECT_WAIT_TIME_IN_SECONDS` was always cast
+as int.
+
 ## 0.9.1
 
 ### Fixes
