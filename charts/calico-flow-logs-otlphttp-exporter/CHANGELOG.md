@@ -9,14 +9,14 @@ of rendering. Fixes the issue where passing
 `RECONNECT_WAIT_TIME_IN_SECONDS` was always cast
 as int.
 
-## 0.9.1
+## 0.9.1 [YANKED]
 
 ### Fixes
 
 Change `RECONNECT_WAIT_TIME_IN_SECONDS` back to
 string datatype.
 
-## 0.9.0
+## 0.9.0 [YANKED]
 
 ### Breaking changes
 
