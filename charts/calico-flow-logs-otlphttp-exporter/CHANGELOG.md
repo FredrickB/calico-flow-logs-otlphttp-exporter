@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.10.0
+
+### Breaking changes
+
+Upgrade to version `0.13.0` of binary, change
+to `RECONNECT_WAIT_TIME_IN_MILLISECONDS` from
+`RECONNECT_WAIT_TIME_IN_SECONDS`. Default
+reconnect wait time remains at 5 seconds.
+
 ## 0.9.2
 
 ### Fixes
