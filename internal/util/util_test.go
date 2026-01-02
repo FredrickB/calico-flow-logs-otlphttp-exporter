@@ -41,10 +41,10 @@ func (logger *FakeOtlpLogger) ReceiveFlows(context context.Context, data <-chan 
 }
 
 func TestShouldParseSecondsCorrectly(t *testing.T) {
-	secondStringValue := "5"
-	defaultValue := 10 * time.Second
-	expected := 5 * time.Second
-	actual := ParseSecondsStringValue(secondStringValue, defaultValue)
+	milliSecondStringValue := "5"
+	defaultValue := 10 * time.Millisecond
+	expected := 5 * time.Millisecond
+	actual := ParseMilliSecondsStringValue(milliSecondStringValue, defaultValue)
 
 	if actual != expected {
 		t.Errorf("expected: %s, actual: %s", expected, actual)
@@ -52,10 +52,10 @@ func TestShouldParseSecondsCorrectly(t *testing.T) {
 }
 
 func TestInvalidSecondsReturnsDefaultValue(t *testing.T) {
-	secondStringValue := "invalid seconds"
-	defaultValue := 10 * time.Second
+	milliSecondStringValue := "invalid milliseconds"
+	defaultValue := 10 * time.Millisecond
 	expected := defaultValue
-	actual := ParseSecondsStringValue(secondStringValue, defaultValue)
+	actual := ParseMilliSecondsStringValue(milliSecondStringValue, defaultValue)
 
 	if actual != expected {
 		t.Errorf("expected: %s, actual: %s", expected, actual)
