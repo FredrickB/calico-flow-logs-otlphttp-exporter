@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.9.1
+
+### Fixes
+
+Change `RECONNECT_WAIT_TIME_IN_SECONDS` back to
+string datatype.
+
 ## 0.9.0
 
 ### Breaking changes
