@@ -57,9 +57,12 @@ spec:
           volumeMounts:
             {{- toYaml . | nindent 12 }}
           {{- end }}
-          {{- with .Values.env }}
+          {{- if gt (len .Values.env) 0 }}
           env:
-            {{- toYaml . | nindent 12 }}
+            {{- range $k, $v := .Values.env }}
+            - name: {{ $k }}
+              value: {{ $v }}
+            {{- end }}
           {{- end }}
       {{- with .Values.volumes }}
       volumes:

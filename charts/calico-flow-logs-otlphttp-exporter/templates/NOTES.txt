@@ -1,4 +1,6 @@
+{{- if gt (len .Values.env) 0 }}
 Environment variables set in configuration:
-{{ range .Values.env }}
-{{ .name }}: {{ .value }}
+{{- range $k, $v := .Values.env }}
+{{ $k }}: {{ $v }}
+{{- end }}
 {{- end }}
