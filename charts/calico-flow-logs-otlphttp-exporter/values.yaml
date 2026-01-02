@@ -20,21 +20,15 @@ nameOverride: ""
 fullnameOverride: ""
 
 env:
-  - name: GOLDMANE_HOST
-    value: "goldmane:7443"
+  GOLDMANE_HOST: "goldmane:7443"
   # Replace with your own OTLP-compatible endpoint
-  - name: OTEL_EXPORTER_OTLP_ENDPOINT
-    value: "http://localhost:4318"
-  - name: CA_CERT_PATH
-    value: "/etc/goldmane/ca-cert/tigera-ca-bundle.crt"
-  - name: PRIVATE_KEY_PATH
-    value: "/etc/goldmane/certs/tls.key"
-  - name: PUBLIC_CERT_PATH
-    value: "/etc/goldmane/certs/tls.crt"
+  OTEL_EXPORTER_OTLP_ENDPOINT: "http://localhost:4318"
+  CA_CERT_PATH: "/etc/goldmane/ca-cert/tigera-ca-bundle.crt"
+  PRIVATE_KEY_PATH: "/etc/goldmane/certs/tls.key"
+  PUBLIC_CERT_PATH: "/etc/goldmane/certs/tls.crt"
   # Time to wait between reconnect attempts
   # to Goldmane in the event of loss of connection
-  - name: RECONNECT_WAIT_TIME_IN_SECONDS
-    value: "5"
+  RECONNECT_WAIT_TIME_IN_SECONDS: 5
 
 volumes:
   - name: goldmane-certs
