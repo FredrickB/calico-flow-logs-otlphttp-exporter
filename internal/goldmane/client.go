@@ -3,7 +3,6 @@ package goldmane
 import (
 	"context"
 	"errors"
-	"fmt"
 	"io"
 	"log"
 	"time"
@@ -13,68 +12,70 @@ import (
 	"google.golang.org/grpc/status"
 )
 
+type GoldmaneApi interface {
+	StreamFlows(context context.Context, reconnectWaitTime time.Duration) (<-chan *pb.Flow, <-chan error)
+}
+
 type GoldmaneClient struct {
-	connection          *grpc.ClientConn
-	flowCollectorClient pb.FlowsClient
+	client pb.FlowsClient
 }
 
-func NewClient(host, caCertificateFilepath, publicCertFilepath, privateKeyFilepath string) (*GoldmaneClient, error) {
-	tlsConfig, err := newTLSConfig(caCertificateFilepath, publicCertFilepath, privateKeyFilepath)
-	if err != nil {
-		return nil, fmt.Errorf("failed to construct TLS certificate: %s", err)
-	}
-
-	connection, err := grpc.NewClient(host, grpc.WithTransportCredentials(tlsConfig))
-	if err != nil {
-		return nil, fmt.Errorf("cannot make a connection to Goldmane on host: %s. Error: %s", host, err)
-	}
-
-	flowClientConnection := pb.NewFlowsClient(connection)
-
-	return &GoldmaneClient{
-		connection:          connection,
-		flowCollectorClient: flowClientConnection,
-	}, nil
+func NewClient(host string, client pb.FlowsClient) *GoldmaneClient {
+	return &GoldmaneClient{client: client}
 }
 
-func (client *GoldmaneClient) Close() error {
-	return client.connection.Close()
-}
-
-func (client *GoldmaneClient) StreamFlows(context context.Context, done chan<- bool, reconnectWaitTime time.Duration) (<-chan *pb.Flow, error) {
+func (c *GoldmaneClient) StreamFlows(
+	ctx context.Context,
+	reconnectWaitTime time.Duration,
+) (<-chan *pb.Flow, <-chan error) {
 	data := make(chan *pb.Flow)
+	reconnectErrors := make(chan error)
 
 	go func() {
 		for {
-			stream, err := client.flowCollectorClient.Stream(context, &pb.FlowStreamRequest{})
-
-			if err != nil {
-				log.Printf("Failed to create stream: %s. Sleeping for %s", err, reconnectWaitTime)
-				time.Sleep(reconnectWaitTime)
-				continue
-			}
-
-			log.Printf("Stream created")
-
-			// block until streaming fails, then check return
-			// value to see if reconnect should be done or if
-			// the execution should be terminated
-			reconnect, _ := streamFlowsUntilError(context, stream, data)
-			if !reconnect {
+			select {
+			case <-ctx.Done():
+				log.Println("Context done, terminating")
 				close(data)
-				done <- true
+				close(reconnectErrors)
 				return
+			default:
+				stream, err := c.client.Stream(ctx, &pb.FlowStreamRequest{})
+
+				if err != nil {
+					log.Printf("Failed to create stream: %s. Sleeping for %s", err, reconnectWaitTime)
+					time.Sleep(reconnectWaitTime)
+					continue
+				}
+
+				log.Printf("Stream created")
+
+				// block until streaming fails, then check return
+				// value to see if reconnect should be done or if
+				// the execution should be terminated
+				reconnect, err := streamFlowsUntilError(ctx, stream, data)
+				if !reconnect {
+					close(data)
+					close(reconnectErrors)
+					return
+				}
+
+				reconnectErrors <- err
 			}
 		}
 	}()
 
-	return data, nil
+	return data, reconnectErrors
 }
 
 // start streaming flow logs to channel `data` until error is
 // received from grpc. If there is a possibillity for recovery
 // by reconnecting, flag it to the caller using `reconnect`
-func streamFlowsUntilError(context context.Context, stream grpc.ServerStreamingClient[pb.FlowResult], data chan<- *pb.Flow) (reconnect bool, err error) {
+func streamFlowsUntilError(
+	context context.Context,
+	stream grpc.ServerStreamingClient[pb.FlowResult],
+	data chan<- *pb.Flow,
+) (reconnect bool, err error) {
 	// start out with the assumption that
 	// reconnecting won't be done for the
 	// majority of errors
@@ -88,8 +89,8 @@ func streamFlowsUntilError(context context.Context, stream grpc.ServerStreamingC
 			log.Println("Context done, terminating")
 			return
 		default:
-			var flowResult pb.FlowResult
-			err = stream.RecvMsg(&flowResult)
+			var flowResult *pb.FlowResult
+			flowResult, err = stream.Recv()
 
 			if errors.Is(err, io.EOF) {
 				// the sender has nothing more to send, terminate

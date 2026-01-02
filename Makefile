@@ -1,6 +1,6 @@
 GOLDMANE_PROTO_VERSION=v3.30.4
 PROTOBUF_DEFINITIONS_DIR=protos
-PROTOBUF_GENERATED_DIR=gen
+GEN_DIR=gen
 GOLDMANE_CERTIFICATES_DIR=certs/goldmane
 GOLDMANE_HOST=goldmane:7443
 GOLDMANE_NAMESPACE=calico-system
@@ -24,6 +24,7 @@ port-forward-goldmane \
 docker-compose-up \
 run \
 lint \
+test \
 debug \
 run-built-binary \
 run-container \
@@ -34,7 +35,7 @@ setup-k3d \
 start-k3d \
 stop-k3d
 
-all: clean install-development-packages fetch-protobuf-definition generate-code-from-protobuf lint build
+all: clean install-development-packages fetch-protobuf-definition generate-code-from-protobuf lint test build
 .PHONY : all
 
 clean:
@@ -52,10 +53,10 @@ generate-code-from-protobuf:
 	which protoc > /dev/null || (echo "protoc not in PATH" && exit 1)
 	which protoc-gen-go > /dev/null || (echo "protoc-gen-go not in PATH" && exit 1)
 	which protoc-gen-go-grpc > /dev/null || (echo "protoc-gen-go-grpc not in PATH" && exit 1)
-	mkdir -p $(PROTOBUF_GENERATED_DIR)
+	mkdir -p $(GEN_DIR)
 	protoc \
-		--go_out=$(PROTOBUF_GENERATED_DIR) \
-		--go-grpc_out=$(PROTOBUF_GENERATED_DIR) \
+		--go_out=$(GEN_DIR) \
+		--go-grpc_out=$(GEN_DIR) \
 		--go_opt=paths=source_relative \
 		--go-grpc_opt=paths=source_relative \
 		$(PROTOBUF_DEFINITIONS_DIR)/api.proto
@@ -90,6 +91,9 @@ debug:
 
 lint:
 	gofmt -l .
+
+test: generate-code-from-protobuf
+	go test -v ./...
 
 build:
 	go build -C cmd/$(GO_PROGRAM) -o ../../$(OUT_DIR)/$(GO_PROGRAM)

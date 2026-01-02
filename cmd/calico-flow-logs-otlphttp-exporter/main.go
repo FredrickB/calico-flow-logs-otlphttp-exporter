@@ -9,6 +9,9 @@ import (
 	"syscall"
 	"time"
 
+	"google.golang.org/grpc"
+
+	pb "github.com/FredrickB/calico-flow-logs-otlphttp-exporter/v2/gen/protos"
 	"github.com/FredrickB/calico-flow-logs-otlphttp-exporter/v2/internal/goldmane"
 	"github.com/FredrickB/calico-flow-logs-otlphttp-exporter/v2/internal/otlp"
 	"github.com/FredrickB/calico-flow-logs-otlphttp-exporter/v2/internal/util"
@@ -51,22 +54,23 @@ func main() {
 		util.LogEnvironmentVariable(RECONNECT_WAIT_TIME_IN_SECONDS_ENV, reconnectSecondsStringValue)
 	}
 
-	client, err := goldmane.NewClient(
-		goldmaneHost,
-		caCertFilePath,
-		publicCertPath,
-		privateKeyPath,
-	)
+	tlsConfig, err := goldmane.NewTLSConfig(caCertFilePath, publicCertPath, privateKeyPath)
 	if err != nil {
-		log.Fatalf("Error while creating Goldmane client: %s", err)
+		log.Fatalf("Failed to construct TLS certificate: %s", err)
 	}
+	connection, err := grpc.NewClient(goldmaneHost, grpc.WithTransportCredentials(tlsConfig))
+	if err != nil {
+		log.Fatalf("Cannot make a connection to Goldmane on host: %s. Error: %s", goldmaneHost, err)
+	}
+	client := goldmane.NewClient(goldmaneHost, pb.NewFlowsClient(connection))
 
 	context, cancel := context.WithCancel(context.Background())
 
-	otlpLogger, err := otlp.NewLogger(context, PACKAGE_NAME, SERVICE_NAME, SERVICE_VERSION)
+	loggerProvider, err := otlp.NewLoggerProvider(context, SERVICE_NAME, SERVICE_VERSION)
 	if err != nil {
-		log.Fatalf("Error while creating logger: %s", err)
+		log.Fatalf("Error while creating loggerprovider: %s", err)
 	}
+	otlpLogger := otlp.NewLogger(otlp.NewProcessor(context, PACKAGE_NAME, loggerProvider))
 
 	signals := make(chan os.Signal, 2)
 	signal.Notify(signals, os.Interrupt, syscall.SIGTERM)
@@ -74,14 +78,11 @@ func main() {
 	reconnectWaitTime := util.ParseSecondsStringValue(reconnectSecondsStringValue, DEFAULT_RECONNECT_WAIT_TIME)
 	log.Printf("Reconnect wait time set to: %s", reconnectWaitTime)
 
-	streamClosed, err := util.StartLogStreaming(context, client, otlpLogger, reconnectWaitTime)
-	if err != nil {
-		log.Fatalf("Failed to start streaming logs: %s", err)
-	}
+	reconnects := util.StartLogStreaming(context, client, otlpLogger, reconnectWaitTime)
 
-	done := make(chan bool)
-	go monitor(context, client, signals, streamClosed, done, cancel, otlpLogger)
-	<-done
+	go monitor(context, signals, cancel, otlpLogger, connection, reconnects)
+
+	<-context.Done()
 
 	log.Println("Program terminated")
 }
@@ -91,37 +92,36 @@ func main() {
 // signal is received
 func monitor(
 	context context.Context,
-	client *goldmane.GoldmaneClient,
 	signals chan os.Signal,
-	streamClosed chan bool,
-	done chan bool,
-	cancel func(),
+	cancelFunc func(),
 	logger *otlp.Logger,
+	connection *grpc.ClientConn,
+	reconnectErrors <-chan error,
 ) {
 	for {
 		select {
 		case <-context.Done():
 			log.Println("Context done")
-			cleanup(context, client, logger, cancel)
-			done <- true
+			cleanup(context, logger, cancelFunc, connection)
 			return
 		case <-signals:
 			log.Println("Termination signal received")
-			cleanup(context, client, logger, cancel)
-			done <- true
+			cleanup(context, logger, cancelFunc, connection)
 			return
-		case <-streamClosed:
-			log.Println("Stream closed")
-			cleanup(context, client, logger, cancel)
-			done <- true
-			return
+		case err := <-reconnectErrors:
+			log.Printf("Reconnect attempted, error: %s", err)
 		}
 	}
 }
 
-func cleanup(context context.Context, client *goldmane.GoldmaneClient, logger *otlp.Logger, cancel func()) {
+func cleanup(
+	context context.Context,
+	logger *otlp.Logger,
+	cancelFunc func(),
+	connection *grpc.ClientConn,
+) {
 	log.Println("Triggering cleanup...")
-	util.Cleanup(context, client, logger)
-	cancel()
+	util.Cleanup(context, logger, connection)
+	cancelFunc()
 	log.Println("Cleanup finished")
 }
