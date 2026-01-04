@@ -586,7 +586,7 @@
         "type": "loki",
         "uid": "${datasource}"
       },
-      "description": "Show all traffic where action is \"Deny\"",
+      "description": "",
       "gridPos": {
         "h": 11,
         "w": 24,
@@ -660,7 +660,7 @@
   "timezone": "browser",
   "title": "Calico Flow Logs OTLP/HTTP Exporter",
   "uid": "df6lzp2dktmo0e",
-  "version": 19,
+  "version": 20,
   "weekStart": "",
   "id": null
 }
