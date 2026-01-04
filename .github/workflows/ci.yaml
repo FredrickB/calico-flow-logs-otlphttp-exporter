@@ -50,6 +50,8 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
             VERSION=ci
+          # Have to explicitly specify the test target
+          # to make the stage in the Dockerfile execute.
           target: test
 
       - name: Build container image
