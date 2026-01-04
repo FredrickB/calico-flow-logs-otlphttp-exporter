@@ -181,6 +181,14 @@ graph TB
         calico-flow-logs-otlphttp-exporter/calico-flow-logs-otlphttp-exporter
     ```
 
+## Monitoring
+
+### Grafana/Loki
+
+There is a [Grafana Loki dashboard](./docs/monitoring/loki-grafana-dashboard.json)
+which can be imported to view the state of flows when logs are sent to a Loki OTLP/HTTP
+endpoint.
+
 ## Development
 
 > [!NOTE]
