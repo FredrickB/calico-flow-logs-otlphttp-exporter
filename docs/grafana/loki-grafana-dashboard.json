@@ -129,7 +129,7 @@
           },
           "direction": "backward",
           "editorMode": "code",
-          "expr": "sum by (destType) (\n    count_over_time(\n        ({service_name=\"calico-flow-logs-otlphttp-exporter\"} | json destType=\"Key.destType\" | destType != \"\")[$__auto]\n    )\n)",
+          "expr": "sum(\n    count_over_time(\n        ({service_name=\"calico-flow-logs-otlphttp-exporter\"} | json destType=\"Key.destType\" | destType != \"\")[$__auto]\n    )\n) by (destType)",
           "legendFormat": "{{ destType }}",
           "queryType": "range",
           "refId": "A"
@@ -196,7 +196,7 @@
           },
           "direction": "backward",
           "editorMode": "code",
-          "expr": "sum by (proto) (\n    count_over_time(\n        ({service_name=\"calico-flow-logs-otlphttp-exporter\"} | json proto=\"Key.proto\" | proto != \"\")[$__auto]\n    )\n)",
+          "expr": "sum(\n    count_over_time(\n        ({service_name=\"calico-flow-logs-otlphttp-exporter\"} | json proto=\"Key.proto\" | proto != \"\")[$__auto]\n    )\n) by (proto)",
           "legendFormat": "{{ proto }}",
           "queryType": "range",
           "refId": "A"
@@ -263,7 +263,7 @@
           },
           "direction": "backward",
           "editorMode": "code",
-          "expr": "sum by(action) (\n    count_over_time(\n        ({service_name=\"calico-flow-logs-otlphttp-exporter\"} | json action=\"Key.action\" | action != \"\")[$__auto]\n    )\n)",
+          "expr": "sum(\n    count_over_time(\n        ({service_name=\"calico-flow-logs-otlphttp-exporter\"} | json action=\"Key.action\" | action != \"\")[$__auto]\n    )\n) by(action)",
           "legendFormat": "{{ action }}",
           "queryType": "range",
           "refId": "A"
@@ -660,7 +660,7 @@
   "timezone": "browser",
   "title": "Calico Flow Logs OTLP/HTTP Exporter",
   "uid": "df6lzp2dktmo0e",
-  "version": 18,
+  "version": 19,
   "weekStart": "",
   "id": null
 }
