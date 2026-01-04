@@ -1,6 +1,8 @@
 FROM golang:1.24-alpine AS test
 
 RUN apk add --no-cache make protoc curl
+WORKDIR /test
+COPY . .
 RUN make install-development-packages generate-code-from-protobuf lint test
 
 FROM golang:1.24-alpine AS build
