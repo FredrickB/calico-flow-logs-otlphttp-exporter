@@ -183,11 +183,9 @@ graph TB
 
 ## Monitoring
 
-### Grafana/Loki
-
-There is a [Grafana Loki dashboard](./docs/monitoring/loki-grafana-dashboard.json)
-which can be imported to view the state of flows when logs are sent to a Loki OTLP/HTTP
-endpoint.
+There is a [Loki Grafana dashboard](./docs/monitoring/loki-grafana-dashboard.json)
+which can be imported to view the state of flows when logs are sent to a [Loki OTLP
+endpoint](https://grafana.com/docs/loki/latest/send-data/otel/).
 
 ## Development
 
