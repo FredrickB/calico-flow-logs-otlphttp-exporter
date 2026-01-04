@@ -1,12 +1,12 @@
 # Changelog
 
-## 0.13.1 - 2026-01-04
+## [0.13.1] - 2026-01-04
 
 ### Changes
 
 Cleaned up dependencies.
 
-## 0.13.0 - 2026-01-02
+## [0.13.0] - 2026-01-02
 
 ### Breaking changes
 
