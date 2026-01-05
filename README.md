@@ -37,8 +37,8 @@ See [#Datamodel](#datamodel) for example payload.
       - [Prerequisites](#prerequisites-1)
       - [Install Helm chart from local directory](#install-helm-chart-from-local-directory)
       - [Install Helm chart from private registry](#install-helm-chart-from-private-registry)
-- [Contributors](#contributors)
 - [Disclaimer](#disclaimer)
+- [Contributors](#contributors)
 
 ## Compatibility
 
@@ -313,6 +313,18 @@ approach in production environments, this is just for development.
     make install-helm-chart-from-private-chart-repository
     ```
 
+## Disclaimer
+
+This project is a personal open-source initiative and is not affiliated with,
+endorsed by, or associated with any of my current or former employers.
+All opinions, code, and documentation are solely those of myself and the
+individual contributors.
+
+The project is not affiliated with [Project Calico](https://www.tigera.io/project-calico/)
+or any of its subsidiaries. The use of the Calico name and/or logo is for
+informational purposes only and does not imply any endorsement or affiliation
+with the Calico project.
+
 ## Contributors
 
 <!-- readme: erikroed,collaborators,contributors/ -start -->
@@ -337,15 +349,3 @@ approach in production environments, this is just for development.
 	<tbody>
 </table>
 <!-- readme: erikroed,collaborators,contributors/ -end -->
-
-## Disclaimer
-
-This project is a personal open-source initiative and is not affiliated with,
-endorsed by, or associated with any of my current or former employers.
-All opinions, code, and documentation are solely those of myself and the
-individual contributors.
-
-The project is not affiliated with [Project Calico](https://www.tigera.io/project-calico/)
-or any of its subsidiaries. The use of the Calico name and/or logo is for
-informational purposes only and does not imply any endorsement or affiliation
-with the Calico project.
