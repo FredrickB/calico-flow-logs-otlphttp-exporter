@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.13.3] - 2026-01-05
+
+### Changes
+
+Bump deps.
+
 ## [0.13.2] - 2026-01-05
 
 ### Changes
