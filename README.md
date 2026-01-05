@@ -1,6 +1,6 @@
 # calico-flow-logs-otlphttp-exporter
 
-> [!NOTE]
+> [!WARNING]
 > Currently in development, use at your own risk
 
 Export network flow logs from [Calico](https://docs.tigera.io/calico/latest/observability/flow-logs-api)
@@ -15,13 +15,80 @@ tools using the vendor agnostic OTLP format. This will
 allow for Security teams/SOC to have insight into
 Kubernetes-contextual network flows. The idea for the
 project originates from [this blogpost](https://www.tigera.io/blog/calico-open-source-3-30-exploring-the-goldmane-api-for-custom-kubernetes-network-observability/).
+See [README.md#datamodel](./README.md#datamodel) for
+an example payload.
 
-## Compatibility matrix
+## Disclaimer
+
+This project is a personal open-source initiative and is not affiliated with,
+endorsed by, or associated with any of my current or former employers.
+All opinions, code, and documentation are solely those of myself and the
+individual contributors.
+
+The project is not affiliated with [Project Calico](https://www.tigera.io/project-calico/)
+or any of its subsidiaries. The use of the Calico name and/or logo is for
+informational purposes only and does not imply any endorsement or affiliation
+with the Calico project.
+
+## Compatibility
 
 | Calico version | Compatible |
 | :------------- | :--------- |
 | `3.30`         | Yes        |
 | `3.31`         | Unknown    |
+
+## Installation
+
+> [!NOTE]
+> See the [official documentation](https://pkg.go.dev/go.opentelemetry.io/otel/exporters/otlp/otlplog/otlploghttp)
+> for a list of all environment variables which can be set for the OTLP Log HTTP exporter.
+
+### Helm
+
+> [!WARNING]
+> The default installation uses Goldmanes own certificates for mTLS
+> between calico-flow-logs-otlphttp-exporter and Goldmane, this
+> is not a recommended practice. See the
+> [Calico documentation](https://docs.tigera.io/calico/latest/operations/certificate-management)
+> for recommended methods to secure communication using certificates.
+
+1. Create ImagePullSecret:
+    ```bash
+    docker login ghcr.io -u ghp
+    <Paste Personal Access Token with read-only access to GitHub Packages>
+    kubectl create secret generic \
+        --namespace calico-system \
+        calico-flow-logs-otlphttp-exporter-regcred \
+        --from-file=.dockerconfigjson=$HOME/.docker/config.json \
+        --type kubernetes.io/dockerconfigjson
+    ```
+1. Pass created ImagePullSecret using `values.yaml`:
+    ```yaml
+    imagePullSecrets:
+      - name: calico-flow-logs-otlphttp-exporter-regcred
+    ```
+1. Set GitHub Access Token
+    ```bash
+    read -s ACCESS_TOKEN
+    <Paste Personal Access Token with read-only access to repository content>
+    ```
+1. Setup Helm chart repository:
+    ```bash
+    helm repo add \
+        --username ghp \
+        --password $ACCESS_TOKEN \
+        calico-flow-logs-otlphttp-exporter \
+        https://raw.githubusercontent.com/FredrickB/calico-flow-logs-otlphttp-exporter/gh-pages
+    helm repo update
+    ```
+1. Install Helm release:
+    ```bash
+    helm upgrade \
+        --install \
+        --namespace calico-system \
+        calico-flow-logs-otlphttp-exporter \
+        calico-flow-logs-otlphttp-exporter/calico-flow-logs-otlphttp-exporter
+    ```
 
 ## Datamodel
 
@@ -127,59 +194,6 @@ graph TB
     otel-collector-->|Push logs using OTLP/HTTP|loki
     grafana-->|Consume Datasource|loki
 ```
-
-## Installation
-
-> [!NOTE]
-> See the [official documentation](https://pkg.go.dev/go.opentelemetry.io/otel/exporters/otlp/otlplog/otlploghttp)
-> for a list of all environment variables which can be set for the OTLP Log HTTP exporter.
-
-### Helm
-
-> [!WARNING]
-> The default installation uses Goldmanes own certificates for mTLS
-> between calico-flow-logs-otlphttp-exporter and Goldmane, this
-> is not a recommended practice. See the
-> [Calico documentation](https://docs.tigera.io/calico/latest/operations/certificate-management)
-> for recommended methods to secure communication using certificates.
-
-1. Create ImagePullSecret:
-    ```bash
-    docker login ghcr.io -u ghp
-    <Paste Personal Access Token with read-only access to GitHub Packages>
-    kubectl create secret generic \
-        --namespace calico-system \
-        calico-flow-logs-otlphttp-exporter-regcred \
-        --from-file=.dockerconfigjson=$HOME/.docker/config.json \
-        --type kubernetes.io/dockerconfigjson
-    ```
-1. Pass created ImagePullSecret using `values.yaml`:
-    ```yaml
-    imagePullSecrets:
-      - name: calico-flow-logs-otlphttp-exporter-regcred
-    ```
-1. Set GitHub Access Token
-    ```bash
-    read -s ACCESS_TOKEN
-    <Paste Personal Access Token with read-only access to repository content>
-    ```
-1. Setup Helm chart repository:
-    ```bash
-    helm repo add \
-        --username ghp \
-        --password $ACCESS_TOKEN \
-        calico-flow-logs-otlphttp-exporter \
-        https://raw.githubusercontent.com/FredrickB/calico-flow-logs-otlphttp-exporter/gh-pages
-    helm repo update
-    ```
-1. Install Helm release:
-    ```bash
-    helm upgrade \
-        --install \
-        --namespace calico-system \
-        calico-flow-logs-otlphttp-exporter \
-        calico-flow-logs-otlphttp-exporter/calico-flow-logs-otlphttp-exporter
-    ```
 
 ## Monitoring
 
