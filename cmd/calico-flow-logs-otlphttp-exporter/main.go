@@ -12,6 +12,7 @@ import (
 	"google.golang.org/grpc"
 
 	pb "github.com/FredrickB/calico-flow-logs-otlphttp-exporter/v2/gen/protos"
+	"github.com/FredrickB/calico-flow-logs-otlphttp-exporter/v2/internal/core"
 	"github.com/FredrickB/calico-flow-logs-otlphttp-exporter/v2/internal/goldmane"
 	"github.com/FredrickB/calico-flow-logs-otlphttp-exporter/v2/internal/otlp"
 	"github.com/FredrickB/calico-flow-logs-otlphttp-exporter/v2/internal/util"
@@ -78,7 +79,7 @@ func main() {
 	reconnectWaitTime := util.ParseMilliSecondsStringValue(reconnectMilliSecondsStringValue, DEFAULT_RECONNECT_WAIT_TIME)
 	log.Printf("Reconnect wait time set to: %s", reconnectWaitTime)
 
-	reconnects := util.StartLogStreaming(context, client, otlpLogger, reconnectWaitTime)
+	reconnects := core.Run(context, client, otlpLogger, reconnectWaitTime)
 
 	go monitor(context, signals, cancel, otlpLogger, connection, reconnects)
 
@@ -121,7 +122,7 @@ func cleanup(
 	connection *grpc.ClientConn,
 ) {
 	log.Println("Triggering cleanup...")
-	util.Cleanup(context, logger, connection)
+	core.Cleanup(context, logger, connection)
 	cancelFunc()
 	log.Println("Cleanup finished")
 }
