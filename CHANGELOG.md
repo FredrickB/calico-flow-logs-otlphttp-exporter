@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.13.2] - 2026-01-05
+
+### Changes
+
+Refactored internals.
+
 ## [0.13.1] - 2026-01-04
 
 ### Changes
