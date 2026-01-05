@@ -1,3 +1,4 @@
+<!-- omit from toc -->
 # calico-flow-logs-otlphttp-exporter
 
 > [!WARNING]
@@ -18,17 +19,26 @@ project originates from [this blogpost](https://www.tigera.io/blog/calico-open-s
 
 See [#Datamodel](#datamodel) for example payload.
 
-## Disclaimer
+<!-- omit from toc -->
+## Table of contents
 
-This project is a personal open-source initiative and is not affiliated with,
-endorsed by, or associated with any of my current or former employers.
-All opinions, code, and documentation are solely those of myself and the
-individual contributors.
-
-The project is not affiliated with [Project Calico](https://www.tigera.io/project-calico/)
-or any of its subsidiaries. The use of the Calico name and/or logo is for
-informational purposes only and does not imply any endorsement or affiliation
-with the Calico project.
+- [Compatibility](#compatibility)
+- [Installation](#installation)
+  - [Helm](#helm)
+- [Datamodel](#datamodel)
+- [Demo](#demo)
+- [Monitoring](#monitoring)
+- [Development](#development)
+  - [Prerequisites](#prerequisites)
+  - [Setup](#setup)
+  - [Running](#running)
+    - [Running as container](#running-as-container)
+    - [Running as Helm release](#running-as-helm-release)
+      - [Prerequisites](#prerequisites-1)
+      - [Install Helm chart from local directory](#install-helm-chart-from-local-directory)
+      - [Install Helm chart from private registry](#install-helm-chart-from-private-registry)
+- [Disclaimer](#disclaimer)
+- [Contributors](#contributors)
 
 ## Compatibility
 
@@ -302,6 +312,18 @@ approach in production environments, this is just for development.
     ```bash
     make install-helm-chart-from-private-chart-repository
     ```
+
+## Disclaimer
+
+This project is a personal open-source initiative and is not affiliated with,
+endorsed by, or associated with any of my current or former employers.
+All opinions, code, and documentation are solely those of myself and the
+individual contributors.
+
+The project is not affiliated with [Project Calico](https://www.tigera.io/project-calico/)
+or any of its subsidiaries. The use of the Calico name and/or logo is for
+informational purposes only and does not imply any endorsement or affiliation
+with the Calico project.
 
 ## Contributors
 
