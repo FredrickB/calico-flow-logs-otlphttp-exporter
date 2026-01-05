@@ -15,8 +15,9 @@ tools using the vendor agnostic OTLP format. This will
 allow for Security teams/SOC to have insight into
 Kubernetes-contextual network flows. The idea for the
 project originates from [this blogpost](https://www.tigera.io/blog/calico-open-source-3-30-exploring-the-goldmane-api-for-custom-kubernetes-network-observability/).
+
 See [README.md#datamodel](./README.md#datamodel) for
-an example payload.
+example payload.
 
 ## Disclaimer
 
