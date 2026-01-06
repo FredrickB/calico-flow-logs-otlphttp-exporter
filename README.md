@@ -343,7 +343,8 @@ when releasing a new Helm chart version**
 
 Bumping of Helm chart versions is done manually in the
 [charts/calico-flow-logs-otlphttp-exporter/Chart.yaml](./charts/calico-flow-logs-otlphttp-exporter/Chart.yaml).
-Upon merge to `main` the workflow [.github/workflows/release_charts.yaml](./.github/workflows/release_charts.yaml).
+Upon merge to `main` the workflow [.github/workflows/release_charts.yaml](./.github/workflows/release_charts.yaml)
+packages and uploads the new helm chart version to branch `gh-pages`.
 
 ## Disclaimer
 
