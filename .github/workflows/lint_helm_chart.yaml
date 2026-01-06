@@ -47,7 +47,9 @@ jobs:
 
       - name: Check if the Helm chart README.md has a diff and fail if it does
         id: diff
-        run: git diff --exit-code $CHARTS_DIR/**/README.md
+        run: |
+          git config --global --add safe.directory "$GITHUB_WORKSPACE"
+          git diff --exit-code $CHARTS_DIR/**/README.md
 
       - name: Commit and push updated Helm chart README.md
         if: ${{ failure() && steps.diff.conclusion == 'failure' }}
