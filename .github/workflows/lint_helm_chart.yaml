@@ -1,4 +1,4 @@
-name: Lint Helm chart
+name: Lint Helm chart and generate Helm chart docs
 
 on:
   pull_request:
