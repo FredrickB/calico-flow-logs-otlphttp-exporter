@@ -1,0 +1,55 @@
+name: Generate Helm chart docs
+
+on:
+  pull_request:
+    branches: ["main"]
+    paths:
+      - '.github/workflows/**'
+      - 'charts/**'
+
+env:
+  CHARTS_DIR: charts
+
+jobs:
+  generate_docs:
+    name: Generate Helm chart docs
+    permissions:
+      contents: write
+    runs-on: ubuntu-latest
+    container:
+      image: golang:1.24-alpine
+    steps:
+      - name: Install git
+        run: apk add git
+
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.ref }}
+
+      - name: Setup environment
+        run: |
+          apk add make
+          make install-development-packages
+
+      - name: Generate Helm chart README.md
+        run: make generate-helm-docs
+
+      # https://github.com/actions/checkout/issues/766
+      - name: Check if the Helm chart README.md has a diff and fail if it does
+        id: diff
+        continue-on-error: true
+        run: |
+          git config --global --add safe.directory "$GITHUB_WORKSPACE"
+          git diff --exit-code $CHARTS_DIR/**/README.md
+
+      - name: Commit and push updated Helm chart README.md
+        if: job.steps.diff.status == failure()
+        continue-on-error: true
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add $CHARTS_DIR/**/README.md
+          git commit -m "docs: update Helm chart README.md"
+          git push
