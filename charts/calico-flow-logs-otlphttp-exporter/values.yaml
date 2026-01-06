@@ -3,14 +3,16 @@
 # Declare variables to be passed into your templates.
 
 # This will set the replicaset count more information can be found here: https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/
+# -- Number of pods
 replicaCount: 1
 
 # This sets the container image more information can be found here: https://kubernetes.io/docs/concepts/containers/images/
 image:
+  # -- Image repository
   repository: ghcr.io/fredrickb/calico-flow-logs-otlphttp-exporter
-  # This sets the pull policy for images.
+  # -- Image pullpolicy
   pullPolicy: IfNotPresent
-  # Overrides the image tag whose default is the chart appVersion.
+  # -- Overrides the image tag whose default is the chart appVersion.
   tag: ""
 
 # This is for the secrets for pulling an image from a private repository more information can be found here: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
@@ -20,21 +22,26 @@ nameOverride: ""
 fullnameOverride: ""
 
 env:
+  # -- Host and port of Goldmane, must be present as SAN in certificate used for mTLS
   GOLDMANE_HOST: "goldmane:7443"
-  # Replace with your own OTLP-compatible endpoint
+  # -- Host and port of OTLP/HTTP endpoint to send logs to
   OTEL_EXPORTER_OTLP_ENDPOINT: "http://localhost:4318"
+  # -- Path to CA certificate used for mTLS connection to Goldmane
   CA_CERT_PATH: "/etc/goldmane/ca-cert/tigera-ca-bundle.crt"
+  # -- Path to private key used for mTLS connection to Goldmane
   PRIVATE_KEY_PATH: "/etc/goldmane/certs/tls.key"
+  # -- Path to public certificate used for mTLS connection to Goldmane
   PUBLIC_CERT_PATH: "/etc/goldmane/certs/tls.crt"
-  # Time to wait between reconnect attempts
-  # to Goldmane in the event of loss of connection
+  # -- Amount of milliseconds to wait before attempting to reconnect to Goldmane in the event of connection error
   RECONNECT_WAIT_TIME_IN_MILLISECONDS: "5000"
 
 volumes:
+  # -- Secret containing Goldmane mTLS certificates
   - name: goldmane-certs
     secret:
       secretName: goldmane-key-pair
       optional: false
+  # -- ConfigMap containing Goldmane CA bundle
   - name: goldmane-ca-cert
     configMap:
       name: goldmane-ca-bundle
@@ -43,9 +50,11 @@ volumes:
           path: "tigera-ca-bundle.crt"
 
 volumeMounts:
+  # -- VolumeMount for Goldmane mTLS certificates
   - name: goldmane-certs
     mountPath: /etc/goldmane/certs
     readOnly: true
+  # -- VolumeMount for Goldmane CA bundle
   - name: goldmane-ca-cert
     mountPath: /etc/goldmane/ca-cert
     readOnly: true

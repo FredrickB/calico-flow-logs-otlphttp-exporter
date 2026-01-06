@@ -37,6 +37,9 @@ See [#Datamodel](#datamodel) for example payload.
       - [Prerequisites](#prerequisites-1)
       - [Install Helm chart from local directory](#install-helm-chart-from-local-directory)
       - [Install Helm chart from private registry](#install-helm-chart-from-private-registry)
+- [Releasing new versions](#releasing-new-versions)
+  - [Releasing new container image versions](#releasing-new-container-image-versions)
+  - [Releasing new Helm chart versions](#releasing-new-helm-chart-versions)
 - [Disclaimer](#disclaimer)
 - [Contributors](#contributors)
 
@@ -312,6 +315,35 @@ approach in production environments, this is just for development.
     ```bash
     make install-helm-chart-from-private-chart-repository
     ```
+
+## Releasing new versions
+
+When releasing new versions, it has to be done in 2 steps:
+
+1. Release a new container image version
+1. Release a new Helm chart version
+
+### Releasing new container image versions
+
+**Always update [CHANGELOG.md](./CHANGELOG.md) when releasing a new container image version**
+
+Upon merge to `main` the workflow [./.github/workflows/release_container_image.yaml](./.github/workflows/release_container_image.yaml)
+builds a new version number based on the collection of [conventional commits](https://www.conventionalcommits.org/en/v1.0.0/)
+between previous release and current commit.
+
+All container image versions are [here](https://github.com/FredrickB/calico-flow-logs-otlphttp-exporter/pkgs/container/calico-flow-logs-otlphttp-exporter).
+
+Proceed to [Releasing new Helm chart versions](#releasing-new-helm-chart-versions)
+once a new container image version has been created.
+
+### Releasing new Helm chart versions
+
+**Always update [charts/calico-flow-logs-otlphttp-exporter/CHANGELOG.md](./charts/calico-flow-logs-otlphttp-exporter/CHANGELOG.md)
+when releasing a new Helm chart version**
+
+Bumping of Helm chart versions is done manually in the
+[charts/calico-flow-logs-otlphttp-exporter/Chart.yaml](./charts/calico-flow-logs-otlphttp-exporter/Chart.yaml).
+Upon merge to `main` the workflow [.github/workflows/release_charts.yaml](./.github/workflows/release_charts.yaml).
 
 ## Disclaimer
 
