@@ -55,7 +55,7 @@ jobs:
           git diff --exit-code $CHARTS_DIR/**/README.md
 
       - name: Commit and push updated Helm chart README.md
-        if: ${{ steps.diff.conclusion == 'failure' }}
+        if: job.steps.diff.status == failure()
         run: |
           git config user.name "$GITHUB_ACTOR"
           git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
