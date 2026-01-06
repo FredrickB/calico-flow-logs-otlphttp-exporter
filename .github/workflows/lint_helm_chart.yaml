@@ -56,6 +56,7 @@ jobs:
 
       - name: Commit and push updated Helm chart README.md
         if: job.steps.diff.status == failure()
+        continue-on-error: true
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
