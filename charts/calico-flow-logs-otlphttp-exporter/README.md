@@ -39,6 +39,6 @@ Export network flow logs from Calico using OTLP/HTTP
 | tolerations | list | `[]` |  |
 | volumeMounts[0] | object | `{"mountPath":"/etc/goldmane/certs","name":"goldmane-certs","readOnly":true}` | VolumeMount for Goldmane mTLS certificates |
 | volumeMounts[1] | object | `{"mountPath":"/etc/goldmane/ca-cert","name":"goldmane-ca-cert","readOnly":true}` | VolumeMount for Goldmane CA bundle |
-| volumes[0] | object | `{"name":"goldmane-certs","secret":{"optional":false,"secretName":"goldmane-key-pair"}}` | Secret containing Goldmane mTLS certificates |
+| volumes[0] | object | `{"name":"goldmane-certs","secret":{"optional":false,"secretName":"goldmane-key-pair"}}` | Secret containing Goldmane mTLS certificates TESTESTTEST |
 | volumes[1] | object | `{"configMap":{"items":[{"key":"tigera-ca-bundle.crt","path":"tigera-ca-bundle.crt"}],"name":"goldmane-ca-bundle"},"name":"goldmane-ca-cert"}` | ConfigMap containing Goldmane CA bundle |
 
