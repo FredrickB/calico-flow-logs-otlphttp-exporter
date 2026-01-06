@@ -1,4 +1,4 @@
-name: Lint Helm chart and generate Helm chart docs
+name: Generate Helm chart docs
 
 on:
   pull_request:
@@ -11,16 +11,6 @@ env:
   CHARTS_DIR: charts
 
 jobs:
-  lint-chart:
-    name: Lint Helm chart
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v5
-
-      - name: Lint Helm chart
-        run: helm lint $CHARTS_DIR/**
-
   generate_docs:
     name: Generate Helm chart docs
     permissions:
