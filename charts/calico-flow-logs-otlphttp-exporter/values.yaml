@@ -36,7 +36,7 @@ env:
   RECONNECT_WAIT_TIME_IN_MILLISECONDS: "5000"
 
 volumes:
-  # -- Secret containing Goldmane mTLS certificates
+  # -- Secret containing Goldmane mTLS certificates TESTESTTEST
   - name: goldmane-certs
     secret:
       secretName: goldmane-key-pair
