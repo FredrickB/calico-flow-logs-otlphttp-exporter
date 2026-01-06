@@ -22,7 +22,7 @@ jobs:
         run: helm lint $CHARTS_DIR/**
 
   generate_docs:
-    name: Generate docs
+    name: Generate Helm chart docs
     permissions:
       contents: write
     runs-on: ubuntu-latest
