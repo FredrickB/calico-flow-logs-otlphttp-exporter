@@ -29,9 +29,7 @@ jobs:
           ref: ${{ github.event.pull_request.head.ref }}
 
       - name: Setup environment
-        run: |
-          apk add make
-          make install-development-packages
+        run: go install github.com/norwoodj/helm-docs/cmd/helm-docs@v1.14.2
 
       - name: Generate Helm chart README.md
         run: make generate-helm-docs
