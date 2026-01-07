@@ -48,7 +48,7 @@ See [#Datamodel](#datamodel) for example payload.
 | Calico version | Compatible |
 | :------------- | :--------- |
 | `3.30`         | Yes        |
-| `3.31`         | Unknown    |
+| `3.31`         | Untested   |
 
 ## Installation
 
