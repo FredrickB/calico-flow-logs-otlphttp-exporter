@@ -32,7 +32,7 @@ jobs:
         run: go install github.com/norwoodj/helm-docs/cmd/helm-docs@v1.14.2
 
       - name: Generate Helm chart README.md
-        run: make generate-helm-docs
+        run: helm-docs --chart-search-root $CHARTS_DIR
 
       # https://github.com/actions/checkout/issues/766
       - name: Check if the Helm chart README.md has a diff and fail if it does
