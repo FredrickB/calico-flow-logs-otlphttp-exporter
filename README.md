@@ -195,19 +195,6 @@ from OpenTelemetry Collector.
 
 ![Demo showing log search in Grafana using Loki as a Datasource](./docs/demo/otel_collector_loki_otlp_demo.gif)
 
-Architecture:
-
-```mermaid
-graph TB
-    exporter[calico-flow-logs-otlphttp-exporter]
-    otel-collector[OpenTelemetry Collector]
-    loki[Loki]
-    grafana[Grafana]
-    exporter-->|Push logs using OTLP/HTTP|otel-collector
-    otel-collector-->|Push logs using OTLP/HTTP|loki
-    grafana-->|Consume Datasource|loki
-```
-
 ## Monitoring
 
 There is a [Loki Grafana dashboard](./docs/monitoring/loki-grafana-dashboard.json)
@@ -222,12 +209,12 @@ endpoint](https://grafana.com/docs/loki/latest/send-data/otel/).
 
 ### Prerequisites
 
-- `go` >= `1.24`
-- `protoc` >= `3.21.12`
+- `go`, `1.24`
+- `protoc`, `3.21.12`
 - `make`
 - `kubectl`
 - `base64`
-- `docker` >= `28.2.1`
+- `docker`, `28.2.1`
 - Calico ([installation documentation](https://docs.tigera.io/calico/latest/getting-started/))
 - Goldmane running in namespace `calico-system` ([installation documentation](https://docs.tigera.io/calico/latest/observability/enable-whisker#enable-the-flow-logs-api))
 - `dlv` (optional, for debugging, [installation documentation](https://github.com/go-delve/delve))
@@ -242,7 +229,7 @@ endpoint](https://grafana.com/docs/loki/latest/send-data/otel/).
     ```
     127.0.0.1 goldmane
     ```
-1. (Optional, requires `docker`) setup k3d cluster `make setup-k3d`
+1. (Optional, requires `docker` and `k3d`) setup k3d cluster `make setup-k3d`
 
 ### Running
 
@@ -320,26 +307,25 @@ approach in production environments, this is just for development.
 
 When releasing new versions, it has to be done in 2 steps:
 
-1. Release a new container image version
-1. Release a new Helm chart version
+1. Release new container image version
+1. Release new Helm chart version
 
 ### Releasing new container image versions
 
-**Always update [CHANGELOG.md](./CHANGELOG.md) when releasing a new container image version**
+> Always update [CHANGELOG.md](./CHANGELOG.md) when releasing a new container image version
 
 Upon merge to `main` the workflow [.github/workflows/release_container_image.yaml](./.github/workflows/release_container_image.yaml)
-builds a new version number based on the collection of [conventional commits](https://www.conventionalcommits.org/en/v1.0.0/)
-between previous release and current commit.
+builds a new container image. Version is based on the
+collection of [conventional commits](https://www.conventionalcommits.org/en/v1.0.0/) between previous release and current commit.
 
 All container image versions are [here](https://github.com/FredrickB/calico-flow-logs-otlphttp-exporter/pkgs/container/calico-flow-logs-otlphttp-exporter).
 
-Proceed to [Releasing new Helm chart versions](#releasing-new-helm-chart-versions)
-once a new container image version has been created.
+Proceed to [Releasing new Helm chart versions](#releasing-new-helm-chart-versions) afterwards.
 
 ### Releasing new Helm chart versions
 
-**Always update [charts/calico-flow-logs-otlphttp-exporter/CHANGELOG.md](./charts/calico-flow-logs-otlphttp-exporter/CHANGELOG.md)
-when releasing a new Helm chart version**
+> Always update [charts/calico-flow-logs-otlphttp-exporter/CHANGELOG.md](./charts/calico-flow-logs-otlphttp-exporter/CHANGELOG.md)
+when releasing a new Helm chart version
 
 Bumping of Helm chart versions is done manually in the
 [charts/calico-flow-logs-otlphttp-exporter/Chart.yaml](./charts/calico-flow-logs-otlphttp-exporter/Chart.yaml).
