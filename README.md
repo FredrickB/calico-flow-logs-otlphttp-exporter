@@ -65,6 +65,9 @@ See [#Datamodel](#datamodel) for example payload.
 > [Calico documentation](https://docs.tigera.io/calico/latest/operations/certificate-management)
 > for recommended methods to secure communication using certificates.
 
+See [charts/calico-flow-logs-otlphttp-exporter/README.md](./charts/calico-flow-logs-otlphttp-exporter/README.md)
+for a list of all Helm chart values.
+
 1. Create ImagePullSecret:
     ```bash
     docker login ghcr.io -u ghp
