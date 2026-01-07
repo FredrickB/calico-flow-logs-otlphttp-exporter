@@ -125,7 +125,7 @@ payload.
 > [!NOTE]
 > Numerical enums are converted to strings.
 
-Example output:
+Example JSON payload sent to OTLP/HTTP endpoint:
 
 ```json
 {
