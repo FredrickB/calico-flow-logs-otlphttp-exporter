@@ -34,7 +34,6 @@ See [#Datamodel](#datamodel) for example payload.
     - [Running as Helm release](#running-as-helm-release)
       - [Prerequisites](#prerequisites-1)
       - [Install Helm chart from local directory](#install-helm-chart-from-local-directory)
-      - [Install Helm chart from private registry](#install-helm-chart-from-private-registry)
 - [Releasing new versions](#releasing-new-versions)
   - [Releasing new container image versions](#releasing-new-container-image-versions)
   - [Releasing new Helm chart versions](#releasing-new-helm-chart-versions)
@@ -76,33 +75,11 @@ Environment variables:
 See [charts/calico-flow-logs-otlphttp-exporter/README.md](./charts/calico-flow-logs-otlphttp-exporter/README.md)
 for a list of all Helm chart values.
 
-1. Create ImagePullSecret:
-    ```bash
-    docker login ghcr.io -u ghp
-    <Paste Personal Access Token with read-only access to GitHub Packages>
-    kubectl create secret generic \
-        --namespace calico-system \
-        calico-flow-logs-otlphttp-exporter-regcred \
-        --from-file=.dockerconfigjson=$HOME/.docker/config.json \
-        --type kubernetes.io/dockerconfigjson
-    ```
-1. Pass created ImagePullSecret using `values.yaml`:
-    ```yaml
-    imagePullSecrets:
-      - name: calico-flow-logs-otlphttp-exporter-regcred
-    ```
-1. Set GitHub Access Token
-    ```bash
-    read -s ACCESS_TOKEN
-    <Paste Personal Access Token with read-only access to repository content>
-    ```
-1. Add Helm chart repository:
+1. Setup Helm chart repository:
     ```bash
     helm repo add \
-        --username ghp \
-        --password $ACCESS_TOKEN \
-        calico-flow-logs-otlphttp-exporter \
-        https://raw.githubusercontent.com/FredrickB/calico-flow-logs-otlphttp-exporter/gh-pages
+      calico-flow-logs-otlphttp-exporter \
+      https://fredrickb.github.io/calico-flow-logs-otlphttp-exporter
     helm repo update
     ```
 1. Install Helm release (see the [official documentation](https://pkg.go.dev/go.opentelemetry.io/otel/exporters/otlp/otlplog/otlploghttp)
@@ -280,18 +257,6 @@ approach in production environments, this is just for development.
 1. OpenTelemetry-Collector installed:
    1. Namespace must be `opentelemetry-collector`
    1. Name of Service for OpenTelemetry-Collector must be `opentelemetry-collector`
-1. Login to ghcr.io:
-    ```bash
-    docker login ghcr.io -u ghp
-    <Paste Personal Access Token>
-    ```
-1. Create an imagepullsecret from docker config:
-    ```bash
-    kubectl create secret generic ghcr-io-regcred \
-    -n calico-system \
-    --from-file=.dockerconfigjson=$HOME/.docker/config.json \
-    --type kubernetes.io/dockerconfigjson
-    ```
 1. (Optional) Adapt values in `hack/charts/calico-flow-logs-otlphttp-exporter/override.yaml`
 
 ##### Install Helm chart from local directory
@@ -299,22 +264,6 @@ approach in production environments, this is just for development.
 1. Install Helm release:
     ```bash
     make install-helm-chart-from-local-dir
-    ```
-
-##### Install Helm chart from private registry
-
-1. Login to GitHub Packages private chart repository
-    ```bash
-    read -s ACCESS_TOKEN
-    <Paste Personal Access Token with read-only access for repository content>
-    ```
-1. Setup private helm chart repository:
-    ```bash
-    make setup-private-helm-chart-repository
-    ```
-1. Install Helm release:
-    ```bash
-    make install-helm-chart-from-private-chart-repository
     ```
 
 ## Releasing new versions
