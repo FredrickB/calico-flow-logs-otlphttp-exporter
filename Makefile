@@ -33,8 +33,7 @@ setup-private-helm-chart-repository \
 install-helm-chart-from-private-chart-repository \
 setup-k3d \
 start-k3d \
-stop-k3d \
-generate-helm-docs
+stop-k3d
 
 all: clean install-development-packages fetch-protobuf-definition generate-code-from-protobuf lint test build
 .PHONY : all
@@ -45,7 +44,6 @@ clean:
 install-development-packages:
 	go install google.golang.org/protobuf/cmd/protoc-gen-go@v1.36.10
 	go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@v1.5.1
-	go install github.com/norwoodj/helm-docs/cmd/helm-docs@v1.14.2
 
 fetch-protobuf-definition:
 	mkdir -p $(PROTOBUF_DEFINITIONS_DIR)
@@ -160,6 +158,3 @@ start-k3d:
 
 stop-k3d:
 	k3d cluster stop $(K3D_CLUSTER_NAME)
-
-generate-helm-docs:
-	helm-docs --chart-search-root charts/$(GO_PROGRAM)
