@@ -56,6 +56,17 @@ See [#Datamodel](#datamodel) for example payload.
 > See the [official documentation](https://pkg.go.dev/go.opentelemetry.io/otel/exporters/otlp/otlplog/otlploghttp)
 > for a list of all environment variables which can be set for the OTLP Log HTTP exporter.
 
+Environment variables:
+
+| Environment variable                  | Description                                                                                                | Required | Default value |
+| :------------------------------------ | :--------------------------------------------------------------------------------------------------------- | :------- | :------------ |
+| `GOLDMANE_HOST`                       | Host and port of Goldmane, must be present as SAN in certificate used for mTLS                             | Yes      |               |
+| `CA_CERT_PATH`                        | Path to CA certificate used for mTLS connection to Goldmane                                                | Yes      |               |
+| `PRIVATE_KEY_PATH`                    | Path to private key used for mTLS connection to Goldmane                                                   | Yes      |               |
+| `PUBLIC_CERT_PATH`                    | Path to public certificate used for mTLS connection to Goldmane                                            | Yes      |               |
+| `OTEL_EXPORTER_OTLP_ENDPOINT`         | Host and port of OTLP/HTTP endpoint to send logs to                                                        | Yes      |               |
+| `RECONNECT_WAIT_TIME_IN_MILLISECONDS` | Amount of milliseconds to wait before attempting to reconnect to Goldmane in the event of connection error | No       | `5000`        |
+
 ### Helm
 
 > [!WARNING]
