@@ -149,9 +149,9 @@ install-helm-chart-from-private-chart-repository:
 
 setup-k3d:
 	k3d cluster create $(K3D_CLUSTER_NAME)-$(K3D_CLUSTER_CALICO_VERSION) \
-  --k3s-arg '--flannel-backend=none@server:*' \
-  --k3s-arg '--disable-network-policy@server:*' \
-  --k3s-arg '--cluster-cidr=192.168.0.0/16@server:*'
+		--k3s-arg '--flannel-backend=none@server:*' \
+		--k3s-arg '--disable-network-policy@server:*' \
+		--k3s-arg '--cluster-cidr=192.168.0.0/16@server:*'
 	kubectl apply -R -f hack/k3d
 
 install-calico:
