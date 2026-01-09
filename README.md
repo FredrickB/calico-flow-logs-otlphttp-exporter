@@ -244,6 +244,7 @@ endpoint](https://grafana.com/docs/loki/latest/send-data/otel/).
     127.0.0.1 goldmane
     ```
 1. (Optional, requires `docker` and `k3d`) setup k3d cluster `make setup-k3d`
+1. (Optional, requires `k3d` cluster to be created) install calico to k3d cluster `make install-calico`
 
 ### Running
 

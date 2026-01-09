@@ -33,6 +33,7 @@ install-helm-chart-from-local-dir \
 setup-private-helm-chart-repository \
 install-helm-chart-from-private-chart-repository \
 setup-k3d \
+install-calico \
 start-k3d \
 stop-k3d
 
@@ -151,11 +152,11 @@ setup-k3d:
   --k3s-arg '--flannel-backend=none@server:*' \
   --k3s-arg '--disable-network-policy@server:*' \
   --k3s-arg '--cluster-cidr=192.168.0.0/16@server:*'
-	kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/$(K3D_CLUSTER_CALICO_VERSION)/manifests/tigera-operator.yaml
-	sleep 10
-	kubectl rollout status --namespace tigera-operator deployment/tigera-operator
-	kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/$(K3D_CLUSTER_CALICO_VERSION)/manifests/custom-resources.yaml
 	kubectl apply -R -f hack/k3d
+
+install-calico:
+	kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/$(K3D_CLUSTER_CALICO_VERSION)/manifests/tigera-operator.yaml
+	kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/$(K3D_CLUSTER_CALICO_VERSION)/manifests/custom-resources.yaml
 
 start-k3d:
 	k3d cluster start $(K3D_CLUSTER_NAME)-$(K3D_CLUSTER_CALICO_VERSION)
