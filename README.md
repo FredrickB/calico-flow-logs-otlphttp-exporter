@@ -1,4 +1,3 @@
-<!-- omit from toc -->
 # calico-flow-logs-otlphttp-exporter
 
 > [!WARNING]
@@ -19,7 +18,6 @@ project originates from [this blogpost](https://www.tigera.io/blog/calico-open-s
 
 See [#Datamodel](#datamodel) for example payload.
 
-<!-- omit from toc -->
 ## Table of contents
 
 - [Compatibility](#compatibility)
