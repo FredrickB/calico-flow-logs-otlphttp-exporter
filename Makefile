@@ -12,6 +12,7 @@ CONTAINER_WOKRDIR=/build
 TAG=0.0.1-development.1
 HELM_CHART_REGISTRY_URL=https://raw.githubusercontent.com/FredrickB/calico-flow-logs-otlphttp-exporter/gh-pages
 K3D_CLUSTER_NAME=calico-flow-logs
+K3D_CLUSTER_CALICO_VERSION=v3.30.4
 
 .PHONY : \
 clean \
@@ -146,15 +147,18 @@ install-helm-chart-from-private-chart-repository:
 		$(GO_PROGRAM) $(GO_PROGRAM)/$(GO_PROGRAM)
 
 setup-k3d:
-	k3d cluster create $(K3D_CLUSTER_NAME) \
+	k3d cluster create $(K3D_CLUSTER_NAME)-$(K3D_CLUSTER_CALICO_VERSION) \
   --k3s-arg '--flannel-backend=none@server:*' \
   --k3s-arg '--disable-network-policy@server:*' \
   --k3s-arg '--cluster-cidr=192.168.0.0/16@server:*'
-	kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.30.2/manifests/tigera-operator.yaml
-	kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.30.2/manifests/custom-resources.yaml
+	kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/$(K3D_CLUSTER_CALICO_VERSION)/manifests/tigera-operator.yaml
+	sleep 10
+	kubectl rollout status --namespace tigera-operator deployment/tigera-operator
+	kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/$(K3D_CLUSTER_CALICO_VERSION)/manifests/custom-resources.yaml
+	kubectl apply -R -f hack/k3d
 
 start-k3d:
-	k3d cluster start $(K3D_CLUSTER_NAME)
+	k3d cluster start $(K3D_CLUSTER_NAME)-$(K3D_CLUSTER_CALICO_VERSION)
 
 stop-k3d:
-	k3d cluster stop $(K3D_CLUSTER_NAME)
+	k3d cluster stop $(K3D_CLUSTER_NAME)-$(K3D_CLUSTER_CALICO_VERSION)

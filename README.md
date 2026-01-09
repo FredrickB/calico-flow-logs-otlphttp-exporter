@@ -45,10 +45,10 @@ See [#Datamodel](#datamodel) for example payload.
 
 ## Compatibility
 
-| Calico version | Compatible |
-| :------------- | :--------- |
-| `3.30`         | Yes        |
-| `3.31`         | Untested   |
+| Calico version | Compatible version |
+| :------------- | :----------------- |
+| `3.30`         | `0.13.3`           |
+| `3.31`         | Untested           |
 
 ## Installation
 
