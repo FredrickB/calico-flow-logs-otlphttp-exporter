@@ -155,8 +155,8 @@ setup-k3d:
 	kubectl apply -R -f hack/k3d
 
 install-calico:
-	kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/$(K3D_CLUSTER_CALICO_VERSION)/manifests/tigera-operator.yaml
-	kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/$(K3D_CLUSTER_CALICO_VERSION)/manifests/custom-resources.yaml
+	kubectl apply -f https://raw.githubusercontent.com/projectcalico/calico/$(K3D_CLUSTER_CALICO_VERSION)/manifests/tigera-operator.yaml
+	kubectl apply -f https://raw.githubusercontent.com/projectcalico/calico/$(K3D_CLUSTER_CALICO_VERSION)/manifests/custom-resources.yaml
 
 start-k3d:
 	k3d cluster start $(K3D_CLUSTER_NAME)-$(K3D_CLUSTER_CALICO_VERSION)
