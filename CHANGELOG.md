@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.13.7] - 2026-01-10
+
+### Changes
+
+Update version of Goldmane
+protobuf definitions. This
+is basically a noop since
+there is no diff between
+versions `v3.30.4` and
+`v3.31.3` protobuf definitions.
+
 ## [0.13.6] - 2026-01-10
 
 ### Changes
