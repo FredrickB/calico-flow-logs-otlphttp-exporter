@@ -1,4 +1,3 @@
-<!-- omit from toc -->
 # calico-flow-logs-otlphttp-exporter
 
 > [!WARNING]
@@ -19,7 +18,6 @@ project originates from [this blogpost](https://www.tigera.io/blog/calico-open-s
 
 See [#Datamodel](#datamodel) for example payload.
 
-<!-- omit from toc -->
 ## Table of contents
 
 - [Compatibility](#compatibility)
@@ -27,7 +25,7 @@ See [#Datamodel](#datamodel) for example payload.
   - [Helm](#helm)
 - [Datamodel](#datamodel)
 - [Demo](#demo)
-- [Monitoring](#monitoring)
+- [Observability](#observability)
 - [Development](#development)
   - [Prerequisites](#prerequisites)
   - [Setup](#setup)
@@ -127,7 +125,7 @@ payload.
 > [!NOTE]
 > Numerical enums are converted to strings.
 
-Example output:
+Example JSON payload sent to OTLP/HTTP endpoint:
 
 ```json
 {
@@ -211,7 +209,7 @@ from OpenTelemetry Collector.
 
 ![Demo showing log search in Grafana using Loki as a Datasource](./docs/demo/otel_collector_loki_otlp_demo.gif)
 
-## Monitoring
+## Observability
 
 There is a [Loki Grafana dashboard](./docs/monitoring/loki-grafana-dashboard.json)
 which can be imported to view the state of flows when logs are sent to a [Loki OTLP
