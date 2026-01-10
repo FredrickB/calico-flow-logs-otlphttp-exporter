@@ -16,6 +16,7 @@ import (
 	"github.com/FredrickB/calico-flow-logs-otlphttp-exporter/v2/internal/goldmane"
 	"github.com/FredrickB/calico-flow-logs-otlphttp-exporter/v2/internal/otlp"
 	"github.com/FredrickB/calico-flow-logs-otlphttp-exporter/v2/internal/util"
+	"github.com/FredrickB/calico-flow-logs-otlphttp-exporter/v2/internal/version"
 )
 
 const (
@@ -27,7 +28,6 @@ const (
 	DEFAULT_RECONNECT_WAIT_TIME             time.Duration = 5 * time.Second
 	PACKAGE_NAME                            string        = "calico-flow-logs-otlphttp-exporter"
 	SERVICE_NAME                            string        = "calico-flow-logs-otlphttp-exporter"
-	SERVICE_VERSION                         string        = "REPLACED_DURING_BUILD"
 )
 
 var (
@@ -54,6 +54,8 @@ func main() {
 	if reconnectMilliSecondsStringValueSet {
 		util.LogEnvironmentVariable(RECONNECT_WAIT_TIME_IN_MILLISECONDS_ENV, reconnectMilliSecondsStringValue)
 	}
+	log.Printf("Version: %s", version.Version())
+	log.Printf("Goldmane Protobuf Version: %s", version.GoldmaneProtobufVersion())
 
 	tlsConfig, err := goldmane.NewTLSConfig(caCertFilePath, publicCertPath, privateKeyPath)
 	if err != nil {
@@ -67,7 +69,7 @@ func main() {
 
 	context, cancel := context.WithCancel(context.Background())
 
-	loggerProvider, err := otlp.NewLoggerProvider(context, SERVICE_NAME, SERVICE_VERSION)
+	loggerProvider, err := otlp.NewLoggerProvider(context, SERVICE_NAME, version.Version())
 	if err != nil {
 		log.Fatalf("Error while creating loggerprovider: %s", err)
 	}

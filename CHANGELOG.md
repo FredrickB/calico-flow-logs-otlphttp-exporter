@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.13.6] - 2026-01-10
+
+### Changes
+
+Print version of binary and Goldmane
+protobuf version as part of startup.
+
 ## [0.13.5] - 2026-01-10
 
 ### Changes

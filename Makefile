@@ -7,6 +7,7 @@ GOLDMANE_NAMESPACE=calico-system
 # Disable HTTPS when running locally
 OTEL_EXPORTER_OTLP_ENDPOINT=http://localhost:4318
 GO_PROGRAM=calico-flow-logs-otlphttp-exporter
+VERSION=DEVELOPMENT_BUILD
 OUT_DIR=out
 CONTAINER_WOKRDIR=/build
 TAG=0.0.1-development.1
@@ -98,7 +99,13 @@ test: generate-code-from-protobuf
 	go test -v ./...
 
 build:
-	go build -C cmd/$(GO_PROGRAM) -o ../../$(OUT_DIR)/$(GO_PROGRAM)
+	go build \
+		-C cmd/$(GO_PROGRAM) \
+		-o ../../$(OUT_DIR)/$(GO_PROGRAM) \
+		--ldflags "\
+			-X github.com/FredrickB/calico-flow-logs-otlphttp-exporter/v2/internal/version.version=$(VERSION) \
+			-X github.com/FredrickB/calico-flow-logs-otlphttp-exporter/v2/internal/version.goldmaneProtobufVersion=$(GOLDMANE_PROTO_VERSION) \
+		"
 
 run-built-binary:
 	CA_CERT_PATH=$(GOLDMANE_CERTIFICATES_DIR)/goldmane_ca.crt \
