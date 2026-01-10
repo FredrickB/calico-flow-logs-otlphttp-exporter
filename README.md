@@ -11,10 +11,8 @@ and [Logging bridge](https://pkg.go.dev/go.opentelemetry.io/contrib/bridges/otel
 
 The motivation for this project is to be able to ingest
 network flow logs from Calico into Log Analysis or SIEM
-tools using the vendor agnostic OTLP format. This will
-allow for Security teams/SOC to have insight into
-Kubernetes-contextual network flows. The idea for the
-project originates from [this blogpost](https://www.tigera.io/blog/calico-open-source-3-30-exploring-the-goldmane-api-for-custom-kubernetes-network-observability/).
+tools using the vendor agnostic OTLP format. The idea for
+the project originates from [this blogpost](https://www.tigera.io/blog/calico-open-source-3-30-exploring-the-goldmane-api-for-custom-kubernetes-network-observability/).
 
 See [#Datamodel](#datamodel) for example payload.
 
