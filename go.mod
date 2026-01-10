@@ -1,6 +1,6 @@
 module github.com/FredrickB/calico-flow-logs-otlphttp-exporter/v2
 
-go 1.24.0
+go 1.25.5
 
 require (
 	github.com/mdelapenya/tlscert v0.2.0
