@@ -41,10 +41,10 @@ See [#Datamodel](#datamodel) for example payload.
 
 ## Compatibility
 
-| Calico version | Compatible |
-| :------------- | :--------- |
-| `3.30`         | Yes        |
-| `3.31`         | Yes        |
+| Calico version | Exporter version |
+| :------------- | :--------------- |
+| `3.30`         | >= `0.13.3`      |
+| `3.31`         | >= `0.13.3`      |
 
 ## Installation
 
