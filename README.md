@@ -75,7 +75,7 @@ Environment variables:
 See [charts/calico-flow-logs-otlphttp-exporter/README.md](./charts/calico-flow-logs-otlphttp-exporter/README.md)
 for a list of all Helm chart values.
 
-1. Setup Helm chart repository:
+1. Add Helm chart repository:
     ```bash
     helm repo add \
       calico-flow-logs-otlphttp-exporter \
