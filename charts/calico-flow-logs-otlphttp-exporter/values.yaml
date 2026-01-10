@@ -24,8 +24,6 @@ fullnameOverride: ""
 env:
   # -- Host and port of Goldmane, must be present as SAN in certificate used for mTLS
   GOLDMANE_HOST: "goldmane:7443"
-  # -- Host and port of OTLP/HTTP endpoint to send logs to
-  OTEL_EXPORTER_OTLP_ENDPOINT: "http://localhost:4318"
   # -- Path to CA certificate used for mTLS connection to Goldmane
   CA_CERT_PATH: "/etc/goldmane/ca-cert/tigera-ca-bundle.crt"
   # -- Path to private key used for mTLS connection to Goldmane
