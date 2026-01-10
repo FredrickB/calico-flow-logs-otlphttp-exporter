@@ -3,6 +3,16 @@ entries:
   calico-flow-logs-otlphttp-exporter:
   - apiVersion: v2
     appVersion: 0.13.3
+    created: "2026-01-10T08:49:30.873970435Z"
+    description: Export network flow logs from Calico using OTLP/HTTP
+    digest: 948ae24ed66a25f0f95a207beaade4af25215af99e7ace9b518b7e7a22afb635
+    name: calico-flow-logs-otlphttp-exporter
+    type: application
+    urls:
+    - calico-flow-logs-otlphttp-exporter-0.11.0.tgz
+    version: 0.11.0
+  - apiVersion: v2
+    appVersion: 0.13.3
     created: "2026-01-05T19:48:14.360005217Z"
     description: Export network flow logs from Calico using OTLP/HTTP
     digest: 1fedb6412fd556cd2527a971677d29bcbde035e2922d0f5313eb0b05fbb23b8e
@@ -241,4 +251,4 @@ entries:
     urls:
     - calico-flow-logs-otlphttp-exporter-0.1.0.tgz
     version: 0.1.0
-generated: "2026-01-05T19:48:14.36020001Z"
+generated: "2026-01-10T08:49:30.874171774Z"
