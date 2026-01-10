@@ -119,8 +119,7 @@ for environment variables to set the OTLP/HTTP endpoint in `env`)
 
 ## Datamodel
 
-The exporter forwards `Flow` in [./protos/api.proto](./protos/api.proto)
-payload. 
+The exporter forwards `Flow` in [protos/api.proto](./protos/api.proto) payload.
 
 > [!NOTE]
 > Numerical enums are converted to strings.
