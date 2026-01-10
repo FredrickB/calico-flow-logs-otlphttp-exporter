@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.13.5] - 2026-01-10
+
+### Changes
+
+Checkin grpc-generated protobuf code
+from Goldmane.
+
 ## [0.13.4] - 2026-01-10
 
 ### Changes
