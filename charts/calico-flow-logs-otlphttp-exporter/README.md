@@ -1,6 +1,6 @@
 # calico-flow-logs-otlphttp-exporter
 
-![Version: 0.10.3](https://img.shields.io/badge/Version-0.10.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.13.3](https://img.shields.io/badge/AppVersion-0.13.3-informational?style=flat-square)
+![Version: 0.11.0](https://img.shields.io/badge/Version-0.11.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.13.3](https://img.shields.io/badge/AppVersion-0.13.3-informational?style=flat-square)
 
 Export network flow logs from Calico using OTLP/HTTP
 
@@ -15,7 +15,6 @@ Export network flow logs from Calico using OTLP/HTTP
 | autoscaling.targetCPUUtilizationPercentage | int | `80` |  |
 | env.CA_CERT_PATH | string | `"/etc/goldmane/ca-cert/tigera-ca-bundle.crt"` | Path to CA certificate used for mTLS connection to Goldmane |
 | env.GOLDMANE_HOST | string | `"goldmane:7443"` | Host and port of Goldmane, must be present as SAN in certificate used for mTLS |
-| env.OTEL_EXPORTER_OTLP_ENDPOINT | string | `"http://localhost:4318"` | Host and port of OTLP/HTTP endpoint to send logs to |
 | env.PRIVATE_KEY_PATH | string | `"/etc/goldmane/certs/tls.key"` | Path to private key used for mTLS connection to Goldmane |
 | env.PUBLIC_CERT_PATH | string | `"/etc/goldmane/certs/tls.crt"` | Path to public certificate used for mTLS connection to Goldmane |
 | env.RECONNECT_WAIT_TIME_IN_MILLISECONDS | string | `"5000"` | Amount of milliseconds to wait before attempting to reconnect to Goldmane in the event of connection error |
