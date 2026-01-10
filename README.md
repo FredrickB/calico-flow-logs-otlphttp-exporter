@@ -211,8 +211,8 @@ from OpenTelemetry Collector.
 ## Observability
 
 There is a [Loki Grafana dashboard](./docs/monitoring/loki-grafana-dashboard.json)
-which can be imported to view the state of flows when logs are sent to a [Loki OTLP
-endpoint](https://grafana.com/docs/loki/latest/send-data/otel/).
+which can be imported to view the state of flows when logs are sent to a
+[Loki OTLP endpoint](https://grafana.com/docs/loki/latest/send-data/otel/).
 
 ## Development
 
@@ -242,7 +242,7 @@ endpoint](https://grafana.com/docs/loki/latest/send-data/otel/).
     ```
     127.0.0.1 goldmane
     ```
-1. (Optional, requires `docker` and `k3d`) setup k3d cluster `make setup-k3d`
+1. (Optional, requires `docker` and `k3d`) setup k3d cluster `make setup-k3d [K3D_CLUSTER_NAME=<cluster-name>] [K3D_CLUSTER_CALICO_VERSION=<calico-version>]`
 1. (Optional, requires `k3d` cluster to be created) install calico to k3d cluster `make install-calico`
 
 ### Running
@@ -252,7 +252,7 @@ endpoint](https://grafana.com/docs/loki/latest/send-data/otel/).
 deployment running in the cluster directly. Do not use this
 approach in production environments, this is just for development.
 
-1. (Optional) start k3d cluster `make start-k3d`
+1. (Optional) start k3d cluster `make start-k3d [K3D_CLUSTER_NAME=<cluster-name>] [K3D_CLUSTER_CALICO_VERSION=<calico-version>]`
 1. Port-forward the Goldmane service: `make port-forward-goldmane [GOLDMANE_NAMESPACE=<goldmane namespace>]`
 1. Copy the certificates from a running instance of Goldmane: `make copy-goldmane-certs-from-kubernetes-deployment [GOLDMANE_NAMESPACE=<goldmane namespace>]`
 1. Start the otel-collector, Loki and Grafana: `make docker-compose-up`
@@ -261,17 +261,17 @@ approach in production environments, this is just for development.
 1. [Open Grafana Explore with Loki search + JSON parsing enabled](http://localhost:3000/explore?schemaVersion=1&panes=%7B%22fns%22:%7B%22datasource%22:%22P8E80F9AEF21F6940%22,%22queries%22:%5B%7B%22refId%22:%22A%22,%22expr%22:%22%7Bservice_name%3D%5C%22calico-flow-logs-otlphttp-exporter%5C%22%7D%20%7C%20json%22,%22queryType%22:%22range%22,%22datasource%22:%7B%22type%22:%22loki%22,%22uid%22:%22P8E80F9AEF21F6940%22%7D,%22editorMode%22:%22code%22,%22direction%22:%22backward%22%7D%5D,%22range%22:%7B%22from%22:%22now-1h%22,%22to%22:%22now%22%7D,%22panelsState%22:%7B%22logs%22:%7B%22visualisationType%22:%22logs%22%7D%7D,%22compact%22:false%7D%7D&orgId=1)
     - Username: `admin123`
     - Password: `admin123`
-1. (Optional) stop k3d cluster `make stop-k3d`
+1. (Optional) stop k3d cluster `make stop-k3d [K3D_CLUSTER_NAME=<cluster-name>] [K3D_CLUSTER_CALICO_VERSION=<calico-version>]`
 
 #### Running as container
 
-1. (Optional) start k3d cluster `make start-k3d`
+1. (Optional) start k3d cluster `make start-k3d [K3D_CLUSTER_NAME=<cluster-name>] [K3D_CLUSTER_CALICO_VERSION=<calico-version>]`
 1. Port-forward the Goldmane service: `make port-forward-goldmane [GOLDMANE_NAMESPACE=<goldmane namespace>]`
 1. Copy the certificates from a running instance of Goldmane: `make copy-goldmane-certs-from-kubernetes-deployment [GOLDMANE_NAMESPACE=<goldmane namespace>]`
 1. Start the otel-collector, Loki and Grafana: `make docker-compose-up`
-1. Build container image: `make build-container-image`
-1. Run the container image: `make run-container`
-1. (Optional) stop k3d cluster `make stop-k3d`
+2. Build container image: `make build-container-image [TAG=<tag>]`
+3. Run the container image: `make run-container`
+4. (Optional) stop k3d cluster `make stop-k3d [K3D_CLUSTER_NAME=<cluster-name>] [K3D_CLUSTER_CALICO_VERSION=<calico-version>]`
 
 #### Running as Helm release
 
