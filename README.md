@@ -220,7 +220,7 @@ which can be imported to view the state of flows when logs are sent to a
 
 ### Prerequisites
 
-- `go`, `1.24`
+- `go` >= `1.25`
 - `protoc`, `3.21.12`
 - `make`
 - `kubectl`

@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.13.4] - 2026-01-10
+
+### Changes
+
+Upgrade to Go `1.25`.
+
 ## [0.13.3] - 2026-01-05
 
 ### Changes
