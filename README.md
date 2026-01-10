@@ -64,7 +64,6 @@ Environment variables:
 | `CA_CERT_PATH`                        | Path to CA certificate used for mTLS connection to Goldmane                                                | Yes      |               |
 | `PRIVATE_KEY_PATH`                    | Path to private key used for mTLS connection to Goldmane                                                   | Yes      |               |
 | `PUBLIC_CERT_PATH`                    | Path to public certificate used for mTLS connection to Goldmane                                            | Yes      |               |
-| `OTEL_EXPORTER_OTLP_ENDPOINT`         | Host and port of OTLP/HTTP endpoint to send logs to                                                        | Yes      |               |
 | `RECONNECT_WAIT_TIME_IN_MILLISECONDS` | Amount of milliseconds to wait before attempting to reconnect to Goldmane in the event of connection error | No       | `5000`        |
 
 ### Helm
@@ -99,7 +98,7 @@ for a list of all Helm chart values.
     read -s ACCESS_TOKEN
     <Paste Personal Access Token with read-only access to repository content>
     ```
-1. Setup Helm chart repository:
+1. Add Helm chart repository:
     ```bash
     helm repo add \
         --username ghp \
@@ -108,11 +107,14 @@ for a list of all Helm chart values.
         https://raw.githubusercontent.com/FredrickB/calico-flow-logs-otlphttp-exporter/gh-pages
     helm repo update
     ```
-1. Install Helm release:
+1. Install Helm release (see the [official documentation](https://pkg.go.dev/go.opentelemetry.io/otel/exporters/otlp/otlplog/otlploghttp)
+for environment variables to set the OTLP/HTTP endpoint in `env`)
     ```bash
     helm upgrade \
         --install \
         --namespace calico-system \
+        # Example setting OTLP endpoint using the OTEL_EXPORTER_OTLP_ENDPOINT environment variable
+        --set-string env.OTEL_EXPORTER_OTLP_ENDPOINT="http://localhost:4318" \
         calico-flow-logs-otlphttp-exporter \
         calico-flow-logs-otlphttp-exporter/calico-flow-logs-otlphttp-exporter
     ```

@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.11.0] - 2026-01-10
+
+### Breaking changes
+
+Remove default value for `env.OTEL_EXPORTER_OTLP_ENDPOINT`,
+to retain backwards-compatibility with existing deployments,
+add the following to `values.yaml`:
+
+```yaml
+env:
+  OTEL_EXPORTER_OTLP_ENDPOINT: "http://localhost:4318"
+```
+
 ## [0.10.3] - 2026-01-05
 
 ### Changes
