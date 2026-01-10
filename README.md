@@ -241,7 +241,7 @@ which can be imported to view the state of flows when logs are sent to a
     127.0.0.1 goldmane
     ```
 1. (Optional, requires `docker` and `k3d`) setup k3d cluster `make setup-k3d [K3D_CLUSTER_NAME=<cluster-name>] [K3D_CLUSTER_CALICO_VERSION=<calico-version>]`
-1. (Optional, requires `k3d` cluster to be created) install calico to k3d cluster `make install-calico`
+1. (Optional, requires `k3d` cluster to be created) install calico to k3d cluster `make install-calico [K3D_CLUSTER_CALICO_VERSION=<calico-version>]`
 
 ### Running
 
