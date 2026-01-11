@@ -12,7 +12,7 @@ VERSION=DEVELOPMENT_BUILD
 OUT_DIR=out
 CONTAINER_WOKRDIR=/build
 TAG=0.0.1-development.1
-HELM_CHART_REGISTRY_URL=https://raw.githubusercontent.com/FredrickB/calico-flow-logs-otlphttp-exporter/gh-pages
+HELM_CHART_REGISTRY_URL=https://fredrickb.github.io/calico-flow-logs-otlphttp-exporter
 K3D_CLUSTER_NAME=calico-flow-logs
 K3D_CLUSTER_CALICO_VERSION=v3.30.4
 
@@ -32,8 +32,6 @@ debug \
 run-built-binary \
 run-container \
 install-helm-chart-from-local-dir \
-setup-private-helm-chart-repository \
-install-helm-chart-from-private-chart-repository \
 setup-k3d \
 install-calico \
 start-k3d \
@@ -138,22 +136,6 @@ install-helm-chart-from-local-dir:
 		-n $(GOLDMANE_NAMESPACE) \
 		-f hack/charts/$(GO_PROGRAM)/override.yaml \
 		$(GO_PROGRAM) ./charts/$(GO_PROGRAM)
-
-setup-private-helm-chart-repository:
-	if [ -z $${ACCESS_TOKEN:+x} ]; then (echo "Set ACCESS_TOKEN to Personal Access token with read access to repo contents" && exit 1); fi
-	helm repo add \
-		--username ghp \
-		--password $$ACCESS_TOKEN \
-		$(GO_PROGRAM) \
-		$(HELM_CHART_REGISTRY_URL)
-	helm repo update
-
-install-helm-chart-from-private-chart-repository:
-	helm upgrade \
-		--install \
-		-n $(GOLDMANE_NAMESPACE) \
-		-f hack/charts/$(GO_PROGRAM)/override.yaml \
-		$(GO_PROGRAM) $(GO_PROGRAM)/$(GO_PROGRAM)
 
 setup-k3d:
 	k3d cluster create $(K3D_CLUSTER_NAME)-$(K3D_CLUSTER_CALICO_VERSION) \
