@@ -1,5 +1,6 @@
 GOLDMANE_PROTO_VERSION=v3.30.4
 PROTOBUF_DEFINITIONS_DIR=proto
+PROTOBUF_GOLDMANE_FILE=goldmane.proto
 GEN_DIR=gen
 GOLDMANE_CERTIFICATES_DIR=certs/goldmane
 GOLDMANE_HOST=goldmane:7443
@@ -50,7 +51,7 @@ install-development-packages:
 
 fetch-protobuf-definition:
 	mkdir -p $(PROTOBUF_DEFINITIONS_DIR)
-	curl -sL https://raw.githubusercontent.com/projectcalico/calico/refs/tags/$(GOLDMANE_PROTO_VERSION)/goldmane/proto/api.proto -o $(PROTOBUF_DEFINITIONS_DIR)/api.proto
+	curl -sL https://raw.githubusercontent.com/projectcalico/calico/refs/tags/$(GOLDMANE_PROTO_VERSION)/goldmane/proto/api.proto -o $(PROTOBUF_DEFINITIONS_DIR)/$(PROTOBUF_GOLDMANE_FILE)
 
 generate-code-from-protobuf:
 	which protoc > /dev/null || (echo "protoc not in PATH" && exit 1)
@@ -62,7 +63,7 @@ generate-code-from-protobuf:
 		--go-grpc_out=$(GEN_DIR) \
 		--go_opt=paths=source_relative \
 		--go-grpc_opt=paths=source_relative \
-		$(PROTOBUF_DEFINITIONS_DIR)/api.proto
+		$(PROTOBUF_DEFINITIONS_DIR)/$(PROTOBUF_GOLDMANE_FILE)
 
 copy-goldmane-certs-from-kubernetes-deployment:
 	mkdir -p $(GOLDMANE_CERTIFICATES_DIR)
