@@ -29,6 +29,3 @@ volumeMounts:
   - name: goldmane-ca-cert
     mountPath: /etc/goldmane/ca-cert
     readOnly: true
-
-imagePullSecrets:
-  - name: calico-flow-logs-otlphttp-exporter-regcred
