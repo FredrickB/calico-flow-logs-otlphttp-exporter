@@ -6,7 +6,7 @@ import (
 	"testing"
 	"time"
 
-	pb "github.com/FredrickB/calico-flow-logs-otlphttp-exporter/v2/gen/protos"
+	pb "github.com/FredrickB/calico-flow-logs-otlphttp-exporter/v2/gen/proto"
 )
 
 var (

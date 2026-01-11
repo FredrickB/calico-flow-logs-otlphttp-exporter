@@ -7,8 +7,8 @@ on:
       - '.github/workflows/**'
       - 'cmd/**'
       - 'internal/**'
-      - 'protos/**'
-      - 'gen/protos/**'
+      - 'proto/**'
+      - 'gen/proto/**'
       - Dockerfile
       - go.mod
       - go.sum
@@ -18,8 +18,8 @@ on:
       - '.github/workflows/**'
       - 'cmd/**'
       - 'internal/**'
-      - 'protos/**'
-      - 'gen/protos/**'
+      - 'proto/**'
+      - 'gen/proto/**'
       - Dockerfile
       - go.mod
       - go.sum

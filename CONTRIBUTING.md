@@ -61,11 +61,11 @@ pull request once the new container image version has been released.
 ├── charts      # Helm charts
 ├── cmd         # contains main.go for executables
 ├── docs        # documentation
-├── gen         # code generated from .proto files
+├── gen/proto   # code generated from .proto files
 ├── go.mod
 ├── go.sum
 ├── hack        # utility dir for scripts, docker compose files, ect
 ├── internal    # all code should be here
 ├── out         # build output
-└── protos      # .proto files
+└── proto       # .proto files
 ```

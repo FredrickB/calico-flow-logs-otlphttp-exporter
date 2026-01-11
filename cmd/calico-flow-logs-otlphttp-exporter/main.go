@@ -11,7 +11,7 @@ import (
 
 	"google.golang.org/grpc"
 
-	pb "github.com/FredrickB/calico-flow-logs-otlphttp-exporter/v2/gen/protos"
+	pb "github.com/FredrickB/calico-flow-logs-otlphttp-exporter/v2/gen/proto"
 	"github.com/FredrickB/calico-flow-logs-otlphttp-exporter/v2/internal/core"
 	"github.com/FredrickB/calico-flow-logs-otlphttp-exporter/v2/internal/goldmane"
 	"github.com/FredrickB/calico-flow-logs-otlphttp-exporter/v2/internal/otlp"

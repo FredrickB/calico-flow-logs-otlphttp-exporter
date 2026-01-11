@@ -2,7 +2,7 @@
 // versions:
 // - protoc-gen-go-grpc v1.5.1
 // - protoc             v3.21.12
-// source: protos/api.proto
+// source: proto/api.proto
 
 package proto
 
@@ -219,7 +219,7 @@ var Flows_ServiceDesc = grpc.ServiceDesc{
 			ServerStreams: true,
 		},
 	},
-	Metadata: "protos/api.proto",
+	Metadata: "proto/api.proto",
 }
 
 const (
@@ -331,7 +331,7 @@ var FlowCollector_ServiceDesc = grpc.ServiceDesc{
 			ClientStreams: true,
 		},
 	},
-	Metadata: "protos/api.proto",
+	Metadata: "proto/api.proto",
 }
 
 const (
@@ -446,5 +446,5 @@ var Statistics_ServiceDesc = grpc.ServiceDesc{
 			ServerStreams: true,
 		},
 	},
-	Metadata: "protos/api.proto",
+	Metadata: "proto/api.proto",
 }

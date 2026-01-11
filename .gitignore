@@ -1,6 +1,3 @@
-# Don't include generated protobuf code
-gen
-!gen/protos
 certs/
 out/
 # Don't include output from delve
