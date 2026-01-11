@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.13.7] - 2026-01-11
+
+### Changes
+
+Refactored internal protobuf
+related code.
+
 ## [0.13.6] - 2026-01-10
 
 ### Changes
