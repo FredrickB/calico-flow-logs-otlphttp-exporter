@@ -2,7 +2,7 @@
 // versions:
 // 	protoc-gen-go v1.36.10
 // 	protoc        v3.21.12
-// source: proto/api.proto
+// source: proto/goldmane.proto
 
 package proto
 
@@ -67,11 +67,11 @@ func (x FilterType) String() string {
 }
 
 func (FilterType) Descriptor() protoreflect.EnumDescriptor {
-	return file_proto_api_proto_enumTypes[0].Descriptor()
+	return file_proto_goldmane_proto_enumTypes[0].Descriptor()
 }
 
 func (FilterType) Type() protoreflect.EnumType {
-	return &file_proto_api_proto_enumTypes[0]
+	return &file_proto_goldmane_proto_enumTypes[0]
 }
 
 func (x FilterType) Number() protoreflect.EnumNumber {
@@ -80,7 +80,7 @@ func (x FilterType) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use FilterType.Descriptor instead.
 func (FilterType) EnumDescriptor() ([]byte, []int) {
-	return file_proto_api_proto_rawDescGZIP(), []int{0}
+	return file_proto_goldmane_proto_rawDescGZIP(), []int{0}
 }
 
 type Action int32
@@ -119,11 +119,11 @@ func (x Action) String() string {
 }
 
 func (Action) Descriptor() protoreflect.EnumDescriptor {
-	return file_proto_api_proto_enumTypes[1].Descriptor()
+	return file_proto_goldmane_proto_enumTypes[1].Descriptor()
 }
 
 func (Action) Type() protoreflect.EnumType {
-	return &file_proto_api_proto_enumTypes[1]
+	return &file_proto_goldmane_proto_enumTypes[1]
 }
 
 func (x Action) Number() protoreflect.EnumNumber {
@@ -132,7 +132,7 @@ func (x Action) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use Action.Descriptor instead.
 func (Action) EnumDescriptor() ([]byte, []int) {
-	return file_proto_api_proto_rawDescGZIP(), []int{1}
+	return file_proto_goldmane_proto_rawDescGZIP(), []int{1}
 }
 
 type MatchType int32
@@ -167,11 +167,11 @@ func (x MatchType) String() string {
 }
 
 func (MatchType) Descriptor() protoreflect.EnumDescriptor {
-	return file_proto_api_proto_enumTypes[2].Descriptor()
+	return file_proto_goldmane_proto_enumTypes[2].Descriptor()
 }
 
 func (MatchType) Type() protoreflect.EnumType {
-	return &file_proto_api_proto_enumTypes[2]
+	return &file_proto_goldmane_proto_enumTypes[2]
 }
 
 func (x MatchType) Number() protoreflect.EnumNumber {
@@ -180,7 +180,7 @@ func (x MatchType) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use MatchType.Descriptor instead.
 func (MatchType) EnumDescriptor() ([]byte, []int) {
-	return file_proto_api_proto_rawDescGZIP(), []int{2}
+	return file_proto_goldmane_proto_rawDescGZIP(), []int{2}
 }
 
 type PolicyKind int32
@@ -244,11 +244,11 @@ func (x PolicyKind) String() string {
 }
 
 func (PolicyKind) Descriptor() protoreflect.EnumDescriptor {
-	return file_proto_api_proto_enumTypes[3].Descriptor()
+	return file_proto_goldmane_proto_enumTypes[3].Descriptor()
 }
 
 func (PolicyKind) Type() protoreflect.EnumType {
-	return &file_proto_api_proto_enumTypes[3]
+	return &file_proto_goldmane_proto_enumTypes[3]
 }
 
 func (x PolicyKind) Number() protoreflect.EnumNumber {
@@ -257,7 +257,7 @@ func (x PolicyKind) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use PolicyKind.Descriptor instead.
 func (PolicyKind) EnumDescriptor() ([]byte, []int) {
-	return file_proto_api_proto_rawDescGZIP(), []int{3}
+	return file_proto_goldmane_proto_rawDescGZIP(), []int{3}
 }
 
 type SortBy int32
@@ -305,11 +305,11 @@ func (x SortBy) String() string {
 }
 
 func (SortBy) Descriptor() protoreflect.EnumDescriptor {
-	return file_proto_api_proto_enumTypes[4].Descriptor()
+	return file_proto_goldmane_proto_enumTypes[4].Descriptor()
 }
 
 func (SortBy) Type() protoreflect.EnumType {
-	return &file_proto_api_proto_enumTypes[4]
+	return &file_proto_goldmane_proto_enumTypes[4]
 }
 
 func (x SortBy) Number() protoreflect.EnumNumber {
@@ -318,7 +318,7 @@ func (x SortBy) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use SortBy.Descriptor instead.
 func (SortBy) EnumDescriptor() ([]byte, []int) {
-	return file_proto_api_proto_rawDescGZIP(), []int{4}
+	return file_proto_goldmane_proto_rawDescGZIP(), []int{4}
 }
 
 type EndpointType int32
@@ -368,11 +368,11 @@ func (x EndpointType) String() string {
 }
 
 func (EndpointType) Descriptor() protoreflect.EnumDescriptor {
-	return file_proto_api_proto_enumTypes[5].Descriptor()
+	return file_proto_goldmane_proto_enumTypes[5].Descriptor()
 }
 
 func (EndpointType) Type() protoreflect.EnumType {
-	return &file_proto_api_proto_enumTypes[5]
+	return &file_proto_goldmane_proto_enumTypes[5]
 }
 
 func (x EndpointType) Number() protoreflect.EnumNumber {
@@ -381,7 +381,7 @@ func (x EndpointType) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use EndpointType.Descriptor instead.
 func (EndpointType) EnumDescriptor() ([]byte, []int) {
-	return file_proto_api_proto_rawDescGZIP(), []int{5}
+	return file_proto_goldmane_proto_rawDescGZIP(), []int{5}
 }
 
 type Reporter int32
@@ -418,11 +418,11 @@ func (x Reporter) String() string {
 }
 
 func (Reporter) Descriptor() protoreflect.EnumDescriptor {
-	return file_proto_api_proto_enumTypes[6].Descriptor()
+	return file_proto_goldmane_proto_enumTypes[6].Descriptor()
 }
 
 func (Reporter) Type() protoreflect.EnumType {
-	return &file_proto_api_proto_enumTypes[6]
+	return &file_proto_goldmane_proto_enumTypes[6]
 }
 
 func (x Reporter) Number() protoreflect.EnumNumber {
@@ -431,7 +431,7 @@ func (x Reporter) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use Reporter.Descriptor instead.
 func (Reporter) EnumDescriptor() ([]byte, []int) {
-	return file_proto_api_proto_rawDescGZIP(), []int{6}
+	return file_proto_goldmane_proto_rawDescGZIP(), []int{6}
 }
 
 // StatisticType represents the types of data available over the Statistics API endpoint.
@@ -468,11 +468,11 @@ func (x StatisticType) String() string {
 }
 
 func (StatisticType) Descriptor() protoreflect.EnumDescriptor {
-	return file_proto_api_proto_enumTypes[7].Descriptor()
+	return file_proto_goldmane_proto_enumTypes[7].Descriptor()
 }
 
 func (StatisticType) Type() protoreflect.EnumType {
-	return &file_proto_api_proto_enumTypes[7]
+	return &file_proto_goldmane_proto_enumTypes[7]
 }
 
 func (x StatisticType) Number() protoreflect.EnumNumber {
@@ -481,7 +481,7 @@ func (x StatisticType) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use StatisticType.Descriptor instead.
 func (StatisticType) EnumDescriptor() ([]byte, []int) {
-	return file_proto_api_proto_rawDescGZIP(), []int{7}
+	return file_proto_goldmane_proto_rawDescGZIP(), []int{7}
 }
 
 type StatisticsGroupBy int32
@@ -516,11 +516,11 @@ func (x StatisticsGroupBy) String() string {
 }
 
 func (StatisticsGroupBy) Descriptor() protoreflect.EnumDescriptor {
-	return file_proto_api_proto_enumTypes[8].Descriptor()
+	return file_proto_goldmane_proto_enumTypes[8].Descriptor()
 }
 
 func (StatisticsGroupBy) Type() protoreflect.EnumType {
-	return &file_proto_api_proto_enumTypes[8]
+	return &file_proto_goldmane_proto_enumTypes[8]
 }
 
 func (x StatisticsGroupBy) Number() protoreflect.EnumNumber {
@@ -529,7 +529,7 @@ func (x StatisticsGroupBy) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use StatisticsGroupBy.Descriptor instead.
 func (StatisticsGroupBy) EnumDescriptor() ([]byte, []int) {
-	return file_proto_api_proto_rawDescGZIP(), []int{8}
+	return file_proto_goldmane_proto_rawDescGZIP(), []int{8}
 }
 
 type RuleDirection int32
@@ -565,11 +565,11 @@ func (x RuleDirection) String() string {
 }
 
 func (RuleDirection) Descriptor() protoreflect.EnumDescriptor {
-	return file_proto_api_proto_enumTypes[9].Descriptor()
+	return file_proto_goldmane_proto_enumTypes[9].Descriptor()
 }
 
 func (RuleDirection) Type() protoreflect.EnumType {
-	return &file_proto_api_proto_enumTypes[9]
+	return &file_proto_goldmane_proto_enumTypes[9]
 }
 
 func (x RuleDirection) Number() protoreflect.EnumNumber {
@@ -578,7 +578,7 @@ func (x RuleDirection) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use RuleDirection.Descriptor instead.
 func (RuleDirection) EnumDescriptor() ([]byte, []int) {
-	return file_proto_api_proto_rawDescGZIP(), []int{9}
+	return file_proto_goldmane_proto_rawDescGZIP(), []int{9}
 }
 
 // FlowListRequest defines a message to request a particular selection of aggregated Flow objects.
@@ -619,7 +619,7 @@ type FlowListRequest struct {
 
 func (x *FlowListRequest) Reset() {
 	*x = FlowListRequest{}
-	mi := &file_proto_api_proto_msgTypes[0]
+	mi := &file_proto_goldmane_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -631,7 +631,7 @@ func (x *FlowListRequest) String() string {
 func (*FlowListRequest) ProtoMessage() {}
 
 func (x *FlowListRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_api_proto_msgTypes[0]
+	mi := &file_proto_goldmane_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -644,7 +644,7 @@ func (x *FlowListRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use FlowListRequest.ProtoReflect.Descriptor instead.
 func (*FlowListRequest) Descriptor() ([]byte, []int) {
-	return file_proto_api_proto_rawDescGZIP(), []int{0}
+	return file_proto_goldmane_proto_rawDescGZIP(), []int{0}
 }
 
 func (x *FlowListRequest) GetStartTimeGte() int64 {
@@ -709,7 +709,7 @@ type FlowListResult struct {
 
 func (x *FlowListResult) Reset() {
 	*x = FlowListResult{}
-	mi := &file_proto_api_proto_msgTypes[1]
+	mi := &file_proto_goldmane_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -721,7 +721,7 @@ func (x *FlowListResult) String() string {
 func (*FlowListResult) ProtoMessage() {}
 
 func (x *FlowListResult) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_api_proto_msgTypes[1]
+	mi := &file_proto_goldmane_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -734,7 +734,7 @@ func (x *FlowListResult) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use FlowListResult.ProtoReflect.Descriptor instead.
 func (*FlowListResult) Descriptor() ([]byte, []int) {
-	return file_proto_api_proto_rawDescGZIP(), []int{1}
+	return file_proto_goldmane_proto_rawDescGZIP(), []int{1}
 }
 
 func (x *FlowListResult) GetMeta() *ListMetadata {
@@ -778,7 +778,7 @@ type FlowStreamRequest struct {
 
 func (x *FlowStreamRequest) Reset() {
 	*x = FlowStreamRequest{}
-	mi := &file_proto_api_proto_msgTypes[2]
+	mi := &file_proto_goldmane_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -790,7 +790,7 @@ func (x *FlowStreamRequest) String() string {
 func (*FlowStreamRequest) ProtoMessage() {}
 
 func (x *FlowStreamRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_api_proto_msgTypes[2]
+	mi := &file_proto_goldmane_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -803,7 +803,7 @@ func (x *FlowStreamRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use FlowStreamRequest.ProtoReflect.Descriptor instead.
 func (*FlowStreamRequest) Descriptor() ([]byte, []int) {
-	return file_proto_api_proto_rawDescGZIP(), []int{2}
+	return file_proto_goldmane_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *FlowStreamRequest) GetStartTimeGte() int64 {
@@ -857,7 +857,7 @@ type FilterHintsRequest struct {
 
 func (x *FilterHintsRequest) Reset() {
 	*x = FilterHintsRequest{}
-	mi := &file_proto_api_proto_msgTypes[3]
+	mi := &file_proto_goldmane_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -869,7 +869,7 @@ func (x *FilterHintsRequest) String() string {
 func (*FilterHintsRequest) ProtoMessage() {}
 
 func (x *FilterHintsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_api_proto_msgTypes[3]
+	mi := &file_proto_goldmane_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -882,7 +882,7 @@ func (x *FilterHintsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use FilterHintsRequest.ProtoReflect.Descriptor instead.
 func (*FilterHintsRequest) Descriptor() ([]byte, []int) {
-	return file_proto_api_proto_rawDescGZIP(), []int{3}
+	return file_proto_goldmane_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *FilterHintsRequest) GetType() FilterType {
@@ -939,7 +939,7 @@ type FilterHintsResult struct {
 
 func (x *FilterHintsResult) Reset() {
 	*x = FilterHintsResult{}
-	mi := &file_proto_api_proto_msgTypes[4]
+	mi := &file_proto_goldmane_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -951,7 +951,7 @@ func (x *FilterHintsResult) String() string {
 func (*FilterHintsResult) ProtoMessage() {}
 
 func (x *FilterHintsResult) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_api_proto_msgTypes[4]
+	mi := &file_proto_goldmane_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -964,7 +964,7 @@ func (x *FilterHintsResult) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use FilterHintsResult.ProtoReflect.Descriptor instead.
 func (*FilterHintsResult) Descriptor() ([]byte, []int) {
-	return file_proto_api_proto_rawDescGZIP(), []int{4}
+	return file_proto_goldmane_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *FilterHintsResult) GetMeta() *ListMetadata {
@@ -995,7 +995,7 @@ type ListMetadata struct {
 
 func (x *ListMetadata) Reset() {
 	*x = ListMetadata{}
-	mi := &file_proto_api_proto_msgTypes[5]
+	mi := &file_proto_goldmane_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1007,7 +1007,7 @@ func (x *ListMetadata) String() string {
 func (*ListMetadata) ProtoMessage() {}
 
 func (x *ListMetadata) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_api_proto_msgTypes[5]
+	mi := &file_proto_goldmane_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1020,7 +1020,7 @@ func (x *ListMetadata) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListMetadata.ProtoReflect.Descriptor instead.
 func (*ListMetadata) Descriptor() ([]byte, []int) {
-	return file_proto_api_proto_rawDescGZIP(), []int{5}
+	return file_proto_goldmane_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *ListMetadata) GetTotalPages() int64 {
@@ -1046,7 +1046,7 @@ type FilterHint struct {
 
 func (x *FilterHint) Reset() {
 	*x = FilterHint{}
-	mi := &file_proto_api_proto_msgTypes[6]
+	mi := &file_proto_goldmane_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1058,7 +1058,7 @@ func (x *FilterHint) String() string {
 func (*FilterHint) ProtoMessage() {}
 
 func (x *FilterHint) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_api_proto_msgTypes[6]
+	mi := &file_proto_goldmane_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1071,7 +1071,7 @@ func (x *FilterHint) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use FilterHint.ProtoReflect.Descriptor instead.
 func (*FilterHint) Descriptor() ([]byte, []int) {
-	return file_proto_api_proto_rawDescGZIP(), []int{6}
+	return file_proto_goldmane_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *FilterHint) GetValue() string {
@@ -1096,7 +1096,7 @@ type FlowResult struct {
 
 func (x *FlowResult) Reset() {
 	*x = FlowResult{}
-	mi := &file_proto_api_proto_msgTypes[7]
+	mi := &file_proto_goldmane_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1108,7 +1108,7 @@ func (x *FlowResult) String() string {
 func (*FlowResult) ProtoMessage() {}
 
 func (x *FlowResult) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_api_proto_msgTypes[7]
+	mi := &file_proto_goldmane_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1121,7 +1121,7 @@ func (x *FlowResult) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use FlowResult.ProtoReflect.Descriptor instead.
 func (*FlowResult) Descriptor() ([]byte, []int) {
-	return file_proto_api_proto_rawDescGZIP(), []int{7}
+	return file_proto_goldmane_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *FlowResult) GetId() int64 {
@@ -1163,7 +1163,7 @@ type Filter struct {
 
 func (x *Filter) Reset() {
 	*x = Filter{}
-	mi := &file_proto_api_proto_msgTypes[8]
+	mi := &file_proto_goldmane_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1175,7 +1175,7 @@ func (x *Filter) String() string {
 func (*Filter) ProtoMessage() {}
 
 func (x *Filter) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_api_proto_msgTypes[8]
+	mi := &file_proto_goldmane_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1188,7 +1188,7 @@ func (x *Filter) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Filter.ProtoReflect.Descriptor instead.
 func (*Filter) Descriptor() ([]byte, []int) {
-	return file_proto_api_proto_rawDescGZIP(), []int{8}
+	return file_proto_goldmane_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *Filter) GetSourceNames() []*StringMatch {
@@ -1257,7 +1257,7 @@ type StringMatch struct {
 
 func (x *StringMatch) Reset() {
 	*x = StringMatch{}
-	mi := &file_proto_api_proto_msgTypes[9]
+	mi := &file_proto_goldmane_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1269,7 +1269,7 @@ func (x *StringMatch) String() string {
 func (*StringMatch) ProtoMessage() {}
 
 func (x *StringMatch) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_api_proto_msgTypes[9]
+	mi := &file_proto_goldmane_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1282,7 +1282,7 @@ func (x *StringMatch) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use StringMatch.ProtoReflect.Descriptor instead.
 func (*StringMatch) Descriptor() ([]byte, []int) {
-	return file_proto_api_proto_rawDescGZIP(), []int{9}
+	return file_proto_goldmane_proto_rawDescGZIP(), []int{9}
 }
 
 func (x *StringMatch) GetValue() string {
@@ -1308,7 +1308,7 @@ type PortMatch struct {
 
 func (x *PortMatch) Reset() {
 	*x = PortMatch{}
-	mi := &file_proto_api_proto_msgTypes[10]
+	mi := &file_proto_goldmane_proto_msgTypes[10]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1320,7 +1320,7 @@ func (x *PortMatch) String() string {
 func (*PortMatch) ProtoMessage() {}
 
 func (x *PortMatch) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_api_proto_msgTypes[10]
+	mi := &file_proto_goldmane_proto_msgTypes[10]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1333,7 +1333,7 @@ func (x *PortMatch) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PortMatch.ProtoReflect.Descriptor instead.
 func (*PortMatch) Descriptor() ([]byte, []int) {
-	return file_proto_api_proto_rawDescGZIP(), []int{10}
+	return file_proto_goldmane_proto_rawDescGZIP(), []int{10}
 }
 
 func (x *PortMatch) GetPort() int64 {
@@ -1353,7 +1353,7 @@ type SortOption struct {
 
 func (x *SortOption) Reset() {
 	*x = SortOption{}
-	mi := &file_proto_api_proto_msgTypes[11]
+	mi := &file_proto_goldmane_proto_msgTypes[11]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1365,7 +1365,7 @@ func (x *SortOption) String() string {
 func (*SortOption) ProtoMessage() {}
 
 func (x *SortOption) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_api_proto_msgTypes[11]
+	mi := &file_proto_goldmane_proto_msgTypes[11]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1378,7 +1378,7 @@ func (x *SortOption) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SortOption.ProtoReflect.Descriptor instead.
 func (*SortOption) Descriptor() ([]byte, []int) {
-	return file_proto_api_proto_rawDescGZIP(), []int{11}
+	return file_proto_goldmane_proto_rawDescGZIP(), []int{11}
 }
 
 func (x *SortOption) GetSortBy() SortBy {
@@ -1403,7 +1403,7 @@ type PolicyMatch struct {
 
 func (x *PolicyMatch) Reset() {
 	*x = PolicyMatch{}
-	mi := &file_proto_api_proto_msgTypes[12]
+	mi := &file_proto_goldmane_proto_msgTypes[12]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1415,7 +1415,7 @@ func (x *PolicyMatch) String() string {
 func (*PolicyMatch) ProtoMessage() {}
 
 func (x *PolicyMatch) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_api_proto_msgTypes[12]
+	mi := &file_proto_goldmane_proto_msgTypes[12]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1428,7 +1428,7 @@ func (x *PolicyMatch) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PolicyMatch.ProtoReflect.Descriptor instead.
 func (*PolicyMatch) Descriptor() ([]byte, []int) {
-	return file_proto_api_proto_rawDescGZIP(), []int{12}
+	return file_proto_goldmane_proto_rawDescGZIP(), []int{12}
 }
 
 func (x *PolicyMatch) GetKind() PolicyKind {
@@ -1475,7 +1475,7 @@ type FlowReceipt struct {
 
 func (x *FlowReceipt) Reset() {
 	*x = FlowReceipt{}
-	mi := &file_proto_api_proto_msgTypes[13]
+	mi := &file_proto_goldmane_proto_msgTypes[13]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1487,7 +1487,7 @@ func (x *FlowReceipt) String() string {
 func (*FlowReceipt) ProtoMessage() {}
 
 func (x *FlowReceipt) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_api_proto_msgTypes[13]
+	mi := &file_proto_goldmane_proto_msgTypes[13]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1500,7 +1500,7 @@ func (x *FlowReceipt) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use FlowReceipt.ProtoReflect.Descriptor instead.
 func (*FlowReceipt) Descriptor() ([]byte, []int) {
-	return file_proto_api_proto_rawDescGZIP(), []int{13}
+	return file_proto_goldmane_proto_rawDescGZIP(), []int{13}
 }
 
 // FlowUpdate wraps a Flow with additional metadata.
@@ -1514,7 +1514,7 @@ type FlowUpdate struct {
 
 func (x *FlowUpdate) Reset() {
 	*x = FlowUpdate{}
-	mi := &file_proto_api_proto_msgTypes[14]
+	mi := &file_proto_goldmane_proto_msgTypes[14]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1526,7 +1526,7 @@ func (x *FlowUpdate) String() string {
 func (*FlowUpdate) ProtoMessage() {}
 
 func (x *FlowUpdate) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_api_proto_msgTypes[14]
+	mi := &file_proto_goldmane_proto_msgTypes[14]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1539,7 +1539,7 @@ func (x *FlowUpdate) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use FlowUpdate.ProtoReflect.Descriptor instead.
 func (*FlowUpdate) Descriptor() ([]byte, []int) {
-	return file_proto_api_proto_rawDescGZIP(), []int{14}
+	return file_proto_goldmane_proto_rawDescGZIP(), []int{14}
 }
 
 func (x *FlowUpdate) GetFlow() *Flow {
@@ -1607,7 +1607,7 @@ type FlowKey struct {
 
 func (x *FlowKey) Reset() {
 	*x = FlowKey{}
-	mi := &file_proto_api_proto_msgTypes[15]
+	mi := &file_proto_goldmane_proto_msgTypes[15]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1619,7 +1619,7 @@ func (x *FlowKey) String() string {
 func (*FlowKey) ProtoMessage() {}
 
 func (x *FlowKey) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_api_proto_msgTypes[15]
+	mi := &file_proto_goldmane_proto_msgTypes[15]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1632,7 +1632,7 @@ func (x *FlowKey) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use FlowKey.ProtoReflect.Descriptor instead.
 func (*FlowKey) Descriptor() ([]byte, []int) {
-	return file_proto_api_proto_rawDescGZIP(), []int{15}
+	return file_proto_goldmane_proto_rawDescGZIP(), []int{15}
 }
 
 func (x *FlowKey) GetSourceName() string {
@@ -1778,7 +1778,7 @@ type Flow struct {
 
 func (x *Flow) Reset() {
 	*x = Flow{}
-	mi := &file_proto_api_proto_msgTypes[16]
+	mi := &file_proto_goldmane_proto_msgTypes[16]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1790,7 +1790,7 @@ func (x *Flow) String() string {
 func (*Flow) ProtoMessage() {}
 
 func (x *Flow) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_api_proto_msgTypes[16]
+	mi := &file_proto_goldmane_proto_msgTypes[16]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1803,7 +1803,7 @@ func (x *Flow) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Flow.ProtoReflect.Descriptor instead.
 func (*Flow) Descriptor() ([]byte, []int) {
-	return file_proto_api_proto_rawDescGZIP(), []int{16}
+	return file_proto_goldmane_proto_rawDescGZIP(), []int{16}
 }
 
 func (x *Flow) GetKey() *FlowKey {
@@ -1903,7 +1903,7 @@ type PolicyTrace struct {
 
 func (x *PolicyTrace) Reset() {
 	*x = PolicyTrace{}
-	mi := &file_proto_api_proto_msgTypes[17]
+	mi := &file_proto_goldmane_proto_msgTypes[17]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1915,7 +1915,7 @@ func (x *PolicyTrace) String() string {
 func (*PolicyTrace) ProtoMessage() {}
 
 func (x *PolicyTrace) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_api_proto_msgTypes[17]
+	mi := &file_proto_goldmane_proto_msgTypes[17]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1928,7 +1928,7 @@ func (x *PolicyTrace) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PolicyTrace.ProtoReflect.Descriptor instead.
 func (*PolicyTrace) Descriptor() ([]byte, []int) {
-	return file_proto_api_proto_rawDescGZIP(), []int{17}
+	return file_proto_goldmane_proto_rawDescGZIP(), []int{17}
 }
 
 func (x *PolicyTrace) GetEnforcedPolicies() []*PolicyHit {
@@ -1973,7 +1973,7 @@ type PolicyHit struct {
 
 func (x *PolicyHit) Reset() {
 	*x = PolicyHit{}
-	mi := &file_proto_api_proto_msgTypes[18]
+	mi := &file_proto_goldmane_proto_msgTypes[18]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1985,7 +1985,7 @@ func (x *PolicyHit) String() string {
 func (*PolicyHit) ProtoMessage() {}
 
 func (x *PolicyHit) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_api_proto_msgTypes[18]
+	mi := &file_proto_goldmane_proto_msgTypes[18]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1998,7 +1998,7 @@ func (x *PolicyHit) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PolicyHit.ProtoReflect.Descriptor instead.
 func (*PolicyHit) Descriptor() ([]byte, []int) {
-	return file_proto_api_proto_rawDescGZIP(), []int{18}
+	return file_proto_goldmane_proto_rawDescGZIP(), []int{18}
 }
 
 func (x *PolicyHit) GetKind() PolicyKind {
@@ -2091,7 +2091,7 @@ type StatisticsRequest struct {
 
 func (x *StatisticsRequest) Reset() {
 	*x = StatisticsRequest{}
-	mi := &file_proto_api_proto_msgTypes[19]
+	mi := &file_proto_goldmane_proto_msgTypes[19]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2103,7 +2103,7 @@ func (x *StatisticsRequest) String() string {
 func (*StatisticsRequest) ProtoMessage() {}
 
 func (x *StatisticsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_api_proto_msgTypes[19]
+	mi := &file_proto_goldmane_proto_msgTypes[19]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2116,7 +2116,7 @@ func (x *StatisticsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use StatisticsRequest.ProtoReflect.Descriptor instead.
 func (*StatisticsRequest) Descriptor() ([]byte, []int) {
-	return file_proto_api_proto_rawDescGZIP(), []int{19}
+	return file_proto_goldmane_proto_rawDescGZIP(), []int{19}
 }
 
 func (x *StatisticsRequest) GetStartTimeGte() int64 {
@@ -2199,7 +2199,7 @@ type StatisticsResult struct {
 
 func (x *StatisticsResult) Reset() {
 	*x = StatisticsResult{}
-	mi := &file_proto_api_proto_msgTypes[20]
+	mi := &file_proto_goldmane_proto_msgTypes[20]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2211,7 +2211,7 @@ func (x *StatisticsResult) String() string {
 func (*StatisticsResult) ProtoMessage() {}
 
 func (x *StatisticsResult) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_api_proto_msgTypes[20]
+	mi := &file_proto_goldmane_proto_msgTypes[20]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2224,7 +2224,7 @@ func (x *StatisticsResult) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use StatisticsResult.ProtoReflect.Descriptor instead.
 func (*StatisticsResult) Descriptor() ([]byte, []int) {
-	return file_proto_api_proto_rawDescGZIP(), []int{20}
+	return file_proto_goldmane_proto_rawDescGZIP(), []int{20}
 }
 
 func (x *StatisticsResult) GetPolicy() *PolicyHit {
@@ -2304,11 +2304,11 @@ func (x *StatisticsResult) GetX() []int64 {
 	return nil
 }
 
-var File_proto_api_proto protoreflect.FileDescriptor
+var File_proto_goldmane_proto protoreflect.FileDescriptor
 
-const file_proto_api_proto_rawDesc = "" +
+const file_proto_goldmane_proto_rawDesc = "" +
 	"\n" +
-	"\x0fproto/api.proto\x12\bgoldmane\"\x98\x02\n" +
+	"\x14proto/goldmane.proto\x12\bgoldmane\"\x98\x02\n" +
 	"\x0fFlowListRequest\x12$\n" +
 	"\x0estart_time_gte\x18\x01 \x01(\x03R\fstartTimeGte\x12\"\n" +
 	"\rstart_time_lt\x18\x02 \x01(\x03R\vstartTimeLt\x12\x12\n" +
@@ -2527,20 +2527,20 @@ const file_proto_api_proto_rawDesc = "" +
 	"\x04List\x12\x1b.goldmane.StatisticsRequest\x1a\x1a.goldmane.StatisticsResult0\x01B\tZ\a./protob\x06proto3"
 
 var (
-	file_proto_api_proto_rawDescOnce sync.Once
-	file_proto_api_proto_rawDescData []byte
+	file_proto_goldmane_proto_rawDescOnce sync.Once
+	file_proto_goldmane_proto_rawDescData []byte
 )
 
-func file_proto_api_proto_rawDescGZIP() []byte {
-	file_proto_api_proto_rawDescOnce.Do(func() {
-		file_proto_api_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_proto_api_proto_rawDesc), len(file_proto_api_proto_rawDesc)))
+func file_proto_goldmane_proto_rawDescGZIP() []byte {
+	file_proto_goldmane_proto_rawDescOnce.Do(func() {
+		file_proto_goldmane_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_proto_goldmane_proto_rawDesc), len(file_proto_goldmane_proto_rawDesc)))
 	})
-	return file_proto_api_proto_rawDescData
+	return file_proto_goldmane_proto_rawDescData
 }
 
-var file_proto_api_proto_enumTypes = make([]protoimpl.EnumInfo, 10)
-var file_proto_api_proto_msgTypes = make([]protoimpl.MessageInfo, 21)
-var file_proto_api_proto_goTypes = []any{
+var file_proto_goldmane_proto_enumTypes = make([]protoimpl.EnumInfo, 10)
+var file_proto_goldmane_proto_msgTypes = make([]protoimpl.MessageInfo, 21)
+var file_proto_goldmane_proto_goTypes = []any{
 	(FilterType)(0),            // 0: goldmane.FilterType
 	(Action)(0),                // 1: goldmane.Action
 	(MatchType)(0),             // 2: goldmane.MatchType
@@ -2573,7 +2573,7 @@ var file_proto_api_proto_goTypes = []any{
 	(*StatisticsRequest)(nil),  // 29: goldmane.StatisticsRequest
 	(*StatisticsResult)(nil),   // 30: goldmane.StatisticsResult
 }
-var file_proto_api_proto_depIdxs = []int32{
+var file_proto_goldmane_proto_depIdxs = []int32{
 	21, // 0: goldmane.FlowListRequest.sort_by:type_name -> goldmane.SortOption
 	18, // 1: goldmane.FlowListRequest.filter:type_name -> goldmane.Filter
 	15, // 2: goldmane.FlowListResult.meta:type_name -> goldmane.ListMetadata
@@ -2632,27 +2632,27 @@ var file_proto_api_proto_depIdxs = []int32{
 	0,  // [0:41] is the sub-list for field type_name
 }
 
-func init() { file_proto_api_proto_init() }
-func file_proto_api_proto_init() {
-	if File_proto_api_proto != nil {
+func init() { file_proto_goldmane_proto_init() }
+func file_proto_goldmane_proto_init() {
+	if File_proto_goldmane_proto != nil {
 		return
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: unsafe.Slice(unsafe.StringData(file_proto_api_proto_rawDesc), len(file_proto_api_proto_rawDesc)),
+			RawDescriptor: unsafe.Slice(unsafe.StringData(file_proto_goldmane_proto_rawDesc), len(file_proto_goldmane_proto_rawDesc)),
 			NumEnums:      10,
 			NumMessages:   21,
 			NumExtensions: 0,
 			NumServices:   3,
 		},
-		GoTypes:           file_proto_api_proto_goTypes,
-		DependencyIndexes: file_proto_api_proto_depIdxs,
-		EnumInfos:         file_proto_api_proto_enumTypes,
-		MessageInfos:      file_proto_api_proto_msgTypes,
+		GoTypes:           file_proto_goldmane_proto_goTypes,
+		DependencyIndexes: file_proto_goldmane_proto_depIdxs,
+		EnumInfos:         file_proto_goldmane_proto_enumTypes,
+		MessageInfos:      file_proto_goldmane_proto_msgTypes,
 	}.Build()
-	File_proto_api_proto = out.File
-	file_proto_api_proto_goTypes = nil
-	file_proto_api_proto_depIdxs = nil
+	File_proto_goldmane_proto = out.File
+	file_proto_goldmane_proto_goTypes = nil
+	file_proto_goldmane_proto_depIdxs = nil
 }
