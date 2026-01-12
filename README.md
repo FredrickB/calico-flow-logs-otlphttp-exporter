@@ -84,12 +84,12 @@ for a list of all Helm chart values.
 for environment variables to set the OTLP/HTTP endpoint in `env`)
     ```bash
     helm upgrade \
-        --install \
-        --namespace calico-system \
-        # Example setting OTLP endpoint using the OTEL_EXPORTER_OTLP_ENDPOINT environment variable
-        --set-string env.OTEL_EXPORTER_OTLP_ENDPOINT="http://localhost:4318" \
-        calico-flow-logs-otlphttp-exporter \
-        calico-flow-logs-otlphttp-exporter/calico-flow-logs-otlphttp-exporter
+      --install \
+      --namespace calico-system \
+      # Example setting OTLP endpoint using the OTEL_EXPORTER_OTLP_ENDPOINT environment variable
+      --set-string env.OTEL_EXPORTER_OTLP_ENDPOINT="http://localhost:4318" \
+      calico-flow-logs-otlphttp-exporter \
+      calico-flow-logs-otlphttp-exporter/calico-flow-logs-otlphttp-exporter
     ```
 
 ## Datamodel
@@ -203,6 +203,7 @@ which can be imported to view the state of flows when logs are sent to a
 - `kubectl`
 - `base64`
 - `docker`, `28.2.1`
+- `helm` >= `3.x`
 - Calico ([installation documentation](https://docs.tigera.io/calico/latest/getting-started/))
 - Goldmane running in namespace `calico-system` ([installation documentation](https://docs.tigera.io/calico/latest/observability/enable-whisker#enable-the-flow-logs-api))
 - `dlv` (optional, for debugging, [installation documentation](https://github.com/go-delve/delve))
@@ -244,17 +245,17 @@ approach in production environments, this is just for development.
 1. Port-forward the Goldmane service: `make port-forward-goldmane [GOLDMANE_NAMESPACE=<goldmane namespace>]`
 1. Copy the certificates from a running instance of Goldmane: `make copy-goldmane-certs-from-kubernetes-deployment [GOLDMANE_NAMESPACE=<goldmane namespace>]`
 1. Start the otel-collector, Loki and Grafana: `make docker-compose-up`
-2. Build container image: `make build-container-image [TAG=<tag>]`
-3. Run the container image: `make run-container`
-4. (Optional) stop k3d cluster `make stop-k3d [K3D_CLUSTER_NAME=<cluster-name>] [K3D_CLUSTER_CALICO_VERSION=<calico-version>]`
+1. Build container image: `make build-container-image [TAG=<tag>]`
+1. Run the container image: `make run-container`
+1. (Optional) stop k3d cluster `make stop-k3d [K3D_CLUSTER_NAME=<cluster-name>] [K3D_CLUSTER_CALICO_VERSION=<calico-version>]`
 
 #### Running as Helm release
 
 ##### Prerequisites
 
 1. OpenTelemetry-Collector installed:
-   1. Namespace must be `opentelemetry-collector`
-   1. Name of Service for OpenTelemetry-Collector must be `opentelemetry-collector`
+    1. Namespace must be `opentelemetry-collector`
+    1. Name of Service for OpenTelemetry-Collector must be `opentelemetry-collector`
 1. (Optional) Adapt values in `hack/charts/calico-flow-logs-otlphttp-exporter/override.yaml`
 
 ##### Install Helm chart from local directory
