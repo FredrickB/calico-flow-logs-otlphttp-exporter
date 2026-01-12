@@ -13,7 +13,8 @@ The motivation for this project is to be able to ingest
 network flow logs from Calico into Log Analysis or SIEM
 tools using the vendor agnostic OTLP format. The idea for
 the project originates from [this blogpost](https://www.tigera.io/blog/calico-open-source-3-30-exploring-the-goldmane-api-for-custom-kubernetes-network-observability/).
-More context and example usage [here](https://fredrickb.com/2026/01/12/ingesting-calico-flow-logs-into-loki-in-the-homelab/).
+More context about the project and why it was made can be
+found [here](https://fredrickb.com/2026/01/12/ingesting-calico-flow-logs-into-loki-in-the-homelab/).
 
 See [#Datamodel](#datamodel) for payload structure.
 
