@@ -39,6 +39,7 @@ See [#Datamodel](#datamodel) for payload structure.
   - [Releasing new Helm chart versions](#releasing-new-helm-chart-versions)
 - [Disclaimer](#disclaimer)
 - [Contributors](#contributors)
+- [License](#license)
 
 ## Compatibility
 
@@ -332,3 +333,7 @@ with the Calico project.
 	<tbody>
 </table>
 <!-- readme: erikroed,collaborators,contributors/ -end -->
+
+## License
+
+calico-flow-logs-otlphttp-exporter is distributed under the [MIT License](./LICENSE).
