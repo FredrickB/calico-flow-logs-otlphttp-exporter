@@ -35,7 +35,9 @@ install-helm-chart-from-local-dir \
 setup-k3d \
 install-calico \
 start-k3d \
-stop-k3d
+stop-k3d \
+docker-compose-down \
+docker-tail-otel-collector-logs
 
 all: clean install-development-packages fetch-protobuf-definition generate-code-from-protobuf lint test build
 .PHONY : all
@@ -73,7 +75,13 @@ port-forward-goldmane:
 	kubectl port-forward -n $(GOLDMANE_NAMESPACE) svc/goldmane 7443
 
 docker-compose-up:
-	docker compose --project-directory hack/docker up
+	docker compose --project-directory hack/docker up -d
+
+docker-compose-down:
+	docker compose --project-directory hack/docker down
+
+docker-tail-otel-collector-logs:
+	docker logs otel-collector --follow --tail 50
 
 run:
 	CA_CERT_PATH=$(GOLDMANE_CERTIFICATES_DIR)/goldmane_ca.crt \
