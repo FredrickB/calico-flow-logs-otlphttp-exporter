@@ -5,9 +5,7 @@ metadata:
   labels:
     {{- include "calico-flow-logs-otlphttp-exporter.labels" . | nindent 4 }}
 spec:
-  {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
-  {{- end }}
   selector:
     matchLabels:
       {{- include "calico-flow-logs-otlphttp-exporter.selectorLabels" . | nindent 6 }}
