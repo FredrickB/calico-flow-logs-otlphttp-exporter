@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.12.0] - 2026-01-20
+
+### Breaking changes
+
+Remove HPA from Helm chart.
+
 ## [0.11.4] - 2026-01-11
 
 ### Changes
