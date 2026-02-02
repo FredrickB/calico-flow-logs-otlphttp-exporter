@@ -6,4 +6,4 @@ spec:
   containers:
   - image: alpine/curl:8.17.0
     name: curl
-    command: ["sh", "-c", "while true; do curl -s https://www.example.com; sleep 10; done"]
+    command: ["sh", "-c", "while true; do curl -s http://nginx; sleep 10; done"]

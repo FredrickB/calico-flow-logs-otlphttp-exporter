@@ -154,6 +154,8 @@ setup-k3d:
 
 install-calico:
 	kubectl apply -f https://raw.githubusercontent.com/projectcalico/calico/$(K3D_CLUSTER_CALICO_VERSION)/manifests/tigera-operator.yaml
+	kubectl wait --for=jsonpath='{.status.readyReplicas}'=1 --namespace tigera-operator deployments/tigera-operator
+	sleep 5 # Ensure CRDs are available before creating new resources
 	kubectl apply -f https://raw.githubusercontent.com/projectcalico/calico/$(K3D_CLUSTER_CALICO_VERSION)/manifests/custom-resources.yaml
 
 start-k3d:
