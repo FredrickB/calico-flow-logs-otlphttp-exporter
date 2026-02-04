@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.13.8] - 2026-02-04
+
+### Changes
+
+- Bump deps
+- Change `semconv` to schema version `v1.39.0`
+
 ## [0.13.7] - 2026-01-11
 
 ### Changes
