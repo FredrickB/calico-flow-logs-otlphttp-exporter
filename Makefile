@@ -35,6 +35,7 @@ install-helm-chart-from-local-dir \
 setup-k3d \
 install-calico \
 start-k3d \
+install-test-resources \
 stop-k3d \
 docker-compose-down \
 docker-tail-otel-collector-logs
@@ -150,13 +151,15 @@ setup-k3d:
 		--k3s-arg '--flannel-backend=none@server:*' \
 		--k3s-arg '--disable-network-policy@server:*' \
 		--k3s-arg '--cluster-cidr=192.168.0.0/16@server:*'
-	kubectl apply -R -f hack/k3d
 
 install-calico:
 	kubectl apply -f https://raw.githubusercontent.com/projectcalico/calico/$(K3D_CLUSTER_CALICO_VERSION)/manifests/tigera-operator.yaml
 	kubectl wait --for=jsonpath='{.status.readyReplicas}'=1 --namespace tigera-operator deployments/tigera-operator
 	sleep 5 # Ensure CRDs are available before creating new resources
 	kubectl apply -f https://raw.githubusercontent.com/projectcalico/calico/$(K3D_CLUSTER_CALICO_VERSION)/manifests/custom-resources.yaml
+
+install-test-resources:
+	kubectl apply -R -f hack/k3d
 
 start-k3d:
 	k3d cluster start $(K3D_CLUSTER_NAME)-$(K3D_CLUSTER_CALICO_VERSION)

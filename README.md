@@ -232,6 +232,7 @@ deployment running in the cluster directly. Do not use this
 approach in production environments, this is just for development.
 
 1. (Optional) start k3d cluster `make start-k3d [K3D_CLUSTER_NAME=<cluster-name>] [K3D_CLUSTER_CALICO_VERSION=<calico-version>]`
+1. Install test-resources: `make install-test-resources`
 1. Port-forward the Goldmane service: `make port-forward-goldmane [GOLDMANE_NAMESPACE=<goldmane namespace>]`
 1. Copy the certificates from a running instance of Goldmane: `make copy-goldmane-certs-from-kubernetes-deployment [GOLDMANE_NAMESPACE=<goldmane namespace>]`
 1. Start the otel-collector, Loki and Grafana: `make docker-compose-up` (`make docker-tail-otel-collector-logs` to tail logs of otel-collector)
@@ -246,6 +247,7 @@ approach in production environments, this is just for development.
 #### Running as container
 
 1. (Optional) start k3d cluster `make start-k3d [K3D_CLUSTER_NAME=<cluster-name>] [K3D_CLUSTER_CALICO_VERSION=<calico-version>]`
+1. Install test-resources: `make install-test-resources`
 1. Port-forward the Goldmane service: `make port-forward-goldmane [GOLDMANE_NAMESPACE=<goldmane namespace>]`
 1. Copy the certificates from a running instance of Goldmane: `make copy-goldmane-certs-from-kubernetes-deployment [GOLDMANE_NAMESPACE=<goldmane namespace>]`
 1. Start the otel-collector, Loki and Grafana: `make docker-compose-up` (`make docker-tail-otel-collector-logs` to tail logs of otel-collector)
