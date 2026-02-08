@@ -59,7 +59,7 @@ pull request once the new container image version has been released.
 ├── README.md
 ├── certs       # Goldmane certs (only used for development)
 ├── charts      # Helm charts
-├── cmd         # contains main.go for executables
+├── main.go     # entrypoint
 ├── docs        # documentation
 ├── gen/proto   # code generated from .proto files
 ├── go.mod

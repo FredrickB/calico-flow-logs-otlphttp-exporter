@@ -10,7 +10,7 @@ OTEL_EXPORTER_OTLP_ENDPOINT=http://localhost:4318
 GO_PROGRAM=calico-flow-logs-otlphttp-exporter
 VERSION=DEVELOPMENT_BUILD
 OUT_DIR=out
-CONTAINER_WOKRDIR=/build
+CONTAINER_WORKDIR=/build
 TAG=0.0.1-development.1
 HELM_CHART_REGISTRY_URL=https://fredrickb.github.io/calico-flow-logs-otlphttp-exporter
 K3D_CLUSTER_NAME=calico-flow-logs
@@ -90,7 +90,7 @@ run:
 	PUBLIC_CERT_PATH=$(GOLDMANE_CERTIFICATES_DIR)/goldmane.crt \
 	GOLDMANE_HOST=$(GOLDMANE_HOST) \
 	OTEL_EXPORTER_OTLP_ENDPOINT=$(OTEL_EXPORTER_OTLP_ENDPOINT) \
-	go run cmd/$(GO_PROGRAM)/main.go
+	go run main.go
 
 debug:
 	CA_CERT_PATH=$(GOLDMANE_CERTIFICATES_DIR)/goldmane_ca.crt \
@@ -98,7 +98,7 @@ debug:
 	PUBLIC_CERT_PATH=$(GOLDMANE_CERTIFICATES_DIR)/goldmane.crt \
 	GOLDMANE_HOST=$(GOLDMANE_HOST) \
 	OTEL_EXPORTER_OTLP_ENDPOINT=$(OTEL_EXPORTER_OTLP_ENDPOINT) \
-	dlv debug cmd/$(GO_PROGRAM)/main.go
+	dlv debug main.go
 
 lint:
 	gofmt -l .
@@ -108,8 +108,7 @@ test: generate-code-from-protobuf
 
 build:
 	go build \
-		-C cmd/$(GO_PROGRAM) \
-		-o ../../$(OUT_DIR)/$(GO_PROGRAM) \
+		-o $(OUT_DIR)/$(GO_PROGRAM) \
 		--ldflags "\
 			-X github.com/FredrickB/calico-flow-logs-otlphttp-exporter/v2/internal/version.version=$(VERSION) \
 			-X github.com/FredrickB/calico-flow-logs-otlphttp-exporter/v2/internal/version.goldmaneProtobufVersion=$(GOLDMANE_PROTO_VERSION) \
@@ -131,10 +130,10 @@ run-container: build-container-image
 		--network host \
 		--name $(GO_PROGRAM) \
 		--rm \
-		-v ./$(GOLDMANE_CERTIFICATES_DIR):$(CONTAINER_WOKRDIR)/$(GOLDMANE_CERTIFICATES_DIR) \
-		-e CA_CERT_PATH=/$(CONTAINER_WOKRDIR)/$(GOLDMANE_CERTIFICATES_DIR)/goldmane_ca.crt \
-		-e PRIVATE_KEY_PATH=/$(CONTAINER_WOKRDIR)/$(GOLDMANE_CERTIFICATES_DIR)/goldmane.key \
-		-e PUBLIC_CERT_PATH=/$(CONTAINER_WOKRDIR)/$(GOLDMANE_CERTIFICATES_DIR)/goldmane.crt \
+		-v ./$(GOLDMANE_CERTIFICATES_DIR):$(CONTAINER_WORKDIR)/$(GOLDMANE_CERTIFICATES_DIR) \
+		-e CA_CERT_PATH=$(CONTAINER_WORKDIR)/$(GOLDMANE_CERTIFICATES_DIR)/goldmane_ca.crt \
+		-e PRIVATE_KEY_PATH=$(CONTAINER_WORKDIR)/$(GOLDMANE_CERTIFICATES_DIR)/goldmane.key \
+		-e PUBLIC_CERT_PATH=$(CONTAINER_WORKDIR)/$(GOLDMANE_CERTIFICATES_DIR)/goldmane.crt \
 		-e GOLDMANE_HOST=$(GOLDMANE_HOST) \
 		-e OTEL_EXPORTER_OTLP_ENDPOINT=$(OTEL_EXPORTER_OTLP_ENDPOINT) \
 		-it $(GO_PROGRAM):$(TAG)
