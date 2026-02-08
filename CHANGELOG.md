@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.13.12] - 2026-02-08
+
+### Changes
+
+`main.go` is now placed in the root
+dir instead of under `cmd/`.
+
+updated `Makefile` and fixed typos.
+
 ## [0.13.11] - 2026-02-06
 
 ### Changes
