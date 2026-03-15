@@ -1,16 +1,6 @@
 name: Release container image
 
-on:
-  push:
-    branches: ["main"]
-    paths:
-      - 'cmd/**'
-      - 'internal/**'
-      - 'proto/**'
-      - 'gen/proto/**'
-      - Dockerfile
-      - go.mod
-      - go.sum
+on: workflow_dispatch
 
 env:
   REGISTRY: ghcr.io
