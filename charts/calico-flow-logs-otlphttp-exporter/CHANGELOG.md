@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.12.7] - 2026-03-15
+
+### Changes
+
+Upgrade container image to `0.13.14`.
+
 ## [0.12.6] - 2026-02-18
 
 ### Changes
