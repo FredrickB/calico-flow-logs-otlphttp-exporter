@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.13.14] - 2026-03-15
+
+### Changes
+
+Bump deps
+
 ## [0.13.13] - 2026-02-18
 
 ### Changes
