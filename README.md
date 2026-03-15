@@ -283,9 +283,10 @@ When releasing new versions, it has to be done in 2 steps:
 
 > Always update [CHANGELOG.md](./CHANGELOG.md) when releasing a new container image version
 
-Upon merge to `main` the workflow [.github/workflows/release_container_image.yaml](./.github/workflows/release_container_image.yaml)
-builds a new container image. Version is based on the
-collection of [conventional commits](https://www.conventionalcommits.org/en/v1.0.0/) between previous release and current commit.
+The workflow [.github/workflows/release_container_image.yaml](./.github/workflows/release_container_image.yaml)
+builds a new container image. Semantic version is based on the collection of
+[conventional commits](https://www.conventionalcommits.org/en/v1.0.0/) between previous release and current
+commit.
 
 All container image versions are [here](https://github.com/FredrickB/calico-flow-logs-otlphttp-exporter/pkgs/container/calico-flow-logs-otlphttp-exporter).
 
