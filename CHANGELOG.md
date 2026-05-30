@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.14.0] - 2026-05-30
+
+### Changes
+
+Goldmane protobuf version now matches
+the version in tag `v3.32.0`. Tested
+against the following versions of Calico:
+
+- `v3.30.4`
+- `v3.31.3`
+- `v3.32.0`
+
 ## [0.13.15] - 2026-04-12
 
 ### Changes
