@@ -47,6 +47,7 @@ See [#Datamodel](#datamodel) for payload structure.
 | :------------- | :--------------- |
 | `3.30`         | >= `0.13.3`      |
 | `3.31`         | >= `0.13.3`      |
+| `3.32`         | >= `0.13.5`      |
 
 ## Installation
 
