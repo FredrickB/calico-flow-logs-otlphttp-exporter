@@ -223,6 +223,11 @@ which can be imported to view the state of flows when logs are sent to a
     127.0.0.1 goldmane
     ```
 1. (Optional, requires `docker` and `k3d`) setup k3d cluster `make setup-k3d [K3D_CLUSTER_NAME=<cluster-name>] [K3D_CLUSTER_CALICO_VERSION=<calico-version>]`
+1. (Optional, requires `k3d` cluster to be created) generates a kubeconfig at `~/.kube/$(K3D_CLUSTER_NAME)-$(K3D_CLUSTER_CALICO_VERSION)`:
+    ```
+    make create-k3d-kubeconfig [K3D_CLUSTER_NAME=<cluster-name>] [K3D_CLUSTER_CALICO_VERSION=<calico-version>]
+    ```
+    The command to set the kubeconfig will be printed.
 1. (Optional, requires `k3d` cluster to be created) install calico to k3d cluster `make install-calico [K3D_CLUSTER_CALICO_VERSION=<calico-version>]`
 
 ### Running
@@ -233,9 +238,14 @@ deployment running in the cluster directly. Do not use this
 approach in production environments, this is just for development.
 
 1. (Optional) start k3d cluster `make start-k3d [K3D_CLUSTER_NAME=<cluster-name>] [K3D_CLUSTER_CALICO_VERSION=<calico-version>]`
+1. (Optional, requires `k3d` cluster to be created) generates a kubeconfig at `~/.kube/$(K3D_CLUSTER_NAME)-$(K3D_CLUSTER_CALICO_VERSION)`:
+    ```
+    make create-k3d-kubeconfig [K3D_CLUSTER_NAME=<cluster-name>] [K3D_CLUSTER_CALICO_VERSION=<calico-version>]
+    ```
+    The command to set the kubeconfig will be printed.
 1. Install test-resources: `make install-test-resources`
-1. Port-forward the Goldmane service: `make port-forward-goldmane [GOLDMANE_NAMESPACE=<goldmane namespace>]`
 1. Copy the certificates from a running instance of Goldmane: `make copy-goldmane-certs-from-kubernetes-deployment [GOLDMANE_NAMESPACE=<goldmane namespace>]`
+1. Port-forward the Goldmane service: `make port-forward-goldmane [GOLDMANE_NAMESPACE=<goldmane namespace>]`
 1. Start the otel-collector, Loki and Grafana: `make docker-compose-up` (`make docker-tail-otel-collector-logs` to tail logs of otel-collector)
 1. Run project: `make run [OTEL_EXPORTER_OTLP_ENDPOINT=http://localhost:3100/otlp]` (by default OpenTelemetry Collector is used, you can override to use Loki directly)
    1. Optionally, run `make debug [OTEL_EXPORTER_OTLP_ENDPOINT=http://localhost:3100/otlp]` to debug using `dlv`

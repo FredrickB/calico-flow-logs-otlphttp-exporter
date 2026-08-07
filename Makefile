@@ -151,6 +151,10 @@ setup-k3d:
 		--k3s-arg '--disable-network-policy@server:*' \
 		--k3s-arg '--cluster-cidr=192.168.0.0/16@server:*'
 
+create-k3d-kubeconfig:
+	@k3d kubeconfig get $(K3D_CLUSTER_NAME)-$(K3D_CLUSTER_CALICO_VERSION) > ~/.kube/$(K3D_CLUSTER_NAME)-$(K3D_CLUSTER_CALICO_VERSION) \
+	&& echo "export KUBECONFIG=~/.kube/$(K3D_CLUSTER_NAME)-$(K3D_CLUSTER_CALICO_VERSION)"
+
 install-calico:
 	kubectl apply -f https://raw.githubusercontent.com/projectcalico/calico/$(K3D_CLUSTER_CALICO_VERSION)/manifests/tigera-operator.yaml
 	kubectl wait --for=jsonpath='{.status.readyReplicas}'=1 --namespace tigera-operator deployments/tigera-operator
